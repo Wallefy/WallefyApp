@@ -27,4 +27,23 @@
     <string name="category_transaction">Category</string>
     <string name="account_transaction">Account</string>
 
+    <string name="one_calculator">1</string>
+    <string name="two_calculator">2</string>
+    <string name="three_calculator">3</string>
+    <string name="four_calculator">4</string>
+    <string name="five_calculator">5</string>
+    <string name="six_calculator">6</string>
+    <string name="seven_calculator">7</string>
+    <string name="eight_calculator">8</string>
+    <string name="nine_calculator">9</string>
+    <string name="zero_calculator">0</string>
+
+    <string name="plus_calculator">+</string>
+    <string name="minus_calculator">-</string>
+    <string name="div_calculator">/</string>
+    <string name="mul_calculator">-</string>
+    <string name="equal_calculator">=</string>
+    <string name="coma_calculator">,</string>
+    <string name="arrow_calculator">&#8592;</string>
+
 </resources>

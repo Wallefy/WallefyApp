@@ -127,7 +127,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:text="1"
+                    android:text="@string/one_calculator"
                     android:textSize="@dimen/transaction_big_text_size" />
 
                 <Button
@@ -136,7 +136,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:text="2"
+                    android:text="@string/two_calculator"
                     android:textSize="@dimen/transaction_big_text_size" />
 
                 <Button
@@ -145,7 +145,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:text="3"
+                    android:text="@string/three_calculator"
                     android:textSize="@dimen/transaction_big_text_size" />
             </LinearLayout>
 
@@ -161,7 +161,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:text="4"
+                    android:text="@string/four_calculator"
                     android:textSize="@dimen/transaction_big_text_size" />
 
                 <Button
@@ -170,7 +170,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:text="5"
+                    android:text="@string/five_calculator"
                     android:textSize="@dimen/transaction_big_text_size" />
 
                 <Button
@@ -179,7 +179,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:text="6"
+                    android:text="@string/six_calculator"
                     android:textSize="@dimen/transaction_big_text_size" />
             </LinearLayout>
 
@@ -195,7 +195,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:text="7"
+                    android:text="@string/seven_calculator"
                     android:textSize="@dimen/transaction_big_text_size" />
 
                 <Button
@@ -204,7 +204,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:text="8"
+                    android:text="@string/eight_calculator"
                     android:textSize="@dimen/transaction_big_text_size" />
 
                 <Button
@@ -213,7 +213,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:text="9"
+                    android:text="@string/nine_calculator"
                     android:textSize="@dimen/transaction_big_text_size" />
             </LinearLayout>
 
@@ -228,7 +228,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:text=","
+                    android:text="@string/coma_calculator"
                     android:textSize="@dimen/transaction_big_text_size" />
 
                 <Button
@@ -237,7 +237,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:text="0"
+                    android:text="@string/zero_calculator"
                     android:textSize="@dimen/transaction_big_text_size" />
 
                 <Button
@@ -245,9 +245,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:gravity="center"
                     android:background="@android:color/transparent"
-                    android:text="<--|"
-                    android:textSize="@dimen/transaction_big_text_size" />
+                    android:text="@string/arrow_calculator"
+                    android:textSize="50sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -265,7 +266,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@android:color/holo_orange_light"
-                android:text="/"
+                android:text="@string/div_calculator"
                 android:textSize="@dimen/transaction_big_text_size" />
 
             <Button
@@ -274,7 +275,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@android:color/holo_orange_light"
-                android:text="*"
+                android:text="@string/mul_calculator"
                 android:textSize="@dimen/transaction_big_text_size" />
 
             <Button
@@ -283,7 +284,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@android:color/holo_orange_light"
-                android:text="-"
+                android:text="@string/minus_button"
                 android:textSize="@dimen/transaction_big_text_size" />
 
             <Button
@@ -292,7 +293,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@android:color/holo_orange_light"
-                android:text="+"
+                android:text="@string/plus_button"
                 android:textSize="@dimen/transaction_big_text_size" />
 
             <Button
@@ -301,7 +302,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@android:color/holo_orange_light"
-                android:text="="
+                android:text="@string/equal_calculator"
                 android:textSize="@dimen/transaction_big_text_size" />
 
         </LinearLayout>
