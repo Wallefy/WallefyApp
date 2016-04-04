@@ -9,8 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
-        android:gravity="center_vertical|end"
-        android:background="#FFFFBB">
+        android:background="@color/color_orange_white"
+        android:gravity="center_vertical|end">
 
         <TextView
             android:id="@+id/amount_transaction"
@@ -19,15 +19,13 @@
             android:layout_weight="4"
             android:gravity="center_vertical|end"
             android:text="00,00"
-            android:textSize="@dimen/transaction_amount_text_size"
-            />
+            android:textSize="@dimen/transaction_amount_text_size" />
 
         <TextView
             android:id="@+id/amount_currency_transaction"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:cursorVisible="false"
             android:gravity="center"
             android:inputType="none"
             android:text="BGN"
@@ -40,6 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@color/color_orange_white"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -59,7 +58,7 @@
                 android:textAllCaps="true"
                 android:textSize="@dimen/transaction_small_text_size" />
 
-            <TextView
+            <Spinner
                 android:id="@+id/account_transaction"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -88,7 +87,7 @@
                 android:textAllCaps="true"
                 android:textSize="@dimen/transaction_small_text_size" />
 
-            <TextView
+            <Spinner
                 android:id="@+id/catgory_transaction"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -245,8 +244,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"
                     android:background="@android:color/transparent"
+                    android:gravity="center"
                     android:text="@string/arrow_calculator"
                     android:textSize="50sp" />
             </LinearLayout>
@@ -257,6 +256,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/color_orange"
             android:orientation="vertical">
 
             <Button
@@ -265,7 +265,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@android:color/holo_orange_light"
+                android:background="@android:color/transparent"
                 android:text="@string/div_calculator"
                 android:textSize="@dimen/transaction_big_text_size" />
 
@@ -274,7 +274,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@android:color/holo_orange_light"
+                android:background="@android:color/transparent"
                 android:text="@string/mul_calculator"
                 android:textSize="@dimen/transaction_big_text_size" />
 
@@ -283,7 +283,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@android:color/holo_orange_light"
+                android:background="@android:color/transparent"
                 android:text="@string/minus_button"
                 android:textSize="@dimen/transaction_big_text_size" />
 
@@ -292,7 +292,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@android:color/holo_orange_light"
+                android:background="@android:color/transparent"
                 android:text="@string/plus_button"
                 android:textSize="@dimen/transaction_big_text_size" />
 
@@ -301,7 +301,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@android:color/holo_orange_light"
+                android:background="@android:color/transparent"
                 android:text="@string/equal_calculator"
                 android:textSize="@dimen/transaction_big_text_size" />
 

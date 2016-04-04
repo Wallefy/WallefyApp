@@ -41,7 +41,7 @@
     <string name="plus_calculator">+</string>
     <string name="minus_calculator">-</string>
     <string name="div_calculator">/</string>
-    <string name="mul_calculator">-</string>
+    <string name="mul_calculator">*</string>
     <string name="equal_calculator">=</string>
     <string name="coma_calculator">,</string>
     <string name="arrow_calculator">&#8592;</string>
