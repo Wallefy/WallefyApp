@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Wallefy</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Log in</string>
+    <string name="register">Register</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="plus_button">+</string>
+    <string name="minus_button">-</string>
+    <string name="history">History</string>
+
+    <string name="title_history_element">Category</string>
+    <string name="date_history_element">Date</string>
+    <string name="note_history_element">Note...</string>
+
+    <string name="type_account_transaction">type account</string>
+    <string name="type_category_transaction">type category</string>
+    <string name="category_transaction">Category</string>
+    <string name="account_transaction">Account</string>
+
+</resources>
