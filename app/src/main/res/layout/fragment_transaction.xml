@@ -12,14 +12,28 @@
         android:background="@color/color_orange_white"
         android:gravity="center_vertical|end">
 
-        <TextView
-            android:id="@+id/transaction_amount"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
-            android:gravity="center_vertical|end"
-            android:text="00,00"
-            android:textSize="@dimen/transaction_amount_text_size" />
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/transaction_sign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textSize="@dimen/transaction_small_text_size" />
+
+            <TextView
+                android:id="@+id/transaction_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="0"
+                android:textSize="@dimen/transaction_amount_text_size" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/transaction_amount_currency"
@@ -60,11 +74,11 @@
 
             <Spinner
                 android:id="@+id/transaction_account"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_horizontal|top"
-                android:text="@string/account_transaction"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:textAllCaps="true"
                 android:textSize="@dimen/transaction_big_text_size" />
 
@@ -89,11 +103,11 @@
 
             <Spinner
                 android:id="@+id/transaction_category"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_horizontal|top"
-                android:text="@string/category_transaction"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:textAllCaps="true"
                 android:textSize="@dimen/transaction_big_text_size" />
 
@@ -310,8 +324,7 @@
 
     </LinearLayout>
 
-    <include
-        layout="@layout/saving_buttons" />
+    <include layout="@layout/saving_buttons" />
 
 </LinearLayout>
 
