@@ -11,20 +11,25 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.MainActivity;
+import com.example.dpene.wallefy.model.dao.IUserDao;
+import com.example.dpene.wallefy.model.datasources.UserDataSource;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LoginFragment extends Fragment implements View.OnClickListener{
+public class LoginFragment extends Fragment implements View.OnClickListener {
 
     EditText edtEmail;
     EditText edtPassword;
     Button btnLogin;
     Button btnRegister;
     CheckBox chbKeepLogged;
+
+    IUserDao userDataSource;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -46,15 +51,26 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         btnLogin.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
 
+        userDataSource = new  UserDataSource(getContext());
+
         return view;
     }
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.login_button:
-                // logic
-                startActivity(new Intent(getContext(), MainActivity.class));
+                ((UserDataSource) userDataSource).open();
+//                TODO CLOSE CONNECTION
+                long userId = userDataSource.loginUser(edtEmail.getText().toString(),edtPassword.getText().toString());
+                if (userId<1)
+                    Toast.makeText(getContext(), "ERROR LOGGING", Toast.LENGTH_SHORT).show();
+                else // save in shared prefs userId
+                {
+
+                    getActivity().finish();
+                    startActivity(new Intent(getContext(), MainActivity.class));
+                }
                 break;
             case R.id.register_button:
                 RegisterFragment register = new RegisterFragment();

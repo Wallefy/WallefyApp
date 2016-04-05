@@ -1,8 +1,5 @@
 package com.example.dpene.wallefy.model.utils;
 
-/**
- * Created by Petkata on 25.2.2016 г..
- */
 public class Constants {
 
     public static final String EXISTING_EMAIL = "email exists";

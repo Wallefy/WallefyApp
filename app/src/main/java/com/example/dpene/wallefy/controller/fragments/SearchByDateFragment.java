@@ -12,10 +12,10 @@ import com.example.dpene.wallefy.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SerchByDateFragment extends Fragment {
+public class SearchByDateFragment extends Fragment {
 
 
-    public SerchByDateFragment() {
+    public SearchByDateFragment() {
         // Required empty public constructor
     }
 
@@ -24,7 +24,7 @@ public class SerchByDateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_serch_by_date, container, false);
+        return inflater.inflate(R.layout.fragment_search_by_date, container, false);
     }
 
 }

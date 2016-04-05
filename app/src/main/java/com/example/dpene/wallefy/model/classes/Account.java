@@ -5,37 +5,27 @@ import java.util.List;
 
 public class Account {
 
-    private String title;
-    private float amount;
-    private List<Transaction> transactions;
+    private long  accountTypeId;
+    private String accountName;
 
-    Account(String title, float amount) {
-        this.title = title;
-        this.amount = amount;
-        this.transactions = new ArrayList<>();
+    public Account(long accountTypeId, String accountName) {
+        this.accountTypeId = accountTypeId;
+        this.accountName = accountName;
     }
 
-    void renameAccount(String newTitle) {
-        this.title = newTitle;
+    public long getAccountTypeId() {
+        return accountTypeId;
     }
 
-    void addTransaction(Transaction transaction) {
-        this.transactions.add(transaction);
+    public void setAccountTypeId(long accountTypeId) {
+        this.accountTypeId = accountTypeId;
     }
 
-    void deleteTransaction(Transaction transaction) {
-        this.transactions.remove(transaction);
+    public String getAccountName() {
+        return accountName;
     }
 
-    String getTitle() {
-        return title;
-    }
-
-    float getAmount() {
-        return amount;
-    }
-
-    List<Transaction> getTransactions() {
-        return transactions;
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
     }
 }

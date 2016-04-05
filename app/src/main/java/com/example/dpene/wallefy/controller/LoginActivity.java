@@ -8,13 +8,17 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.fragments.LoginFragment;
+import com.example.dpene.wallefy.model.DbHelper;
 
 public class LoginActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
 
         Fragment login = new LoginFragment();
         FragmentManager manager = getSupportFragmentManager();

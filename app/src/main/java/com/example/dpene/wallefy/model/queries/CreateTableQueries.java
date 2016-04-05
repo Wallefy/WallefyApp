@@ -2,7 +2,7 @@ package com.example.dpene.wallefy.model.queries;
 
 import com.example.dpene.wallefy.model.utils.Constants;
 
-public class Queries {
+public class CreateTableQueries {
 
     //        ----- CREATE TABLE USERS ------
     public static final String CREATE_TABLE_USERS = "create table if not exists " + Constants.TABLE_USERS + "(" +
