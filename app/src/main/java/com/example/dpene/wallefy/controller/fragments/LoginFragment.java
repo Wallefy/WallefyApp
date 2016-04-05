@@ -2,7 +2,9 @@ package com.example.dpene.wallefy.controller.fragments;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -39,6 +41,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (logInfo()>0)
+        {
+//            extract in method
+            getActivity().finish();
+            startActivity(new Intent(getContext(), MainActivity.class));
+        }
 
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
@@ -67,6 +75,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     Toast.makeText(getContext(), "ERROR LOGGING", Toast.LENGTH_SHORT).show();
                 else // save in shared prefs userId
                 {
+                    if (chbKeepLogged.isChecked())
+                        keepLogged(userId);
 
                     getActivity().finish();
                     startActivity(new Intent(getContext(), MainActivity.class));
@@ -86,5 +96,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             default:
                 break;
         }
+    }
+
+    private void keepLogged(long savedUserId){
+        SharedPreferences isLogged = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor editor = isLogged.edit();
+        editor.putLong("userId", savedUserId);
+        editor.commit();
+    }
+
+    private long logInfo() {
+        SharedPreferences log = PreferenceManager.getDefaultSharedPreferences(getContext());
+        return log.getLong("userId", 0);
     }
 }

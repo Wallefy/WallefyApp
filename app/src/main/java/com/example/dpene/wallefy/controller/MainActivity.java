@@ -1,5 +1,8 @@
 package com.example.dpene.wallefy.controller;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -17,6 +20,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
+import com.example.dpene.wallefy.controller.fragments.ListCategoryFragment;
+import com.example.dpene.wallefy.controller.fragments.LoginFragment;
 import com.example.dpene.wallefy.controller.fragments.MainInfoFragment;
 import com.example.dpene.wallefy.controller.fragments.SearchByDateFragment;
 
@@ -98,15 +104,24 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_reports) {
 
-            replaceFrag(new SearchByDateFragment());
 
         } else if (id == R.id.nav_categories) {
+            replaceFrag(new ListCategoryFragment());
 
         } else if (id == R.id.nav_settings) {
+            replaceFrag(new EditProfileFragment());
 
         } else if (id == R.id.nav_export) {
 
         } else if (id == R.id.nav_logout) {
+            //            Clear shared pref file
+            SharedPreferences log = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+            log.edit().clear().commit();
+            SharedPreferences userId = getPreferences(MODE_PRIVATE);
+            userId.edit().clear().commit();
+            Intent i = new Intent(getApplicationContext(),LoginActivity.class);
+            startActivity(i);
+            finish();
 
         }
 
