@@ -17,9 +17,6 @@ import android.widget.ListAdapter;
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.model.classes.Category;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MainInfoFragment extends Fragment {
 
     private int[] categoryImgs;
@@ -77,7 +74,6 @@ public class MainInfoFragment extends Fragment {
             ImageView img;
             if (convertView == null){
                 img = new ImageView(context);
-
             }
             else
             {
