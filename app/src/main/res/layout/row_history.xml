@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
     <ImageView
+        android:id="@+id/icon_row_history"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -35,15 +36,16 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/date_history_element"
-                android:textSize="@dimen/drawer_element_text_size" />
+                android:textSize="@dimen/row_history_small_text_size" />
 
             <TextView
+                android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:id="@+id/note_row_history"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/note_history_element"
-                android:textSize="@dimen/drawer_element_text_size" />
+                android:textSize="@dimen/row_history_small_text_size" />
 
         </LinearLayout>
 

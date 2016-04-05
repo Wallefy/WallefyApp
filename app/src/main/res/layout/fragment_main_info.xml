@@ -1,54 +1,51 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.example.dpene.wallefy.controller.fragments.MainInfoFragment">
 
-
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/main_info_balance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="@dimen/activity_horizontal_margin">
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Balance" />
+            android:layout_alignParentLeft="true"
+            android:text="@string/balance"
+            android:textSize="@dimen/main_info_mid_text_size" />
 
-        <Button
-            android:id="@+id/button"
-            style="?android:attr/buttonStyleSmall"
+        <TextView
+            android:id="@+id/main_info_balance_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="total" />
-    </LinearLayout>
+            android:layout_alignParentRight="true"
+            android:text="00,00"
+            android:textSize="@dimen/main_info_big_text_size" />
+    </RelativeLayout>
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/main_info_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:layout_below="@+id/main_info_balance"
+        android:layout_centerInParent="true">
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Planned" />
+    </android.support.v7.widget.RecyclerView>
 
-        <Button
-            android:id="@+id/total_planned"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="total" />
-    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/main_info_categories"
 
-    <GridView
-        android:id="@+id/grid_categories"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal" />
-</LinearLayout>
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+</RelativeLayout>

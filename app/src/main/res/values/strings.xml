@@ -71,5 +71,7 @@
     <string name="between">Between</string>
     <string name="search">Search</string>
     <string name="keep_me_logged">Keep me logged</string>
+    <string name="balance">Balance</string>
+    <string name="planned">Planned</string>
 
 </resources>
