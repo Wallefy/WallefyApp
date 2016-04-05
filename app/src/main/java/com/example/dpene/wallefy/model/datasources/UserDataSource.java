@@ -31,15 +31,8 @@ public class UserDataSource extends DataSource implements IUserDao {
     @Override
     public long registerUser(String userEmail, String userName, String password) {
 
-
-
         if (checkForExisting(Constants.TABLE_USERS, Constants.USER_EMAIL, userEmail)) {
-
             return 0;
-        }
-        if (checkForExisting(Constants.TABLE_USERS, Constants.USER_NAME, userName)) {
-
-            return -1;
         }
 
         ContentValues values = new ContentValues();
