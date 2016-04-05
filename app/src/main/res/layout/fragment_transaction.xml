@@ -13,7 +13,7 @@
         android:gravity="center_vertical|end">
 
         <TextView
-            android:id="@+id/amount_transaction"
+            android:id="@+id/transaction_amount"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
@@ -22,7 +22,7 @@
             android:textSize="@dimen/transaction_amount_text_size" />
 
         <TextView
-            android:id="@+id/amount_currency_transaction"
+            android:id="@+id/transaction_amount_currency"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -49,7 +49,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/type_account_transaction"
+                android:id="@+id/transaction_type_account"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -59,7 +59,7 @@
                 android:textSize="@dimen/transaction_small_text_size" />
 
             <Spinner
-                android:id="@+id/account_transaction"
+                android:id="@+id/transaction_account"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -78,7 +78,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/type_category_transaction"
+                android:id="@+id/transaction_type_category"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -88,7 +88,7 @@
                 android:textSize="@dimen/transaction_small_text_size" />
 
             <Spinner
-                android:id="@+id/catgory_transaction"
+                android:id="@+id/transaction_category"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"

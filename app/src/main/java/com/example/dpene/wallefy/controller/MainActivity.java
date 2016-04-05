@@ -22,9 +22,8 @@ import android.view.View;
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
 import com.example.dpene.wallefy.controller.fragments.ListCategoryFragment;
-import com.example.dpene.wallefy.controller.fragments.LoginFragment;
 import com.example.dpene.wallefy.controller.fragments.MainInfoFragment;
-import com.example.dpene.wallefy.controller.fragments.SearchByDateFragment;
+import com.example.dpene.wallefy.controller.fragments.ReportsFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -103,9 +102,10 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_stats) {
 
         } else if (id == R.id.nav_reports) {
+            replaceFrag(new ReportsFragment());
+        }else if (id == R.id.nav_accounts) {
 
-
-        } else if (id == R.id.nav_categories) {
+        }else if (id == R.id.nav_categories) {
             replaceFrag(new ListCategoryFragment());
 
         } else if (id == R.id.nav_settings) {
