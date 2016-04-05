@@ -28,4 +28,5 @@
     <dimen name="main_info_mid_text_size">30sp</dimen>
     <dimen name="row_history_small_text_size">15sp</dimen>
     <dimen name="reports_text_size">30sp</dimen>
+    <dimen name="transfer_text_size">30sp</dimen>
 </resources>

@@ -6,13 +6,32 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class TransactionFragment extends Fragment {
+
+
+    private TextView tvCategoryType;
+    private TextView tvAccountType;
+
+    private TextView amount;
+    private TextView currency;
+
+    private Spinner spnAccountType;
+    private Spinner spnCategoryType;
+
+    private List<String> listCategoriest;
+    private List<String> listAccounts;
 
 
     public TransactionFragment() {
@@ -23,8 +42,32 @@ public class TransactionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_transaction, container, false);
+
+        listCategoriest = new ArrayList<>();
+        listAccounts = new ArrayList<>();
+
+        listCategoriest.add("Food");
+        listCategoriest.add("Drink");
+        listCategoriest.add("Clothes");
+        listCategoriest.add("Things");
+
+        listAccounts.add("Cash");
+        listAccounts.add("Card");
+
+        View v = inflater.inflate(R.layout.fragment_transaction, container, false);
+
+        tvCategoryType = (TextView) v.findViewById(R.id.transaction_type_category);
+        tvAccountType = (TextView) v.findViewById(R.id.transaction_type_account);
+        amount = (TextView) v.findViewById(R.id.amount_transaction);
+        currency = (TextView) v.findViewById(R.id.amount_currency_transaction);
+
+        spnAccountType = (Spinner) v.findViewById(R.id.account_transaction);
+        spnCategoryType = (Spinner) v.findViewById(R.id.transaction_category);
+
+        spnAccountType.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, listAccounts));
+        spnCategoryType.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, listCategoriest));
+
+        return v;
     }
 
 }
