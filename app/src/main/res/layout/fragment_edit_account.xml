@@ -1,0 +1,58 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.dpene.wallefy.controller.fragments.EditAccountFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/account_name"
+            android:textSize="@dimen/edit_account_text_size" />
+
+        <EditText
+            android:id="@+id/edit_account_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/edit_account_smaller_text_size" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/initial_balance"
+            android:textSize="@dimen/edit_account_text_size" />
+
+        <EditText
+            android:id="@+id/edit_account_init_balance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/edit_account_smaller_text_size" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/init_balance_date"
+            android:textSize="@dimen/edit_account_text_size" />
+
+        <TextView
+            android:id="@+id/edit_account_init_balance_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="date"
+            android:textSize="@dimen/edit_account_smaller_text_size" />
+    </LinearLayout>
+
+    <!--insert toolbar/ statusbar-->
+
+    <include layout="@layout/saving_buttons" />
+
+</LinearLayout>

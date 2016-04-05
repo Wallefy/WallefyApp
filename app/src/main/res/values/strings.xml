@@ -45,5 +45,31 @@
     <string name="equal_calculator">=</string>
     <string name="coma_calculator">,</string>
     <string name="arrow_calculator">&#8592;</string>
+    <string name="description_note">Note</string>
+    <string name="description_date">Date</string>
+    <string name="description_location">Location</string>
+    <string name="description_picture">Picture</string>
+    <string name="register_email_tv">Enter your email</string>
+    <string name="register_email_hint">Em@il</string>
+    <string name="register_name_tv">Choose a name</string>
+    <string name="register_name_hint">Name</string>
+    <string name="register_pass_tv">Enter a password</string>
+    <string name="register_retypepass_tv">Retype the password</string>
+    <string name="register_button">Register</string>
+    <string name="back_to_login_button">Back to Login</string>
+    <string name="add">add</string>
+    <string name="income">income</string>
+    <string name="expense">expense</string>
+    <string name="category_name">Category name</string>
+    <string name="icon">Icon</string>
+    <string name="account_name">Account name</string>
+    <string name="initial_balance">Initial balance</string>
+    <string name="init_balance_date">Initial balance day</string>
+    <string name="name">Name</string>
+    <string name="after">After</string>
+    <string name="before">Before</string>
+    <string name="between">Between</string>
+    <string name="search">Search</string>
+    <string name="keep_me_logged">Keep me logged</string>
 
 </resources>

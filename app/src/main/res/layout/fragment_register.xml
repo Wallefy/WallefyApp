@@ -2,29 +2,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context="com.example.dpene.wallefy.controller.fragments.RegisterFragment">
 
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Enter your email"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:text="@string/register_email_tv"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
 
     <EditText
         android:id="@+id/edt_register_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Em@il"
+        android:hint="@string/register_email_hint"
         android:imeOptions="actionNext"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Choose a name"
+        android:text="@string/register_name_tv"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
@@ -34,12 +38,13 @@
         android:ems="10"
         android:imeOptions="actionNext"
         android:inputType="textPersonName"
-        android:text="Name" />
+        android:hint="@string/register_name_hint" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Enter a password"
+        android:text="@string/register_pass_tv"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
@@ -51,9 +56,10 @@
         android:inputType="textPassword" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Retype the password"
+        android:text="@string/register_retypepass_tv"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
@@ -69,12 +75,12 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Register" />
+        android:text="@string/register_button" />
 
     <Button
         android:id="@+id/btn_register_login"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Back to Login" />
+        android:text="@string/back_to_login_button" />
 </LinearLayout>
