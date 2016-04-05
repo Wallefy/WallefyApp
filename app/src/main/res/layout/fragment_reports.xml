@@ -1,0 +1,36 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_vertical_margin"
+    tools:context="com.example.dpene.wallefy.controller.fragments.ReportsFragment">
+
+
+    <EditText
+        android:id="@+id/reports_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/choose_date"
+        android:textSize="@dimen/reports_text_size" />
+
+    <Spinner
+        android:id="@+id/reports_categories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin" />
+
+
+    <Spinner
+        android:id="@+id/reports_accounts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin" />
+
+    <Spinner
+        android:id="@+id/reports_expense_income"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin" />
+
+</LinearLayout>

@@ -18,6 +18,7 @@ import android.view.View;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.fragments.MainInfoFragment;
+import com.example.dpene.wallefy.controller.fragments.ReportsFragment;
 import com.example.dpene.wallefy.controller.fragments.SearchByDateFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_reports) {
 
-            replaceFrag(new SearchByDateFragment());
+            replaceFrag(new ReportsFragment());
 
         } else if (id == R.id.nav_categories) {
 

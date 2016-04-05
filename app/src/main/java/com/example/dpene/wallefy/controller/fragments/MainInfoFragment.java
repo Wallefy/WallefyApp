@@ -146,7 +146,7 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
 
         @Override
         public void onBindViewHolder(CategoriesVH holder, int position) {
-            holder.img.setImageResource(R.drawable.ghost);
+            holder.img.setImageResource(R.drawable.ghost_48);
         }
 
         @Override
@@ -166,44 +166,6 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
 
             }
         }
-    }
 
-    private class CategoryImgAdapter extends BaseAdapter {
-
-        private Context context;
-        private int[] elements;
-
-        CategoryImgAdapter(Context c, int[] elements) {
-            this.context = c;
-            this.elements = elements;
-        }
-
-        @Override
-        public int getCount() {
-            return this.elements.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView img;
-            if (convertView == null) {
-                img = new ImageView(context);
-
-            } else {
-                img = (ImageView) convertView;
-            }
-            img.setImageResource(elements[position]);
-            return img;
-        }
     }
 }

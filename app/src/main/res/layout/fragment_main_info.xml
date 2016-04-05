@@ -31,6 +31,7 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_info_history"
+        android:layout_above="@+id/main_info_categories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/main_info_balance"
@@ -40,7 +41,6 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_info_categories"
-
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true">
