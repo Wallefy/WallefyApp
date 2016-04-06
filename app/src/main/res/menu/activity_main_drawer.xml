@@ -13,7 +13,7 @@
         <item
             android:id="@+id/nav_accounts"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Categories" />
+            android:title="Accounts" />
         <item
             android:id="@+id/nav_categories"
             android:icon="@drawable/ic_menu_slideshow"

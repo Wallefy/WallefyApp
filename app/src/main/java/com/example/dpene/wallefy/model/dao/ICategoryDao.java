@@ -8,7 +8,7 @@ public interface ICategoryDao {
 
     Category showCategory(String categoryName);
 
-    Category createCategory(String categoryName, boolean isExpense, long iconResource, String color);
+    Category createCategory(String categoryName, boolean isExpense, long iconResource,long userFk);
 
     ArrayList<Category> showAllCategoriesForUser(long userId);
 

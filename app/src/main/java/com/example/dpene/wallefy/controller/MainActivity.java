@@ -18,25 +18,34 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
 import com.example.dpene.wallefy.controller.fragments.ListCategoryFragment;
 import com.example.dpene.wallefy.controller.fragments.MainInfoFragment;
 import com.example.dpene.wallefy.controller.fragments.ReportsFragment;
+import com.example.dpene.wallefy.model.classes.User;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        user = (User) getIntent().getSerializableExtra("user");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         Fragment fr = new MainInfoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user",user);
+        fr.setArguments(bundle);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.add(R.id.root_main, fr, "mainFr");
@@ -59,6 +68,10 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+//      Get user email and username
+        View headView = navigationView.getHeaderView(0);
+        ((TextView) headView.findViewById(R.id.nav_header_email)).setText(user.getEmail());
+        ((TextView) headView.findViewById(R.id.nav_header_username)).setText(user.getUsername());
     }
 
     @Override
@@ -134,6 +147,9 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 //        ft.setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right,R.anim.slide_in_right,R.anim.slide_out_left);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user",user);
+        fr.setArguments(bundle);
         ft.replace(R.id.root_main, fr);
         ft.addToBackStack(null);
         ft.commit();

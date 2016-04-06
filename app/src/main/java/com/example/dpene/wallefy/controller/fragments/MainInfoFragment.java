@@ -16,35 +16,38 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.model.classes.Category;
+import com.example.dpene.wallefy.model.classes.History;
+import com.example.dpene.wallefy.model.classes.User;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MainInfoFragment extends Fragment implements View.OnClickListener {
 
-    private int[] categoryImgs;
-    GridView gridCategoryImgs;
     RelativeLayout balance;
     RecyclerView listHistory;
     RecyclerView listCategories;
+    User user;
 
+//    TODO Create initial categories and accounts
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_main_info, container, false);
 
-        Log.e("ASDASD", "asd");
-        categoryImgs = new int[9];
-        for (int i = 0; i < categoryImgs.length; i++) {
-            categoryImgs[i] = R.drawable.ghost;
-        }
+        Bundle bundle = this.getArguments();
+        user = (User) bundle.getSerializable("user");
+
 
         balance = (RelativeLayout) view.findViewById(R.id.main_info_balance);
         listHistory = (RecyclerView) view.findViewById(R.id.main_info_history);
         listCategories = (RecyclerView) view.findViewById(R.id.main_info_categories);
 
-        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getContext());
+        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getContext(),user.getCategories());
         LinearLayoutManager linLayoutManager
                 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
@@ -52,7 +55,7 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
         listCategories.setLayoutManager(linLayoutManager);
         listCategories.setAdapter(categoriesAdapter);
 
-        HistoryAdapter historyAdapter = new HistoryAdapter(getContext());
+        HistoryAdapter historyAdapter = new HistoryAdapter(getContext(),user.getHistoryLog());
         listHistory.setLayoutManager(new LinearLayoutManager(getContext()));
         listHistory.setAdapter(historyAdapter);
 
@@ -73,11 +76,11 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
     class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryVH> {
 
         private Context context;
-        private String[] plannedArray = {"neshto1, neshto2, neshto3, neshto4"};
+        private ArrayList<History> historyArrayList;
 
-        HistoryAdapter(Context context) {
+        HistoryAdapter(Context context,ArrayList<History> historyLog) {
             this.context = context;
-
+            this.historyArrayList =historyLog;
         }
 
 
@@ -91,16 +94,17 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
 
         @Override
         public void onBindViewHolder(HistoryVH holder, int position) {
-            holder.img.setImageResource(R.drawable.ghost);
-            holder.category.setText("Test");
-            holder.date.setText("00-00-00");
-            holder.note.setText("Note..");
-            holder.amount.setText("00.00");
+//            TODO
+//            holder.img.setImageResource(historyArrayList.get(position).get);
+            holder.category.setText("categori ID " + historyArrayList.get(position).getCategoryId());
+            holder.date.setText(historyArrayList.get(position).getDateOfTransaction());
+            holder.note.setText(historyArrayList.get(position).getDescription());
+            holder.amount.setText(String.valueOf(historyArrayList.get(position).getAmount()));
         }
 
         @Override
         public int getItemCount() {
-            return plannedArray.length;
+            return historyArrayList.size();
         }
 
 
@@ -128,11 +132,12 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
     class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoriesVH> {
 
         private Context context;
-        private String[] plannedArray = {"neshto1, neshto2, neshto3, neshto4"};
 
-        CategoriesAdapter(Context context) {
+        private ArrayList<Category> categs;
+
+        CategoriesAdapter(Context context,ArrayList<Category> categories) {
             this.context = context;
-
+            this.categs = categories;
         }
 
 
@@ -146,12 +151,13 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
 
         @Override
         public void onBindViewHolder(CategoriesVH holder, int position) {
-            holder.img.setImageResource(R.drawable.ghost_48);
+//            TODO Change resources from long to int
+            holder.img.setImageResource((int) categs.get(position).getIconResource());
         }
 
         @Override
         public int getItemCount() {
-            return 10;
+            return categs.size();
         }
 
 

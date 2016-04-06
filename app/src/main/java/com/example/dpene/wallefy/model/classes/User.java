@@ -1,10 +1,13 @@
 package com.example.dpene.wallefy.model.classes;
 
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class User {
+public class User implements Serializable{
 
     private long userId;
     private String username;
@@ -13,6 +16,19 @@ public class User {
     private ArrayList<Category> categories;
     private ArrayList<Account> accounts;
     private ArrayList<History> historyLog;
+
+    public User(){}
+
+    public User(long userId, String username, String password, String email,
+                ArrayList<Category> categories, ArrayList<Account> accounts, ArrayList<History> historyLog) {
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.categories = categories;
+        this.accounts = accounts;
+        this.historyLog = historyLog;
+    }
 
     public User(long userId,String email, String name, String password) {
 
@@ -72,5 +88,17 @@ public class User {
 
     public void adHistory(History newHistory){
         this.historyLog.add(newHistory);
+    }
+
+    public void setCategories(ArrayList<Category> categories) {
+        this.categories = categories;
+    }
+
+    public void setAccounts(ArrayList<Account> accounts) {
+        this.accounts = accounts;
+    }
+
+    public void setHistoryLog(ArrayList<History> historyLog) {
+        this.historyLog = historyLog;
     }
 }

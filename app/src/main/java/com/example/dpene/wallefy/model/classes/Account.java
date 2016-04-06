@@ -1,16 +1,29 @@
 package com.example.dpene.wallefy.model.classes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Account {
+public class Account implements Serializable {
 
     private long  accountTypeId;
+    private long  accountUserId;
     private String accountName;
 
-    public Account(long accountTypeId, String accountName) {
+    public Account(){}
+
+    public Account(long accountTypeId,long userFk, String accountName) {
         this.accountTypeId = accountTypeId;
+        this.accountUserId = userFk;
         this.accountName = accountName;
+    }
+
+    public long getAccountUserId() {
+        return accountUserId;
+    }
+
+    public void setAccountUserId(long accountUserId) {
+        this.accountUserId = accountUserId;
     }
 
     public long getAccountTypeId() {

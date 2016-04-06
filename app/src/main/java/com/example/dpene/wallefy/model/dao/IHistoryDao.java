@@ -10,8 +10,8 @@ public interface IHistoryDao {
 
     ArrayList<History> listHistoryByCategory(long userID,long accountType);
 
-    void createHistory(long userId, long accountTypeId, long categoryId, double amount,
-                       String description,String dateOfTransaction,String imgPath,String locationLat,String locationLong);
+    History createHistory(long userId, long accountTypeId, long categoryId, double amount,
+                       String description,String dateOfTransaction,String imgPath,String location);
 
     ArrayList<History> listHistoryAfterDate(long userID,String afterDate);
     ArrayList<History> listHistoryBeforeDate(long userID,String beforeDate);

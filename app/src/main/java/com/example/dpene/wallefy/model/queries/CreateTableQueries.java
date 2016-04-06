@@ -29,7 +29,7 @@ public class CreateTableQueries {
             Constants.HISTORY_ID + " integer primary key autoincrement not null, " +
             Constants.HISTORY_USER_FK + " integer not null references " + Constants.TABLE_USERS + "(" + Constants.USER_ID + "), " +
             Constants.HISTORY_ACCOUNT_TYPE_FK + " integer not null references " + Constants.TABLE_ACCOUNT_TYPES + "(" + Constants.ACCOUNT_TYPE_ID + ")," +
-            Constants.HISTORY_CATEGORY_FK + " integer not null references " + Constants.TABLE_CATEGORIES + "(" + Constants.CATEGORY_ID + "),history_description" +
+            Constants.HISTORY_CATEGORY_FK + " integer not null references " + Constants.TABLE_CATEGORIES + "(" + Constants.CATEGORY_ID + ")," +
             Constants.HISTORY_DESCRIPTION + " varchar(200), " +
             Constants.TRANSACTION_DATE + " DATETIME not null," +
             Constants.TRANSACTION_AMOUNT + " numeric not null," +

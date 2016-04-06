@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.MainActivity;
+import com.example.dpene.wallefy.model.classes.User;
 import com.example.dpene.wallefy.model.dao.IUserDao;
 import com.example.dpene.wallefy.model.datasources.UserDataSource;
 
@@ -31,6 +32,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     Button btnBackToLogin;
 
     IUserDao userDataSource;
+    User user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,16 +63,19 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                 String userPassword = edtPassword.getText().toString();
                 ((UserDataSource) userDataSource).open();
                 if (validateEmail(userMail) && validateUsername(userName) && validatePassword(userPassword)) {
-                    long userId = userDataSource.registerUser(userMail, userName, userPassword);
-                    if (userId > 0) {
+                    user = userDataSource.registerUser(userMail, userName, userPassword);
+                    if (user.getUserId() > 0) {
+                        Intent i = new Intent(getContext(), MainActivity.class);
+                        i.putExtra("user",user);
+                        ((UserDataSource) userDataSource).close();
+                        startActivity(i);
                         getActivity().finish();
-                        startActivity(new Intent(getContext(), MainActivity.class));
                     }
-                    else if (userId ==0){
-                        Toast.makeText(getContext(), "Email already registered", Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                        Toast.makeText(getContext(), "Could not register", Toast.LENGTH_SHORT).show();
+//                    else if (user.getUserId() ==0){
+//                        Toast.makeText(getContext(), "Email already registered", Toast.LENGTH_SHORT).show();
+//                    }
+//                    else
+//                        Toast.makeText(getContext(), "Could not register", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Toast.makeText(getContext(), "Could not register", Toast.LENGTH_SHORT).show();

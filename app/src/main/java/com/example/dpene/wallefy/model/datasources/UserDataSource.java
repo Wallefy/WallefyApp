@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.example.dpene.wallefy.model.classes.User;
 import com.example.dpene.wallefy.model.dao.IUserDao;
 import com.example.dpene.wallefy.model.utils.Constants;
 
@@ -15,24 +16,42 @@ public class UserDataSource extends DataSource implements IUserDao {
     }
 
     @Override
-    public long loginUser(String userEmail, String password) {
-
-        String[] selArgs = {userEmail,password};
-        Cursor cursor = database.rawQuery("select user_id from users where user_email = ? and user_password = ?",selArgs);
+    public User selectUserById(long id) {
+        String[] selArgs = {String.valueOf(id)};
+        Cursor cursor = database.rawQuery("select user_id,user_email,user_name,user_password from users where user_id = ? ",selArgs);
         if (cursor.moveToFirst()) {
             long userId = cursor.getLong(0);
+            String userMail = cursor.getString(1);
+            String userName = cursor.getString(2);
+            String userPassword = cursor.getString(3);
             cursor.close();
-            return userId;
+            return new User(userId,userMail,userName,userPassword);
         }
         cursor.close();
-        return 0;
+        return null;
     }
 
     @Override
-    public long registerUser(String userEmail, String userName, String password) {
+    public User loginUser(String mail, String password) {
+        String[] selArgs = {mail,password};
+        Cursor cursor = database.rawQuery("select user_id,user_email,user_name,user_password from users where user_email = ? and user_password = ?",selArgs);
+        if (cursor.moveToFirst()) {
+            long userId = cursor.getLong(0);
+            String userMail = cursor.getString(1);
+            String userName = cursor.getString(2);
+            String userPassword = cursor.getString(3);
+            cursor.close();
+            return new User(userId,userMail,userName,userPassword);
+        }
+        cursor.close();
+        return null;
+    }
+
+    @Override
+    public User registerUser(String userEmail, String userName, String password) {
 
         if (checkForExisting(Constants.TABLE_USERS, Constants.USER_EMAIL, userEmail)) {
-            return 0;
+            return null;
         }
 
         ContentValues values = new ContentValues();
@@ -41,10 +60,10 @@ public class UserDataSource extends DataSource implements IUserDao {
         values.put(Constants.USER_EMAIL, userEmail);
         long insertId = database.insert(Constants.TABLE_USERS, null, values);
         if (insertId < 0) {
-            return -2;
+            return null;
         }
 
-        return insertId;
+        return loginUser(userEmail,password);
 
     }
 

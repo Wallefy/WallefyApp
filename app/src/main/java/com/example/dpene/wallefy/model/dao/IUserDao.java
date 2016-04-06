@@ -1,11 +1,17 @@
 package com.example.dpene.wallefy.model.dao;
 
 
+import com.example.dpene.wallefy.model.classes.User;
+
+import java.util.ArrayList;
+
 public interface IUserDao {
 
-    long loginUser(String userEmail, String password);
+    User selectUserById(long id);
 
-    long registerUser(String userEmail,String userName, String password);
+    User loginUser(String userEmail, String password);
+
+    User registerUser(String userEmail,String userName, String password);
 
     boolean editUsername(long userId,String newUsername);
 

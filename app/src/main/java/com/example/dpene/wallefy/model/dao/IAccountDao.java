@@ -8,7 +8,7 @@ public interface IAccountDao {
 
     Account showAccount(String accountName);
 
-    void createAccount(long userId,String accountName);
+    Account createAccount(long userId,String accountName);
 
     ArrayList<Account> showAllAccounts(long userId);
 
