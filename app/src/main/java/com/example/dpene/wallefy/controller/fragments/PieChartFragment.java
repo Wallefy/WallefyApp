@@ -6,16 +6,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.example.dpene.wallefy.R;
+import com.github.mikephil.charting.charts.PieChart;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchByDateFragment extends Fragment {
+public class PieChartFragment extends Fragment {
 
+    private LinearLayout root;
+    private PieChart pieChart;
 
-    public SearchByDateFragment() {
+    public PieChartFragment() {
         // Required empty public constructor
     }
 
@@ -23,8 +27,12 @@ public class SearchByDateFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search_by_date, container, false);
+
+        View v = inflater.inflate(R.layout.fragment_pie_chart, container, false);
+
+        root = (LinearLayout) v.findViewById(R.id.pie_chart_layout);
+
+        return v;
     }
 
 }

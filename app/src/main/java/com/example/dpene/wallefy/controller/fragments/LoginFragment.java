@@ -64,18 +64,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         historyDataSource = new HistoryDataSource(getContext());
         ((HistoryDataSource) historyDataSource).open();
 
-//        accountDataSource.createAccount(user.getUserId(), "cash");
-//        accountDataSource.createAccount(user.getUserId(), "card");
-//        accountDataSource.createAccount(user.getUserId(), "deposit");
-//
-//        categoryDataSource.createCategory("Food", true, R.drawable.ghost_48, 1);
-//        categoryDataSource.createCategory("Transport", true, R.drawable.ghost_48, 1);
-//        categoryDataSource.createCategory("Photo", true, android.R.drawable.ic_menu_camera, 1);
-
-//        historyDataSource.createHistory(user.getUserId(), 2, 1, 30, null, null, null, null);
-//        historyDataSource.createHistory(user.getUserId(), 2, 1, 12, null, null, null, null);
-//        historyDataSource.createHistory(user.getUserId(), 2, 2, 50, null, null, null, null);
-//        historyDataSource.createHistory(user.getUserId(),2,3,220,"Mnogo snimki",null,null,null);
 
         if (logInfo() > 0) {
 
@@ -120,6 +108,20 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         keepLogged(user.getUserId());
                     // create user
                     //parse user to next activity
+
+
+//        accountDataSource.createAccount(user.getUserId(), "cash");
+//        accountDataSource.createAccount(user.getUserId(), "card");
+//        accountDataSource.createAccount(user.getUserId(), "deposit");
+//
+//        categoryDataSource.createCategory("Food", true, R.drawable.ghost_48, 1);
+//        categoryDataSource.createCategory("Transport", true, R.drawable.ghost_48, 1);
+//        categoryDataSource.createCategory("Photo", true, android.R.drawable.ic_menu_camera, 1);
+
+//        historyDataSource.createHistory(user.getUserId(), 2, 1, 30, null, null, null, null);
+//        historyDataSource.createHistory(user.getUserId(), 2, 1, 12, null, null, null, null);
+//        historyDataSource.createHistory(user.getUserId(), 2, 2, 50, null, null, null, null);
+//        historyDataSource.createHistory(user.getUserId(),2,3,220,"Mnogo snimki",null,null,null);
 
                     Intent i = new Intent(getContext(), MainActivity.class);
                     i.putExtra("user",loadUserInfo(accountDataSource.showAllAccounts(user.getUserId()),

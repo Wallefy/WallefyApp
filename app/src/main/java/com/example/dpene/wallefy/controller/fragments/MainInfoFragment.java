@@ -159,7 +159,7 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
         @Override
         public CategoriesAdapter.CategoriesVH onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            View row = LayoutInflater.from(context).inflate(R.layout.row_category, parent, false);
+            View row = LayoutInflater.from(context).inflate(R.layout.row_category_icon_only, parent, false);
             return new CategoriesAdapter.CategoriesVH(row);
 
         }
@@ -183,7 +183,7 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
 
             public CategoriesVH(View itemView) {
                 super(itemView);
-                img = (ImageView) itemView.findViewById(R.id.row_category_icon);
+                img = (ImageView) itemView.findViewById(R.id.row_category_icon_only);
 
             }
         }

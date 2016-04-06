@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<<<<<<< HEAD
-      <module fileurl="file://$PROJECT_DIR$/Wallefy.iml" filepath="$PROJECT_DIR$/Wallefy.iml" />
-=======
       <module fileurl="file://$PROJECT_DIR$/WallefyApp.iml" filepath="$PROJECT_DIR$/WallefyApp.iml" />
->>>>>>> 9642704f98f3ae53c4853aceffb4d527555e1b07
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

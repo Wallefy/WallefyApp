@@ -77,5 +77,6 @@
     <string name="transfer_to_account">To accountt</string>
     <string name="transfer">Transfer</string>
     <string name="amount">Amount</string>
+    <string name="old_password">Old password</string>
 
 </resources>
