@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.dpene.wallefy.controller.fragments.MainInfoFragment">
 
+
     <RelativeLayout
         android:id="@+id/main_info_balance"
         android:layout_width="match_parent"
@@ -13,10 +14,15 @@
         android:orientation="horizontal"
         android:padding="@dimen/activity_horizontal_margin">
 
+        <Spinner
+            android:id="@+id/spinner_main_info_accounts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_centerHorizontal="true"
             android:text="@string/balance"
             android:textSize="@dimen/main_info_mid_text_size" />
 
@@ -31,9 +37,9 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_info_history"
-        android:layout_above="@+id/main_info_categories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/main_info_categories"
         android:layout_below="@+id/main_info_balance"
         android:layout_centerInParent="true">
 

@@ -10,8 +10,6 @@ public class Account implements Serializable {
     private long  accountUserId;
     private String accountName;
 
-    public Account(){}
-
     public Account(long accountTypeId,long userFk, String accountName) {
         this.accountTypeId = accountTypeId;
         this.accountUserId = userFk;

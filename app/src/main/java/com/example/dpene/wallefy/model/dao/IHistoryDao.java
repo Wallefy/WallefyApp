@@ -8,10 +8,15 @@ public interface IHistoryDao {
 
     ArrayList<History> listAllHistory(long userID);
 
-    ArrayList<History> listHistoryByCategory(long userID,long accountType);
+//    ArrayList<History> listHistoryByCategory(long userID,long accountType);
+
+    ArrayList<History> listHistoryByAccount(long userID,long accountType);
+    ArrayList<History> listHistoryByAccountName(long userID,String accountType);
 
     History createHistory(long userId, long accountTypeId, long categoryId, double amount,
                        String description,String dateOfTransaction,String imgPath,String location);
+
+    double calcAmountForAccount(long userId,String accountTypeName);
 
     ArrayList<History> listHistoryAfterDate(long userID,String afterDate);
     ArrayList<History> listHistoryBeforeDate(long userID,String beforeDate);

@@ -69,6 +69,7 @@ public class ReportsFragment extends Fragment {
                 picDate((EditText) v);
             }
         });
+
         spnCategories = (Spinner) v.findViewById(R.id.reports_categories);
         spnAccounts = (Spinner) v.findViewById(R.id.reports_accounts);
         spnExpenseIncome = (Spinner) v.findViewById(R.id.reports_expense_income);

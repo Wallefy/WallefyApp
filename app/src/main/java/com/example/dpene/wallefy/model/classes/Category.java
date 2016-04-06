@@ -11,9 +11,6 @@ public class Category implements Serializable {
     private long accountUserId;
 
 
-    public Category() {
-    }
-
     public Category(long categoryId, String categoryName, boolean isExpense, long iconResource, long accountUserId) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;

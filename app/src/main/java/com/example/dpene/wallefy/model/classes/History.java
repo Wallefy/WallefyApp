@@ -9,13 +9,14 @@ public class History implements Serializable {
     private long userId;
     private long accountTypeId;
     private long categoryId;
+    private String categoryName;
+    private int categoryIconResource;
     private double amount;
 
     private String description;
     private String dateOfTransaction;
     private String imgPath;
     private String location;
-//    private String locationLong;
 
     public History(){}
 
@@ -27,17 +28,28 @@ public class History implements Serializable {
 //    }
 
 
-    public History(long historyId, long userId, long accountTypeId, long categoryId, double amount,
+    public History(long historyId, long userId, long accountTypeId, long categoryId,String categoryName,
+                   int categoryIconResource, double amount,
                    String description, String dateOfTransaction, String imgPath, String location) {
         this.historyId = historyId;
         this.userId = userId;
         this.accountTypeId = accountTypeId;
         this.categoryId = categoryId;
+        this.categoryName = categoryName;
+        this.categoryIconResource = categoryIconResource;
         this.amount = amount;
         this.description = description;
         this.dateOfTransaction = dateOfTransaction;
         this.imgPath = imgPath;
         this.location = location;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public int getCategoryIconResource() {
+        return categoryIconResource;
     }
 
     public long getUserId() {

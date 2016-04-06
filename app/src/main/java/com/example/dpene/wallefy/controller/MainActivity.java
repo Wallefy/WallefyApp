@@ -117,6 +117,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_stats) {
+            replaceFrag(new MainInfoFragment());
 
         } else if (id == R.id.nav_reports) {
             replaceFrag(new ReportsFragment());
