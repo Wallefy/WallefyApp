@@ -25,6 +25,7 @@ import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
 import com.example.dpene.wallefy.controller.fragments.ListCategoryFragment;
 import com.example.dpene.wallefy.controller.fragments.MainInfoFragment;
 import com.example.dpene.wallefy.controller.fragments.ReportsFragment;
+import com.example.dpene.wallefy.controller.fragments.TransactionFragment;
 import com.example.dpene.wallefy.model.classes.User;
 
 public class MainActivity extends AppCompatActivity
@@ -55,8 +56,11 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                replaceFrag(new TransactionFragment());
+
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
             }
         });
 
