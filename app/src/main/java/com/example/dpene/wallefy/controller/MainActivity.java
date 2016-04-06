@@ -2,10 +2,10 @@ package com.example.dpene.wallefy.controller;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,7 +13,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         fr.setArguments(bundle);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.root_main, fr, "mainFr");
+        ft.replace(R.id.root_main, fr, "mainFr");
         ft.commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -159,4 +158,5 @@ public class MainActivity extends AppCompatActivity
         ft.addToBackStack(null);
         ft.commit();
     }
+
 }

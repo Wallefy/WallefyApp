@@ -12,6 +12,9 @@ import com.example.dpene.wallefy.R;
 
 public class EditProfileFragment extends Fragment {
 
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

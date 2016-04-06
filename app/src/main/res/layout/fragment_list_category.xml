@@ -5,48 +5,50 @@
     android:orientation="vertical"
     tools:context=".controller.fragments.ListCategoryFragment">
 
-    <ScrollView
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/list_category_income_layout"
+            android:clickable="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="@string/add"
-                    android:textSize="@dimen/category_text_size" />
-
-                <Button
-                    android:id="@+id/add_category_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:background="@android:drawable/ic_input_add" />
-
-            </RelativeLayout>
+            android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="@string/income"
                 android:textSize="@dimen/category_text_size" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/income_category_recview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/category_add_income_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@android:drawable/ic_input_add" />
 
-            </android.support.v7.widget.RecyclerView>
+        </RelativeLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/category_income_recview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+        </android.support.v7.widget.RecyclerView>
+
+
+        <RelativeLayout
+            android:id="@+id/list_category_expense_layout"
+            android:clickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="match_parent"
@@ -55,13 +57,24 @@
                 android:text="@string/expense"
                 android:textSize="@dimen/category_text_size" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/expense_category_recview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/category_add_expense_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@android:drawable/ic_input_add" />
 
-            </android.support.v7.widget.RecyclerView>
+        </RelativeLayout>
 
-        </LinearLayout>
-    </ScrollView>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/category_expense_recview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
 </LinearLayout>

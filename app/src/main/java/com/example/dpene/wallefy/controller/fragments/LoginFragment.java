@@ -64,20 +64,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         ((CategoryDataSource) categoryDataSource).open();
         historyDataSource = new HistoryDataSource(getContext());
         ((HistoryDataSource) historyDataSource).open();
-        if (user != null) {
-            accountDataSource.createAccount(user.getUserId(), "cash");
-            accountDataSource.createAccount(user.getUserId(), "card");
-            accountDataSource.createAccount(user.getUserId(), "deposit");
 
-            categoryDataSource.createCategory("Food", true, R.drawable.ghost_48, 1);
-            categoryDataSource.createCategory("Transport", true, R.drawable.ghost_48, 1);
-            categoryDataSource.createCategory("Photo", true, android.R.drawable.ic_menu_camera, 1);
-
-            historyDataSource.createHistory(user.getUserId(), 2, 1, 30, null, null, null, null);
-            historyDataSource.createHistory(user.getUserId(), 2, 1, 12, null, null, null, null);
-            historyDataSource.createHistory(user.getUserId(), 2, 2, 50, null, null, null, null);
-            historyDataSource.createHistory(user.getUserId(), 2, 3, 220, "Mnogo snimki", null, null, null);
-        }
         if (logInfo() > 0) {
 
             Intent i = new Intent(getContext(), MainActivity.class);
