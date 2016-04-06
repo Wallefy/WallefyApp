@@ -3,6 +3,8 @@ package com.example.dpene.wallefy.controller.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -93,13 +95,26 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
         }
 
         @Override
-        public void onBindViewHolder(HistoryVH holder, int position) {
+        public void onBindViewHolder(HistoryVH holder, final int position) {
 //            TODO
 //            holder.img.setImageResource(historyArrayList.get(position).get);
             holder.category.setText("categori ID " + historyArrayList.get(position).getCategoryId());
             holder.date.setText(historyArrayList.get(position).getDateOfTransaction());
             holder.note.setText(historyArrayList.get(position).getDescription());
             holder.amount.setText(String.valueOf(historyArrayList.get(position).getAmount()));
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Fragment entry = new TransactionFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("entryInfo", historyArrayList.get(position));
+                    FragmentTransaction trans = getFragmentManager().beginTransaction();
+                    trans.replace(R.id.root_main, entry, "entry");
+                    trans.commit();
+                }
+            });
         }
 
         @Override
