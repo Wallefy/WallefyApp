@@ -53,21 +53,21 @@ public class ReportsFragment extends Fragment {
     private Spinner spnAccounts;
     private Spinner spnExpenseIncome;
 
-    IUserDao userDataSource;
+    IUserDao     userDataSource;
     ICategoryDao categoryDataSource;
-    IAccountDao accountDataSource;
-    IHistoryDao historyDataSource;
+    IAccountDao  accountDataSource;
+    IHistoryDao  historyDataSource;
 
-    ArrayAdapter categoryAdapter;
-    ArrayAdapter accountAdapter;
-    ReportEntriesAdapter rea;
+    ArrayAdapter            categoryAdapter;
+    ArrayAdapter            accountAdapter;
+    ReportEntriesAdapter    rea;
 
     RadioButton radioChooseTypeOfEntry;
     RadioButton radioChooseCategory;
-    RadioGroup radioGroup;
+    RadioGroup  radioGroup;
 
-    RecyclerView reportEntries;
-    ArrayList<History> entries;
+    RecyclerView        reportEntries;
+    ArrayList<History>  entries;
 
     String selectedCategory;
     String selectedAccount;
@@ -82,17 +82,17 @@ public class ReportsFragment extends Fragment {
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
 
-        categories = new ArrayList<>();
-        accounts = new ArrayList<>();
-        expenseIncome = new ArrayList<>();
+        categories       = new ArrayList<>();
+        accounts         = new ArrayList<>();
+        expenseIncome    = new ArrayList<>();
 
         expenseIncome.add("Expense");
         expenseIncome.add("Income");
 
-        userDataSource = UserDataSource.getInstance(getContext());
-        categoryDataSource = CategoryDataSource.getInstance(getContext());
-        accountDataSource = AccountDataSource.getInstance(getContext());
-        historyDataSource = HistoryDataSource.getInstance(getContext());
+        userDataSource =        UserDataSource.getInstance(getContext());
+        categoryDataSource =    CategoryDataSource.getInstance(getContext());
+        accountDataSource =     AccountDataSource.getInstance(getContext());
+        historyDataSource =     HistoryDataSource.getInstance(getContext());
 
         View v = inflater.inflate(R.layout.fragment_reports, container, false);
 
@@ -135,7 +135,6 @@ public class ReportsFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        Log.e("SELECTED", selectedAccount);
         entries = new ArrayList<>();
 
 

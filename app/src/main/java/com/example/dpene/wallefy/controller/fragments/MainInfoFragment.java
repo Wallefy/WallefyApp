@@ -29,7 +29,10 @@ import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.Category;
 import com.example.dpene.wallefy.model.classes.History;
 import com.example.dpene.wallefy.model.classes.User;
+import com.example.dpene.wallefy.model.dao.IAccountDao;
+import com.example.dpene.wallefy.model.dao.ICategoryDao;
 import com.example.dpene.wallefy.model.dao.IHistoryDao;
+import com.example.dpene.wallefy.model.dao.IUserDao;
 import com.example.dpene.wallefy.model.datasources.HistoryDataSource;
 
 import java.util.ArrayList;
@@ -45,19 +48,21 @@ public class MainInfoFragment extends Fragment {
     Spinner spnAccounts;
     TextView txtAccountBalanceTotal;
 
-    String selectedAccount;
-
-    ArrayList<History> historyByAccount;
-
     User user;
 
-    //    TODO Create initial categories and accounts
+    ArrayList<String> accounts;
+    ArrayList<History> entries;
+    ReportEntriesAdapter rea;
+    IHistoryDao historyDataSource;
+    ArrayAdapter accountAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_main_info, container, false);
 
+        historyDataSource = HistoryDataSource.getInstance(getContext());
         txtAccountBalanceTotal = (TextView) view.findViewById(R.id.main_info_balance_total);
 
         Bundle bundle = this.getArguments();
@@ -70,34 +75,21 @@ public class MainInfoFragment extends Fragment {
             userAccountNames.add(ac.getAccountName());
         }
 
-
         balance = (RelativeLayout) view.findViewById(R.id.main_info_balance);
-        listHistory = (RecyclerView) view.findViewById(R.id.main_info_history);
         listCategories = (RecyclerView) view.findViewById(R.id.main_info_categories);
+
+        accountAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, accounts);
+        listHistory = (RecyclerView) view.findViewById(R.id.main_info_history);
 
         spnAccounts = (Spinner) view.findViewById(R.id.spinner_main_info_accounts);
         spnAccounts.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, userAccountNames));
 
         CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getContext(), user.getCategories());
 
-        final IHistoryDao historyDao = HistoryDataSource.getInstance(getContext());
-
-        ((HistoryDataSource) historyDao).open();
-
-        historyByAccount = new ArrayList<>();
-        HistoryAdapter historyAdapter = new HistoryAdapter(getContext(), historyByAccount);
-
-
         spnAccounts.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                double totalBalanceForAccount = historyDao.calcAmountForAccount(user.getUserId(), spnAccounts.getSelectedItem().toString());
-
-                selectedAccount = spnAccounts.getSelectedItem().toString();
-
-                txtAccountBalanceTotal.setText(String.valueOf(totalBalanceForAccount));
-                historyByAccount = historyDao.listHistoryByAccountName(user.getUserId(), selectedAccount);
-
+                new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), spnAccounts.getSelectedItem().toString());
             }
 
             @Override
@@ -113,77 +105,9 @@ public class MainInfoFragment extends Fragment {
         listCategories.setLayoutManager(linLayoutManager);
         listCategories.setAdapter(categoriesAdapter);
 
-
-        listHistory.setLayoutManager(new LinearLayoutManager(getContext()));
-        listHistory.setAdapter(historyAdapter);
-
         return view;
-    }
-
-    class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryVH> {
-
-        private Context context;
-        private ArrayList<History> historyArrayList;
-
-        HistoryAdapter(Context context, ArrayList<History> historyLog) {
-            this.context = context;
-            this.historyArrayList = historyLog;
-        }
 
 
-        @Override
-        public HistoryVH onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View row = LayoutInflater.from(context).inflate(R.layout.row_history, parent, false);
-            return new HistoryAdapter.HistoryVH(row);
-
-        }
-
-        @Override
-        public void onBindViewHolder(HistoryVH holder, final int position) {
-            holder.img.setImageResource(historyArrayList.get(position).getCategoryIconResource());
-            holder.category.setText(historyArrayList.get(position).getCategoryName());
-            holder.date.setText(historyArrayList.get(position).getDateOfTransaction());
-            holder.note.setText(historyArrayList.get(position).getDescription());
-            holder.amount.setText(String.valueOf(historyArrayList.get(position).getAmount()));
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Fragment entry = new TransactionFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("entryInfo", historyArrayList.get(position));
-                    FragmentTransaction trans = getFragmentManager().beginTransaction();
-                    trans.replace(R.id.root_main, entry, "entry");
-                    trans.commit();
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return historyArrayList.size();
-        }
-
-
-        protected class HistoryVH extends RecyclerView.ViewHolder {
-
-            ImageView img;
-            TextView category;
-            TextView note;
-            TextView date;
-            TextView amount;
-
-            public HistoryVH(View itemView) {
-                super(itemView);
-                img = (ImageView) itemView.findViewById(R.id.icon_row_history);
-                category = (TextView) itemView.findViewById(R.id.category_row_history);
-                date = (TextView) itemView.findViewById(R.id.date_row_history);
-                note = (TextView) itemView.findViewById(R.id.note_row_history);
-                amount = (TextView) itemView.findViewById(R.id.amount_row_history);
-            }
-        }
     }
 
     class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoriesVH> {
@@ -225,7 +149,7 @@ public class MainInfoFragment extends Fragment {
                     editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
                     editActivity.putExtra("category", categs.get(position).getCategoryName());
                     // TODO
-                    editActivity.putExtra("account", selectedAccount);
+                    editActivity.putExtra("account", accounts);
                     editActivity.putExtra("user", user);
                     startActivity(editActivity);
                 }
@@ -245,6 +169,25 @@ public class MainInfoFragment extends Fragment {
                 super(itemView);
                 img = (ImageView) itemView.findViewById(R.id.row_category_icon_only);
             }
+        }
+    }
+
+    class TaskFillFilteredEntries extends AsyncTask<String, Void, Double> {
+
+        @Override
+        protected Double doInBackground(String... params) {
+            ((HistoryDataSource)historyDataSource).open();
+            entries = historyDataSource.listHistoryByAccountName(Long.parseLong(params[0]),params[1]);
+            double totalBalanceForAccount = historyDataSource.calcAmountForAccount(Long.parseLong(params[0]),params[1]);
+            return totalBalanceForAccount;
+        }
+        @Override
+        protected void onPostExecute(Double aDouble) {
+            rea = new ReportEntriesAdapter(getContext(), entries);
+            rea.notifyDataSetChanged();
+            listHistory.setLayoutManager(new LinearLayoutManager(getContext()));
+            listHistory.setAdapter(rea);
+            txtAccountBalanceTotal.setText(String.valueOf(aDouble));
         }
     }
 }
