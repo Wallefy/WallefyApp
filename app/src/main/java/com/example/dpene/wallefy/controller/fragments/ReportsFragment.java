@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -129,6 +130,8 @@ public class ReportsFragment extends Fragment {
         entries = new ArrayList<>();
         reportEntries = (RecyclerView) v.findViewById(R.id.report_recycler);
         ReportEntriesAdapter rea = new ReportEntriesAdapter(getContext(),entries);
+        reportEntries.setLayoutManager(new LinearLayoutManager(getContext()));
+        reportEntries.setAdapter(rea);
 
         return v;
     }
@@ -182,6 +185,14 @@ public class ReportsFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             accountAdapter.notifyDataSetChanged();
             categoryAdapter.notifyDataSetChanged();
+        }
+    }
+
+    class TaskFillFilteredEntries extends AsyncTask<String,Void,Void>{
+
+        @Override
+        protected Void doInBackground(String... params) {
+            return null;
         }
     }
 
