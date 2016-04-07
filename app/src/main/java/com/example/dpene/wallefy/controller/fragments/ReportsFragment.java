@@ -71,9 +71,9 @@ public class ReportsFragment extends Fragment {
         expenseIncome.add("Expense");
         expenseIncome.add("Income");
 
-        userDataSource = new UserDataSource(getContext());
-        categoryDataSource = new CategoryDataSource(getContext());
-        accountDataSource = new AccountDataSource(getContext());
+        userDataSource = UserDataSource.getInstance(getContext());
+        categoryDataSource = CategoryDataSource.getInstance(getContext());
+        accountDataSource = AccountDataSource.getInstance(getContext());
 
         View v = inflater.inflate(R.layout.fragment_reports, container, false);
 
