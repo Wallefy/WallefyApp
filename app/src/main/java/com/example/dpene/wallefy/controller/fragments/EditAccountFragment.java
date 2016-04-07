@@ -19,6 +19,7 @@ public class EditAccountFragment extends Fragment {
 
     private TextView title;
     private TextView amount;
+    private TextView date;
 
     public EditAccountFragment() {
         // Required empty public constructor
@@ -32,10 +33,11 @@ public class EditAccountFragment extends Fragment {
 
         title = (TextView) v.findViewById(R.id.edit_account_name);
         amount = (TextView) v.findViewById(R.id.edit_account_init_balance);
+        date = (TextView) v.findViewById(R.id.edit_account_init_balance_date);
 
         title.setText(getArguments().get("title").toString());
         amount.setText(getArguments().get("amount").toString());
-        amount.setText(getArguments().get("date").toString());
+        date.setText(getArguments().get("date").toString());
 
         return v;
     }
