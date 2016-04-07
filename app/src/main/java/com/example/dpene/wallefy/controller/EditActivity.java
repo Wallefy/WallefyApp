@@ -22,6 +22,7 @@ public class EditActivity extends AppCompatActivity {
 
         Fragment editFragment;
         Bundle bundle = new Bundle();
+        
 
         switch (getIntent().getStringExtra("key")) {
             default:

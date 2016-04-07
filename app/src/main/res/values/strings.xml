@@ -60,7 +60,7 @@
     <string name="income">income</string>
     <string name="expense">expense</string>
     <string name="category_name">Category name</string>
-    <string name="icon">Icon</string>
+    <string name="icon">Icons</string>
     <string name="account_name">Account name</string>
     <string name="initial_balance">Initial balance</string>
     <string name="init_balance_date">Initial balance day</string>
@@ -78,5 +78,6 @@
     <string name="transfer">Transfer</string>
     <string name="amount">Amount</string>
     <string name="old_password">Old password</string>
+    <string name="category">Category</string>
 
 </resources>
