@@ -3,24 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/activity_vertical_margin"
     tools:context="com.example.dpene.wallefy.controller.fragments.ReportsFragment">
 
 
     <EditText
         android:id="@+id/reports_date"
-        android:inputType="none"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/choose_date"
-        android:textSize="@dimen/reports_text_size" />
+        android:inputType="none"
+        android:textSize="19sp" />
 
-    <Spinner
-        android:id="@+id/reports_categories"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/activity_vertical_margin" />
-
+        android:text="Choose account"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Spinner
         android:id="@+id/reports_accounts"
@@ -28,10 +27,39 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/activity_vertical_margin" />
 
-    <Spinner
-        android:id="@+id/reports_expense_income"
+    <RadioGroup
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/activity_vertical_margin" />
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/reports_radio_expense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose type of entry" />
+
+        <Spinner
+            android:id="@+id/reports_expense_income"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/activity_vertical_margin" />
+
+        <RadioButton
+            android:id="@+id/reports_radio_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose category" />
+
+        <Spinner
+            android:id="@+id/reports_categories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/activity_vertical_margin" />
+    </RadioGroup>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/report_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 
 </LinearLayout>

@@ -41,6 +41,7 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
     RecyclerView listCategories;
     Spinner spnAccounts;
     TextView txtAccountBalanceTotal;
+
     ArrayList<History> historyByAccount;
 
     User user;
