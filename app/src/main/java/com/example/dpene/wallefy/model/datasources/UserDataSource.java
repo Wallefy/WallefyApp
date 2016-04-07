@@ -3,6 +3,7 @@ package com.example.dpene.wallefy.model.datasources;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.example.dpene.wallefy.model.classes.User;
 import com.example.dpene.wallefy.model.dao.IUserDao;
@@ -59,6 +60,7 @@ public class UserDataSource extends DataSource implements IUserDao {
     public User registerUser(String userEmail, String userName, String password) {
 
         if (checkForExisting(Constants.TABLE_USERS, Constants.USER_EMAIL, userEmail)) {
+            Log.e("tag", "email existing");
             return null;
         }
 
@@ -68,6 +70,7 @@ public class UserDataSource extends DataSource implements IUserDao {
         values.put(Constants.USER_EMAIL, userEmail);
         long insertId = database.insert(Constants.TABLE_USERS, null, values);
         if (insertId < 0) {
+            Log.e("tag", "db error");
             return null;
         }
 

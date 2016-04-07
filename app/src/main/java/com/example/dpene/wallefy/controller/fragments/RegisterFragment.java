@@ -17,6 +17,7 @@ import com.example.dpene.wallefy.controller.MainActivity;
 import com.example.dpene.wallefy.model.classes.User;
 import com.example.dpene.wallefy.model.dao.IUserDao;
 import com.example.dpene.wallefy.model.datasources.UserDataSource;
+import com.example.dpene.wallefy.model.utils.RegisterHelper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,59 +57,71 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.btn_register_reg:
                 String userMail = edtEmail.getText().toString();
                 String userName = edtName.getText().toString();
                 String userPassword = edtPassword.getText().toString();
+                String retypedPassword = edtRetypedPassword.getText().toString();
                 ((UserDataSource) userDataSource).open();
-                if (validateEmail(userMail) && validateUsername(userName) && validatePassword(userPassword)) {
-                    user = userDataSource.registerUser(userMail, userName, userPassword);
-                    if (user.getUserId() > 0) {
-                        Intent i = new Intent(getContext(), MainActivity.class);
-                        i.putExtra("user",user);
-                        ((UserDataSource) userDataSource).close();
-                        startActivity(i);
-                        getActivity().finish();
-                    }
+
+                boolean isCorrect = true;
+
+                if (RegisterHelper.validateEmail(userMail)) {
+                    // check if email already exist
+
 //                    else if (user.getUserId() ==0){
 //                        Toast.makeText(getContext(), "Email already registered", Toast.LENGTH_SHORT).show();
 //                    }
-//                    else
-//                        Toast.makeText(getContext(), "Could not register", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    edtEmail.setError("Invalid email");
+                    isCorrect = false;
                 }
-                else {
-                    Toast.makeText(getContext(), "Could not register", Toast.LENGTH_SHORT).show();
+
+                Log.e("tag", isCorrect + "");
+
+                if (!RegisterHelper.validateUsername(userName)) {
+                    edtName.setError("Name's length must be bigger than 3");
+                    isCorrect = false;
+                }
+
+                Log.e("tag", isCorrect + "");
+
+                if (RegisterHelper.strongPassword(userPassword)) {
+                    if (!userPassword.equals(retypedPassword)) {
+                        edtRetypedPassword.setError("The passwords don't match");
+                        isCorrect = false;
+                    }
+                } else {
+                    edtPassword.setError("Password must be between 5-10 characters and contain letters AND numbers");
+                    isCorrect = false;
+                }
+
+
+                Log.e("tag", isCorrect + "");
+
+                //TODO
+                if (isCorrect) {
+                    user = userDataSource.registerUser(userMail, userName, RegisterHelper.md5(userPassword));
+
+                    Log.e("tag", user + "");
+                    if (user != null) {
+                        Intent i = new Intent(getContext(), MainActivity.class);
+                        i.putExtra("user", user);
+                        ((UserDataSource) userDataSource).close();
+                        startActivity(i);
+                        getActivity().finish();
+                        Toast.makeText(getContext(), "Successful registration", Toast.LENGTH_SHORT).show();
+                    } else {
+                        edtEmail.setError("This email is already used");
+                    }
                 }
                 break;
             case R.id.btn_register_login:
                 this.onDestroy();
+
         }
     }
 
-    public boolean validateEmail(String email) {
-        String pattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-        if (email != null && email.matches(pattern)){
-            return true;
-        }
-        edtEmail.setError("invalid email");
-        return false;
-    }
-    public boolean validatePassword(String password) {
-        String pattern = "(?=.*[0-9])(?=.*[a-z]).{5,10}";
-        if (password != null && password.matches(pattern)){
-            return true;
-        }
-        edtPassword.setError("password should be more than 5 characters and include a number");
-        return false;
-    }
-    public boolean validateUsername(String username) {
-        String pattern = "(?=.*[a-z]).{5,10}";
-        if (username != null && username.matches(pattern)){
-            return true;
-        }
-        edtName.setError("username should me more than 5 chars");
-        return false;
-    }
 }

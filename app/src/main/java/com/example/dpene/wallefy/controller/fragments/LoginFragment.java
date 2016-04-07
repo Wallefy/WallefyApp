@@ -30,6 +30,7 @@ import com.example.dpene.wallefy.model.datasources.AccountDataSource;
 import com.example.dpene.wallefy.model.datasources.CategoryDataSource;
 import com.example.dpene.wallefy.model.datasources.HistoryDataSource;
 import com.example.dpene.wallefy.model.datasources.UserDataSource;
+import com.example.dpene.wallefy.model.utils.RegisterHelper;
 
 import java.util.ArrayList;
 
@@ -99,9 +100,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             case R.id.login_button:
 
 //                TODO CLOSE CONNECTION
-                user = userDataSource.loginUser(edtEmail.getText().toString(), edtPassword.getText().toString());
+                user = userDataSource.loginUser(edtEmail.getText().toString(), RegisterHelper.md5(edtPassword.getText().toString()));
                 if (user == null)
-                    Toast.makeText(getContext(), "ERROR LOGGING", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Wrong username or password", Toast.LENGTH_SHORT).show();
                 else // save in shared prefs userId
                 {
                     if (chbKeepLogged.isChecked())
