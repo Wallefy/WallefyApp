@@ -1,6 +1,7 @@
 package com.example.dpene.wallefy.controller.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.EditActivity;
+import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.Category;
 import com.example.dpene.wallefy.model.classes.History;
@@ -34,7 +37,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MainInfoFragment extends Fragment implements View.OnClickListener {
+public class MainInfoFragment extends Fragment {
 
     RelativeLayout balance;
     RecyclerView listHistory;
@@ -42,11 +45,13 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
     Spinner spnAccounts;
     TextView txtAccountBalanceTotal;
 
+    String selectedAccount;
+
     ArrayList<History> historyByAccount;
 
     User user;
 
-//    TODO Create initial categories and accounts
+    //    TODO Create initial categories and accounts
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -73,13 +78,13 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
         spnAccounts = (Spinner) view.findViewById(R.id.spinner_main_info_accounts);
         spnAccounts.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, userAccountNames));
 
-        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getContext(),user.getCategories());
+        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getContext(), user.getCategories());
 
         final IHistoryDao historyDao = HistoryDataSource.getInstance(getContext());
 
-        ((HistoryDataSource)historyDao).open();
+        ((HistoryDataSource) historyDao).open();
 
-       historyByAccount = new ArrayList<>();
+        historyByAccount = new ArrayList<>();
         HistoryAdapter historyAdapter = new HistoryAdapter(getContext(), historyByAccount);
 
 
@@ -88,8 +93,11 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 double totalBalanceForAccount = historyDao.calcAmountForAccount(user.getUserId(), spnAccounts.getSelectedItem().toString());
 
+                selectedAccount = spnAccounts.getSelectedItem().toString();
+
                 txtAccountBalanceTotal.setText(String.valueOf(totalBalanceForAccount));
-                historyByAccount = historyDao.listHistoryByAccountName(user.getUserId(), spnAccounts.getSelectedItem().toString());
+                historyByAccount = historyDao.listHistoryByAccountName(user.getUserId(), selectedAccount);
+
             }
 
             @Override
@@ -97,7 +105,6 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
 
             }
         });
-
 
 
         LinearLayoutManager linLayoutManager
@@ -110,16 +117,7 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
         listHistory.setLayoutManager(new LinearLayoutManager(getContext()));
         listHistory.setAdapter(historyAdapter);
 
-        balance.setOnClickListener(this);
-
         return view;
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-
-        }
     }
 
     class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryVH> {
@@ -127,7 +125,7 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
         private Context context;
         private ArrayList<History> historyArrayList;
 
-        HistoryAdapter(Context context,ArrayList<History> historyLog) {
+        HistoryAdapter(Context context, ArrayList<History> historyLog) {
             this.context = context;
             this.historyArrayList = historyLog;
         }
@@ -194,7 +192,7 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
 
         private ArrayList<Category> categs;
 
-        CategoriesAdapter(Context context,ArrayList<Category> categories) {
+        CategoriesAdapter(Context context, ArrayList<Category> categories) {
             this.context = context;
             this.categs = categories;
         }
@@ -208,10 +206,30 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
 
         }
 
+        /**
+         * itemView.OnClickListener sends intent to EditActivity
+         * extras:
+         *      String        key       = IRequestCode.EDIT_TRANSACTION
+         *      String        category
+         *      String        selectedAccount
+         *      Serializable  user
+         */
         @Override
-        public void onBindViewHolder(CategoriesVH holder, int position) {
+        public void onBindViewHolder(CategoriesVH holder, final int position) {
 //            TODO Change resources from long to int
             holder.img.setImageResource((int) categs.get(position).getIconResource());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent editActivity = new Intent(getContext(), EditActivity.class);
+                    editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
+                    editActivity.putExtra("category", categs.get(position).getCategoryName());
+                    // TODO
+                    editActivity.putExtra("account", selectedAccount);
+                    editActivity.putExtra("user", user);
+                    startActivity(editActivity);
+                }
+            });
         }
 
         @Override
@@ -219,16 +237,13 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
             return categs.size();
         }
 
-
         protected class CategoriesVH extends RecyclerView.ViewHolder {
 
             ImageView img;
 
-
             public CategoriesVH(View itemView) {
                 super(itemView);
                 img = (ImageView) itemView.findViewById(R.id.row_category_icon_only);
-
             }
         }
     }

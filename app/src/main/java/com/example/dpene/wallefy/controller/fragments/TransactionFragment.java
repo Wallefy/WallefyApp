@@ -3,6 +3,7 @@ package com.example.dpene.wallefy.controller.fragments;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,6 +97,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
 
+
         for (Account ac : user.getAccounts()) {
             listAccounts.add(ac.getAccountName());
 
@@ -116,12 +118,26 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         spnAccountType = (Spinner) v.findViewById(R.id.transaction_account);
         spnCategoryType = (Spinner) v.findViewById(R.id.transaction_category);
 
-        spnAccountType.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listAccounts));
+        ArrayAdapter categoryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listCategoriest);
+        ArrayAdapter accountAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listAccounts);
+
+        spnAccountType.setAdapter(accountAdapter);
         spnCategoryType.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listCategoriest));
+
+        if(getArguments().get("category") != null) {
+            spnCategoryType.setSelection(categoryAdapter.getPosition(getArguments().get("category")));
+        }
+
+        if(getArguments().get("account") != null) {
+            spnAccountType.setSelection(accountAdapter.getPosition(getArguments().get("account")));
+        }
+
+
 
         return v;
     }
 
+    // Calculator buttons
     @Override
     public void onClick(View v) {
         String btn_text = ((Button) v).getText().toString();

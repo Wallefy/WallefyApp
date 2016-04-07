@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.fragments.EditAccountFragment;
 import com.example.dpene.wallefy.controller.fragments.EditCategoryFragment;
 import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
+import com.example.dpene.wallefy.controller.fragments.TransactionFragment;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 
 public class EditActivity extends AppCompatActivity {
@@ -41,8 +43,21 @@ public class EditActivity extends AppCompatActivity {
                 break;
 
             case IRequestCodes.EDIT_TRANSACTION:
-                editFragment = new EditCategoryFragment();
+                editFragment = new TransactionFragment();
+
                 // inflate bundle
+                if (getIntent().getStringExtra("category") != null){
+                    bundle.putString("category", getIntent().getStringExtra("category"));
+                }
+
+                if (getIntent().getStringExtra("account") != null){
+                    bundle.putString("account", getIntent().getStringExtra("account"));
+                }
+
+                if (getIntent().getSerializableExtra("user") != null){
+                    bundle.putSerializable("user", getIntent().getSerializableExtra("user"));
+                }
+
                 break;
 
             case IRequestCodes.EDIT_ACCOUNT:
