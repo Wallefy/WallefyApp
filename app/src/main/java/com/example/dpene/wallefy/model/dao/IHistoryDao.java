@@ -11,7 +11,10 @@ public interface IHistoryDao {
 //    ArrayList<History> listHistoryByCategory(long userID,long accountType);
 
     ArrayList<History> listHistoryByAccount(long userID,long accountType);
+
     ArrayList<History> listHistoryByAccountName(long userID,String accountType);
+
+    ArrayList<History> listHistoryByCategoryName(long userID,String categoryName);
 
     History createHistory(long userId, long accountTypeId, long categoryId, double amount,
                        String description,String dateOfTransaction,String imgPath,String location);
