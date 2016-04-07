@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.EditActivity;
-import com.example.dpene.wallefy.controller.fragments.comunicators.IRequestCodes;
+import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.model.classes.Category;
 
 import java.util.ArrayList;
@@ -135,7 +135,7 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
 
     /**
      * itemView.onClickListener sends intent to EditActivity
-     * bundle params:
+     * extras:
      *      String key = IRequestCode
      *      String title
      */
