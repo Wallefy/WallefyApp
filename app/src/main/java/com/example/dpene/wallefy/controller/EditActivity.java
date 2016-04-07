@@ -6,9 +6,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.fragments.EditAccountFragment;
 import com.example.dpene.wallefy.controller.fragments.EditCategoryFragment;
 import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
-import com.example.dpene.wallefy.controller.fragments.comunicators.IRequestCodes;
+import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 
 public class EditActivity extends AppCompatActivity {
 
@@ -42,6 +43,29 @@ public class EditActivity extends AppCompatActivity {
             case IRequestCodes.EDIT_TRANSACTION:
                 editFragment = new EditCategoryFragment();
                 // inflate bundle
+                break;
+
+            case IRequestCodes.EDIT_ACCOUNT:
+                editFragment = new EditAccountFragment();
+                // inflate bundle
+                if(getIntent().getStringExtra("title") != null ){
+                    bundle.putString("title", getIntent().getStringExtra("title"));
+                } else {
+                    bundle.putString("title", "");
+                }
+
+                if(getIntent().getStringExtra("amount") != null ){
+                    bundle.putString("amount", getIntent().getStringExtra("amount"));
+                } else {
+                    bundle.putString("amount", "");
+                }
+
+                if(getIntent().getStringExtra("date") != null ){
+                    bundle.putString("date", getIntent().getStringExtra("date"));
+                } else {
+                    bundle.putString("date", "");
+                }
+
                 break;
         }
 

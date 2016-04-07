@@ -5,69 +5,84 @@
     android:orientation="vertical"
     tools:context=".controller.fragments.ListCategoryFragment">
 
-    <RelativeLayout
-        android:id="@+id/list_category_income_layout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/list_category_income_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:text="@string/income"
-            android:textSize="@dimen/category_text_size" />
+            android:clickable="true">
 
-        <Button
-            android:id="@+id/category_add_income_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@android:drawable/ic_input_add" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="@string/income"
+                android:textSize="@dimen/category_text_size" />
 
-    </RelativeLayout>
+            <Button
+                android:id="@+id/category_add_income_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@android:drawable/ic_input_add" />
+
+        </RelativeLayout>
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/category_income_recview"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/category_income_recview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:visibility="visible">
+
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:visibility="gone">
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:orientation="vertical">
 
-    </android.support.v7.widget.RecyclerView>
-
-
-    <RelativeLayout
-        android:id="@+id/list_category_expense_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true">
-
-        <TextView
+        <RelativeLayout
+            android:id="@+id/list_category_expense_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/expense"
-            android:textSize="@dimen/category_text_size" />
+            android:clickable="true">
 
-        <Button
-            android:id="@+id/category_add_expense_button"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/expense"
+                android:textSize="@dimen/category_text_size" />
+
+            <Button
+                android:id="@+id/category_add_expense_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@android:drawable/ic_input_add" />
+
+        </RelativeLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/category_expense_recview"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@android:drawable/ic_input_add" />
+            android:padding="@dimen/activity_horizontal_margin"
+            android:visibility="visible">
 
-    </RelativeLayout>
+        </android.support.v7.widget.RecyclerView>
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/category_expense_recview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
-
-    </android.support.v7.widget.RecyclerView>
-
+    </LinearLayout>
 
 </LinearLayout>
