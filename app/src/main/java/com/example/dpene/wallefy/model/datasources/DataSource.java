@@ -12,7 +12,7 @@ public abstract class DataSource {
     protected DbHelper dbHelper;
 
     public DataSource(Context context) {
-        dbHelper = new DbHelper(context);
+        dbHelper = DbHelper.getInstance(context);
     }
 
     public void open() throws SQLiteException {

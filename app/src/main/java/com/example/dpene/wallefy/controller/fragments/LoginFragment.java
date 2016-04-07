@@ -54,15 +54,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        userDataSource = new UserDataSource(getContext());
+        userDataSource = UserDataSource.getInstance(getContext());
         ((UserDataSource) userDataSource).open();
 
 
-        accountDataSource = new AccountDataSource(getContext());
+        accountDataSource = AccountDataSource.getInstance(getContext());
         ((AccountDataSource) accountDataSource).open();
-        categoryDataSource = new CategoryDataSource(getContext());
+        categoryDataSource = CategoryDataSource.getInstance(getContext());
         ((CategoryDataSource) categoryDataSource).open();
-        historyDataSource = new HistoryDataSource(getContext());
+        historyDataSource = HistoryDataSource.getInstance(getContext());
         ((HistoryDataSource) historyDataSource).open();
 
         if (logInfo() > 0) {

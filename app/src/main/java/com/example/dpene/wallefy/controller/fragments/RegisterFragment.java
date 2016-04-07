@@ -49,7 +49,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
 
         btnRegister.setOnClickListener(this);
 
-        userDataSource = new UserDataSource(getContext());
+        userDataSource = UserDataSource.getInstance(getContext());
 
         return view;
     }

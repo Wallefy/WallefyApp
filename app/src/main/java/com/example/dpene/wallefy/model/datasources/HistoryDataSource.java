@@ -15,8 +15,17 @@ import java.util.Calendar;
 
 public class HistoryDataSource extends DataSource implements IHistoryDao {
 
-    public HistoryDataSource(Context context) {
+    private static HistoryDataSource instance;
+
+    private HistoryDataSource(Context context) {
         super(context);
+    }
+
+    public static HistoryDataSource getInstance(Context context){
+        if(instance == null){
+            instance = new HistoryDataSource(context);
+        }
+        return instance;
     }
 
     @Override

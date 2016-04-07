@@ -75,7 +75,7 @@ public class MainInfoFragment extends Fragment implements View.OnClickListener {
 
         CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getContext(),user.getCategories());
 
-        final IHistoryDao historyDao = new HistoryDataSource(getContext());
+        final IHistoryDao historyDao = HistoryDataSource.getInstance(getContext());
 
         ((HistoryDataSource)historyDao).open();
 

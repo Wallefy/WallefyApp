@@ -14,8 +14,17 @@ import java.util.ArrayList;
 
 public class CategoryDataSource extends DataSource implements ICategoryDao{
 
-    public CategoryDataSource(Context context) {
+    private static CategoryDataSource instance;
+
+    private CategoryDataSource(Context context) {
         super(context);
+    }
+
+    public static CategoryDataSource getInstance(Context context){
+        if(instance == null){
+            instance = new CategoryDataSource(context);
+        }
+        return instance;
     }
 
     @Override

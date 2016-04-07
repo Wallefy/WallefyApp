@@ -11,8 +11,17 @@ import com.example.dpene.wallefy.model.utils.Constants;
 
 public class DbHelper extends SQLiteOpenHelper {
 
-    public DbHelper(Context context) {
+    private static DbHelper instance;
+
+    private DbHelper(Context context) {
         super(context, Constants.DB_NAME, null, Constants.DB_VERSION);
+    }
+
+    public static DbHelper getInstance(Context context){
+        if(instance == null){
+            instance = new DbHelper(context);
+        }
+        return instance;
     }
 
     @Override

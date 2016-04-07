@@ -8,11 +8,19 @@ import com.example.dpene.wallefy.model.classes.User;
 import com.example.dpene.wallefy.model.dao.IUserDao;
 import com.example.dpene.wallefy.model.utils.Constants;
 
-
 public class UserDataSource extends DataSource implements IUserDao {
 
-    public UserDataSource(Context context) {
+    private static UserDataSource instance;
+
+    private UserDataSource(Context context) {
         super(context);
+    }
+
+    public static UserDataSource getInstance(Context context){
+        if(instance == null){
+            instance = new UserDataSource(context);
+        }
+        return instance;
     }
 
     @Override

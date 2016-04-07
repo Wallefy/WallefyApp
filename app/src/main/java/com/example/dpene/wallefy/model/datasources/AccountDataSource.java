@@ -12,8 +12,17 @@ import java.util.ArrayList;
 
 public class AccountDataSource extends DataSource implements IAccountDao {
 
-    public AccountDataSource(Context context) {
+    private static AccountDataSource instance;
+
+    private AccountDataSource(Context context) {
         super(context);
+    }
+
+    public static AccountDataSource getInstance(Context context){
+        if(instance == null){
+            instance = new AccountDataSource(context);
+        }
+        return instance;
     }
 
     @Override
