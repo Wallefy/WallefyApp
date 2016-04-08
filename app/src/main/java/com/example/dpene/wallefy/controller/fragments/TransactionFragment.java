@@ -61,6 +61,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     private LinearLayout transactionView;
 
     private User user;
+    private History entry;
 
     // vars from detailsFragment
     private String note;
@@ -166,9 +167,12 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             History entry = (History) getArguments().get("entry");
             spnCategoryType.setSelection(categoryAdapter.getPosition(entry.getCategoryName()));
             spnAccountType.setSelection(accountAdapter.getPosition(mapUsersAccounts.get(entry.getAccountTypeId())));
-            amount.setText(String.valueOf((int) entry.getAmount()));
+            if(entry.getAmount() != 0) {
+                amount.setText(String.valueOf(entry.getAmount()));
+            } else {
+                amount.setText(String.valueOf((int)entry.getAmount()));
+            }
         } else {
-
             if (getArguments().get("category") != null) {
                 spnCategoryType.setSelection(categoryAdapter.getPosition(getArguments().get("category")));
             }
@@ -176,7 +180,15 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             if (getArguments().get("account") != null) {
                 spnAccountType.setSelection(accountAdapter.getPosition(getArguments().get("account")));
             }
+
+            if (getArguments().get("amount") != null) {
+                if(!getArguments().get("amount").equals(0)) {
+                    amount.setText(String.valueOf((int)getArguments().getDouble("amount")));
+                }
+            }
+
         }
+
 
         transactionView.setOnTouchListener(new OnSwipeGestureListener(getContext()) {
             public void onSwipeRight() {
@@ -189,6 +201,9 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 bundle.putDouble("amount", Double.parseDouble(amount.getText().toString()));
                 bundle.putString("category", spnCategoryType.getSelectedItem().toString());
                 bundle.putString("account", spnAccountType.getSelectedItem().toString());
+                bundle.putString("note", getArguments().getString("note") != null ? getArguments().getString("note") : "");
+                bundle.putString("date", getArguments().getString("date") != null ? getArguments().getString("date") : "");
+                bundle.putSerializable("user", user);
 
                 parent.notifyFragment(new DetailsTransactionFragment(), bundle);
             }
@@ -196,6 +211,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
         return v;
     }
+
 
 
     @Override
