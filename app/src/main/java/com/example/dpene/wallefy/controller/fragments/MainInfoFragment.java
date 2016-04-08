@@ -155,7 +155,6 @@ public class MainInfoFragment extends Fragment {
                     Intent editActivity = new Intent(getContext(), EditActivity.class);
                     editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
                     editActivity.putExtra("category", categs.get(position).getCategoryName());
-                    // TODO
                     editActivity.putExtra("account", selectedAccount);
                     editActivity.putExtra("user", user);
                     startActivity(editActivity);

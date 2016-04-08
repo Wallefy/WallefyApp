@@ -3,7 +3,6 @@ package com.example.dpene.wallefy.controller.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +40,7 @@ public class ReportEntriesAdapter extends RecyclerView.Adapter<ReportEntriesAdap
      * extras:
      *      String          key     IRequestCodes.EDIT_TRANSACTION
      *      Serializable    entry
+     *      Serializable    user
      */
     @Override
     public void onBindViewHolder(CustomVH holder, final int position) {

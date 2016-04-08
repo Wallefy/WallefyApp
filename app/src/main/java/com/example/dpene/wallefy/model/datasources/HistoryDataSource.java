@@ -136,7 +136,7 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
     public ArrayList<History> listHistoryByAccountName(long userID, String accountType) {
         ArrayList<History> historyArrayList = new ArrayList<>();
         String[] selArgs = {String.valueOf(userID), accountType};
-        String whereCaluse = "where history_user_fk = ? and account_name = ?";
+        String whereCaluse = "where history_user_fk = ? and account_name = ? order by transaction_date desc";
 
         searchEntriesByCriteria(historyArrayList,whereCaluse,selArgs);
 

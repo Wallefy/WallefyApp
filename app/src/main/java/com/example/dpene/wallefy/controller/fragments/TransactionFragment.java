@@ -114,7 +114,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         user = (User) bundle.getSerializable("user");
 
         mapUsersAccounts = new HashMap<>();
-        for(Account acc : user.getAccounts() ){
+        for (Account acc : user.getAccounts()) {
             mapUsersAccounts.put(acc.getAccountTypeId(), acc.getAccountName());
         }
 
@@ -124,7 +124,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
         }
 
-        for (Category cat: user.getCategories()) {
+        for (Category cat : user.getCategories()) {
             listCategoriest.add(cat.getCategoryName());
 
         }
@@ -145,15 +145,15 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         spnAccountType.setAdapter(accountAdapter);
         spnCategoryType.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listCategoriest));
 
-        if(getArguments().get("category") != null) {
+        if (getArguments().get("category") != null) {
             spnCategoryType.setSelection(categoryAdapter.getPosition(getArguments().get("category")));
         }
 
-        if(getArguments().get("account") != null) {
+        if (getArguments().get("account") != null) {
             spnAccountType.setSelection(accountAdapter.getPosition(getArguments().get("account")));
         }
 
-        if(getArguments().get("entry") != null) {
+        if (getArguments().get("entry") != null) {
             History entry = (History) getArguments().get("entry");
             spnCategoryType.setSelection(categoryAdapter.getPosition(entry.getCategoryName()));
             spnAccountType.setSelection(accountAdapter.getPosition(mapUsersAccounts.get(entry.getAccountTypeId())));
@@ -173,10 +173,11 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 String selectedAccountType = spnAccountType.getSelectedItem().toString();
                 String selectedCategory = spnCategoryType.getSelectedItem().toString();
                 String calculatedAmount = amount.getText().toString();
-                new TaskSaveEntry(user.getUserId()).execute(selectedAccountType,selectedCategory,calculatedAmount);
+                new TaskSaveEntry(user.getUserId()).execute(selectedAccountType, selectedCategory, calculatedAmount);
+                getActivity().finish();
                 return true;
             case R.id.clear_values:
-                ((TextView)getActivity().findViewById(R.id.transaction_amount)).setText("0");
+                ((TextView) getActivity().findViewById(R.id.transaction_amount)).setText("0");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -314,11 +315,11 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         btn_delimiter.setOnClickListener(this);
     }
 
-    private class TaskSaveEntry extends AsyncTask<String,Void,Boolean>{
+    private class TaskSaveEntry extends AsyncTask<String, Void, Boolean> {
         private long userId;
 
         public TaskSaveEntry(long userId) {
-            this.userId = userId ;
+            this.userId = userId;
 
         }
 
@@ -327,19 +328,19 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
             IAccountDao accountDataSource = AccountDataSource.getInstance(getContext());
             ((AccountDataSource) accountDataSource).open();
-            Account acc = accountDataSource.showAccount(userId,params[0]);
+            Account acc = accountDataSource.showAccount(userId, params[0]);
 
             ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
             ((CategoryDataSource) categoryDataSource).open();
-            Category cat = categoryDataSource.showCategory(userId,params[1]);
+            Category cat = categoryDataSource.showCategory(userId, params[1]);
 
             IHistoryDao historyDataSource;
             historyDataSource = HistoryDataSource.getInstance(getContext());
             ((HistoryDataSource) historyDataSource).open();
-            History h = historyDataSource.createHistory(userId,acc.getAccountTypeId(),
-                    cat.getCategoryId(),Double.parseDouble(params[2]),null,null,null,null);
+            History h = historyDataSource.createHistory(userId, acc.getAccountTypeId(),
+                    cat.getCategoryId(), Double.parseDouble(params[2]), null, null, null, null);
 
-            if (h != null){
+            if (h != null) {
                 user.adHistory(h);
                 return true;
             }
