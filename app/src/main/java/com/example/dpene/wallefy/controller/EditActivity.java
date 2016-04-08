@@ -16,9 +16,10 @@ import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
 import com.example.dpene.wallefy.controller.fragments.TransactionFragment;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
+import com.example.dpene.wallefy.controller.fragments.interfaces.ITransactionCommunicator;
 import com.example.dpene.wallefy.model.classes.User;
 
-public class EditActivity extends AppCompatActivity implements IToolbar {
+public class EditActivity extends AppCompatActivity implements IToolbar, ITransactionCommunicator {
 
     String fragmentCode;
 
@@ -160,5 +161,13 @@ public class EditActivity extends AppCompatActivity implements IToolbar {
     @Override
     public void setTitle(String title) {
         ((TextView)findViewById(R.id.activity_edit_title)).setText(title);
+    }
+
+    @Override
+    public void notifyFragment(Fragment fragment, Bundle bundle) {
+        fragment.setArguments(bundle);
+        FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+        trans.replace(R.id.root_edit, fragment);
+        trans.commit();
     }
 }
