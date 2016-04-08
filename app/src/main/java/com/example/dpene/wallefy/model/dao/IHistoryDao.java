@@ -14,10 +14,10 @@ public interface IHistoryDao {
 
     ArrayList<History> listHistoryByAccountName(long userID,String accountType);
 
-    ArrayList<History> listHistoryByCategoryName(long userID,String categoryName);
+    ArrayList<History> listHistoryByCategoryName(long userID,String category);
 
     History createHistory(long userId, long accountTypeId, long categoryId, double amount,
-                       String description,String dateOfTransaction,String imgPath,String location);
+                          String description,String dateOfTransaction,String imgPath,String location);
 
     double calcAmountForAccount(long userId,String accountTypeName);
 

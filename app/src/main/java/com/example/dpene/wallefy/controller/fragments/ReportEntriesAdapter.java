@@ -39,7 +39,7 @@ public class ReportEntriesAdapter extends RecyclerView.Adapter<ReportEntriesAdap
         holder.category.setText(entries.get(position).getCategoryName());
         holder.date.setText(entries.get(position).getDateOfTransaction());
         holder.note.setText(entries.get(position).getDescription());
-        holder.amount.setText(String.valueOf(entries.get(position).getAmount()));
+        holder.amount.setText( String.format("%.2f",entries.get(position).getAmount()));
 
 //        holder.itemView.setOnClickListener(new View.OnClickListener() {
 //            @Override

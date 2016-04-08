@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 
 import org.w3c.dom.Text;
 
@@ -29,6 +30,9 @@ public class EditAccountFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_edit_account, container, false);
+
+        IToolbar toolbar = (IToolbar) getActivity();
+        toolbar.setTitle("Account");
 
         title = (TextView) v.findViewById(R.id.edit_account_name);
         amount = (TextView) v.findViewById(R.id.edit_account_init_balance);

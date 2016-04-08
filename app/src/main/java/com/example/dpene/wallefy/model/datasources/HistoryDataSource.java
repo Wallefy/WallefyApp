@@ -3,6 +3,7 @@ package com.example.dpene.wallefy.model.datasources;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.example.dpene.wallefy.model.classes.Category;
 import com.example.dpene.wallefy.model.classes.History;
@@ -51,6 +52,7 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
         if (insertId < 0) {
             return null;
         }
+
         String[] selArgs = {String.valueOf(insertId)};
         Cursor cursor = database.rawQuery("select history_id,history_user_fk,history_account_type_fk," +
                 "history_category_fk,history_description,transaction_date,transaction_amount,img_path,transaction_location, " +

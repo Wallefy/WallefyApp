@@ -26,7 +26,17 @@ public class AccountDataSource extends DataSource implements IAccountDao {
     }
 
     @Override
-    public Account showAccount(String accountName) {
+    public Account showAccount(long userId,String accountName) {
+        String[] selArgs = {String.valueOf(userId),accountName};
+        Cursor cursor = database.rawQuery("select account_type_id, account_name,account_user_fk from Account_Types where account_user_fk = ? and account_name = ?", selArgs);
+        if (cursor.moveToFirst()){
+            long accTypeId = cursor.getLong(0);
+            String accName = cursor.getString(1);
+            long accUserFk = cursor.getLong(2);
+            cursor.close();
+            return new Account(accTypeId, accUserFk, accName);
+        }
+        cursor.close();
         return null;
     }
 

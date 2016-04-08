@@ -324,7 +324,7 @@
 
     </LinearLayout>
 
-    <include layout="@layout/saving_buttons" />
+    <!--<include layout="@layout/saving_buttons" />-->
 
 </LinearLayout>
 

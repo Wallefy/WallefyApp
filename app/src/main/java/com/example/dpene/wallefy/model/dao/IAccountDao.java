@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public interface IAccountDao {
 
-    Account showAccount(String accountName);
+    Account showAccount(long userId,String accountName);
 
     Account createAccount(long userId,String accountName);
 

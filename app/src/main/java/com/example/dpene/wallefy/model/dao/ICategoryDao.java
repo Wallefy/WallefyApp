@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public interface ICategoryDao {
 
-    Category showCategory(String categoryName);
+    Category showCategory(long userId,String categoryName);
 
     Category createCategory(String categoryName, boolean isExpense, long iconResource,long userFk);
 

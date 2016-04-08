@@ -27,12 +27,14 @@ import com.example.dpene.wallefy.controller.fragments.ListCategoryFragment;
 import com.example.dpene.wallefy.controller.fragments.MainInfoFragment;
 import com.example.dpene.wallefy.controller.fragments.ReportsFragment;
 import com.example.dpene.wallefy.controller.fragments.TransactionFragment;
+import com.example.dpene.wallefy.controller.fragments.interfaces.ISaveSpinnerPosition;
 import com.example.dpene.wallefy.model.classes.User;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ISaveSpinnerPosition {
 
     User user;
+    int spinnerPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,9 +137,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
             //            Clear shared pref file
             SharedPreferences log = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-            log.edit().clear().commit();
+            //     commit writes its data to persistent storage immediately, whereas apply will handle it in the background
+            log.edit().clear().apply();
             SharedPreferences userId = getPreferences(MODE_PRIVATE);
-            userId.edit().clear().commit();
+            userId.edit().clear().apply();
             Intent i = new Intent(getApplicationContext(),LoginActivity.class);
             startActivity(i);
             finish();
@@ -161,4 +164,13 @@ public class MainActivity extends AppCompatActivity
         ft.commit();
     }
 
+    @Override
+    public void setPosition(int position) {
+        this.spinnerPosition = position;
+    }
+
+    @Override
+    public int getPosition() {
+        return spinnerPosition;
+    }
 }

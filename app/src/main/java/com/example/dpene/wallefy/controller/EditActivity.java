@@ -4,7 +4,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.fragments.EditAccountFragment;
@@ -12,19 +18,42 @@ import com.example.dpene.wallefy.controller.fragments.EditCategoryFragment;
 import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
 import com.example.dpene.wallefy.controller.fragments.TransactionFragment;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
+import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
+import com.example.dpene.wallefy.model.classes.User;
 
-public class EditActivity extends AppCompatActivity {
+public class EditActivity extends AppCompatActivity implements IToolbar {
+
+    String fragmentCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+//            Hide initial title
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        User user = (User) getIntent().getSerializableExtra("user");
+
         Fragment editFragment;
         Bundle bundle = new Bundle();
-        
 
-        switch (getIntent().getStringExtra("key")) {
+        fragmentCode = getIntent().getStringExtra("key");
+
+        switch (fragmentCode) {
             default:
             case IRequestCodes.EDIT_CATEGORY:
                 editFragment = new EditCategoryFragment();
@@ -84,12 +113,25 @@ public class EditActivity extends AppCompatActivity {
 
                 break;
         }
-
+//         Put it in all fragments not only to transactions?
+//        bundle.putSerializable("user",user);
         editFragment.setArguments(bundle);
 
         FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
         trans.replace(R.id.root_edit, editFragment, "category");
         trans.commit();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.edit, menu);
+        return true;
+    }
+
+    @Override
+    public void setTitle(String title) {
+        ((TextView)findViewById(R.id.activity_edit_title)).setText(title);
     }
 }

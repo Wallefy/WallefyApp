@@ -1,5 +1,6 @@
 package com.example.dpene.wallefy.controller.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.EditActivity;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
+import com.example.dpene.wallefy.controller.fragments.interfaces.ISaveSpinnerPosition;
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.Category;
 import com.example.dpene.wallefy.model.classes.History;
@@ -55,6 +58,15 @@ public class MainInfoFragment extends Fragment {
     ReportEntriesAdapter rea;
     IHistoryDao historyDataSource;
     ArrayAdapter accountAdapter;
+
+    int position;
+    ISaveSpinnerPosition mainActivity;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mainActivity = (ISaveSpinnerPosition) context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -133,10 +145,10 @@ public class MainInfoFragment extends Fragment {
         /**
          * itemView.OnClickListener sends intent to EditActivity
          * extras:
-         *      String        key       = IRequestCode.EDIT_TRANSACTION
-         *      String        category
-         *      String        selectedAccount
-         *      Serializable  user
+         * String        key       = IRequestCode.EDIT_TRANSACTION
+         * String        category
+         * String        selectedAccount
+         * Serializable  user
          */
         @Override
         public void onBindViewHolder(CategoriesVH holder, final int position) {
@@ -176,18 +188,33 @@ public class MainInfoFragment extends Fragment {
 
         @Override
         protected Double doInBackground(String... params) {
-            ((HistoryDataSource)historyDataSource).open();
-            entries = historyDataSource.listHistoryByAccountName(Long.parseLong(params[0]),params[1]);
-            double totalBalanceForAccount = historyDataSource.calcAmountForAccount(Long.parseLong(params[0]),params[1]);
-            return totalBalanceForAccount;
+            ((HistoryDataSource) historyDataSource).open();
+            entries = historyDataSource.listHistoryByAccountName(Long.parseLong(params[0]), params[1]);
+            return historyDataSource.calcAmountForAccount(Long.parseLong(params[0]), params[1]);
         }
+
         @Override
         protected void onPostExecute(Double aDouble) {
             rea = new ReportEntriesAdapter(getContext(), entries);
             rea.notifyDataSetChanged();
             listHistory.setLayoutManager(new LinearLayoutManager(getContext()));
             listHistory.setAdapter(rea);
-            txtAccountBalanceTotal.setText(String.valueOf(aDouble));
+            txtAccountBalanceTotal.setText(String.format("%.2f", aDouble));
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        position = mainActivity.getPosition();
+        spnAccounts.setSelection(position);
+        Log.e("POSITION", position + " onresume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        position = spnAccounts.getSelectedItemPosition();
+        mainActivity.setPosition(position);
     }
 }

@@ -1,10 +1,14 @@
 package com.example.dpene.wallefy.controller.fragments;
 
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -14,10 +18,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.Calculator;
 import com.example.dpene.wallefy.model.classes.Category;
+import com.example.dpene.wallefy.model.classes.History;
 import com.example.dpene.wallefy.model.classes.User;
+import com.example.dpene.wallefy.model.dao.IAccountDao;
+import com.example.dpene.wallefy.model.dao.ICategoryDao;
+import com.example.dpene.wallefy.model.dao.IHistoryDao;
+import com.example.dpene.wallefy.model.datasources.AccountDataSource;
+import com.example.dpene.wallefy.model.datasources.CategoryDataSource;
+import com.example.dpene.wallefy.model.datasources.HistoryDataSource;
 import com.example.dpene.wallefy.model.exceptions.NegativeNumberException;
 
 import java.math.BigDecimal;
@@ -83,16 +95,16 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
         listCategoriest = new ArrayList<>();
         listAccounts = new ArrayList<>();
-//
-//        listCategoriest.add("Food");
-//        listCategoriest.add("Drink");
-//        listCategoriest.add("Clothes");
-//        listCategoriest.add("Things");
 
-//        listAccounts.add("Cash");
-//        listAccounts.add("Card");
+//        setting custom heading for every fragment
+        IToolbar toolbar = (IToolbar) getActivity();
+        toolbar.setTitle("Transaction");
+
 
         View v = inflater.inflate(R.layout.fragment_transaction, container, false);
+
+//        enable options menu
+        setHasOptionsMenu(true);
 
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
@@ -131,10 +143,26 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         if(getArguments().get("account") != null) {
             spnAccountType.setSelection(accountAdapter.getPosition(getArguments().get("account")));
         }
-
-
-
         return v;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.save_entry:
+                String selectedAccountType = spnAccountType.getSelectedItem().toString();
+                String selectedCategory = spnCategoryType.getSelectedItem().toString();
+                String calculatedAmount = amount.getText().toString();
+                new TaskSaveEntry(user.getUserId()).execute(selectedAccountType,selectedCategory,calculatedAmount);
+                return true;
+            case R.id.clear_values:
+                ((TextView)getActivity().findViewById(R.id.transaction_amount)).setText("0");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     // Calculator buttons
@@ -150,7 +178,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         }
 
         if (btn_text.equals(btn_delimiter.getText().toString())) {
-            if (!amount.getText().toString().contains(".") && input.matches("[0-9]")) {
+            if (!amount.getText().toString().contains(".") && input.matches("[0-9]*")) {
                 amount.append(".");
             }
         }
@@ -266,5 +294,51 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         btn_equals.setOnClickListener(this);
         btn_del.setOnClickListener(this);
         btn_delimiter.setOnClickListener(this);
+    }
+
+    private class TaskSaveEntry extends AsyncTask<String,Void,Boolean>{
+        private long userId;
+
+        public TaskSaveEntry(long userId) {
+            this.userId = userId ;
+
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+
+            IAccountDao accountDataSource = AccountDataSource.getInstance(getContext());
+            ((AccountDataSource) accountDataSource).open();
+            Account acc = accountDataSource.showAccount(userId,params[0]);
+
+            Log.e("ER",params[0]);
+            Log.e("ER",params[1]);
+            Log.e("ER",params[2]);
+            Log.e("ER",String.valueOf(userId));
+            Log.e("ER",String.valueOf(acc.getAccountTypeId()));
+            ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
+            ((CategoryDataSource) categoryDataSource).open();
+            Category cat = categoryDataSource.showCategory(userId,params[1]);
+            Log.e("ER",String.valueOf(cat.getCategoryId()));
+            IHistoryDao historyDataSource;
+            historyDataSource = HistoryDataSource.getInstance(getContext());
+            ((HistoryDataSource) historyDataSource).open();
+            History h = historyDataSource.createHistory(userId,acc.getAccountTypeId(),
+                    cat.getCategoryId(),Double.parseDouble(params[2]),null,null,null,null);
+
+            if (h != null){
+                user.adHistory(h);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            if (aBoolean)
+                Toast.makeText(getContext(), "Save success", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getContext(), "SAVE FAILED", Toast.LENGTH_SHORT).show();
+        }
     }
 }

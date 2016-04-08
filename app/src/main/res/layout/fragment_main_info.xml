@@ -52,7 +52,8 @@
         android:id="@+id/main_info_categories"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="?attr/colorPrimary">
 
     </android.support.v7.widget.RecyclerView>
 
