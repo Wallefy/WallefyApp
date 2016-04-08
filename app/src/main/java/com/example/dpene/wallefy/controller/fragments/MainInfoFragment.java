@@ -1,13 +1,10 @@
 package com.example.dpene.wallefy.controller.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,9 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -32,10 +26,7 @@ import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.Category;
 import com.example.dpene.wallefy.model.classes.History;
 import com.example.dpene.wallefy.model.classes.User;
-import com.example.dpene.wallefy.model.dao.IAccountDao;
-import com.example.dpene.wallefy.model.dao.ICategoryDao;
 import com.example.dpene.wallefy.model.dao.IHistoryDao;
-import com.example.dpene.wallefy.model.dao.IUserDao;
 import com.example.dpene.wallefy.model.datasources.HistoryDataSource;
 
 import java.util.ArrayList;
@@ -58,6 +49,8 @@ public class MainInfoFragment extends Fragment {
     ReportEntriesAdapter rea;
     IHistoryDao historyDataSource;
     ArrayAdapter accountAdapter;
+
+    String selectedAccount;
 
     int position;
     ISaveSpinnerPosition mainActivity;
@@ -102,6 +95,8 @@ public class MainInfoFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), spnAccounts.getSelectedItem().toString());
+                selectedAccount = spnAccounts.getSelectedItem().toString();
+
             }
 
             @Override
@@ -145,7 +140,7 @@ public class MainInfoFragment extends Fragment {
         /**
          * itemView.OnClickListener sends intent to EditActivity
          * extras:
-         * String        key       = IRequestCode.EDIT_TRANSACTION
+         * String        key               IRequestCode.EDIT_TRANSACTION
          * String        category
          * String        selectedAccount
          * Serializable  user
@@ -161,7 +156,7 @@ public class MainInfoFragment extends Fragment {
                     editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
                     editActivity.putExtra("category", categs.get(position).getCategoryName());
                     // TODO
-                    editActivity.putExtra("account", accounts);
+                    editActivity.putExtra("account", selectedAccount);
                     editActivity.putExtra("user", user);
                     startActivity(editActivity);
                 }
@@ -195,7 +190,7 @@ public class MainInfoFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Double aDouble) {
-            rea = new ReportEntriesAdapter(getContext(), entries);
+            rea = new ReportEntriesAdapter(getContext(), entries,user);
             rea.notifyDataSetChanged();
             listHistory.setLayoutManager(new LinearLayoutManager(getContext()));
             listHistory.setAdapter(rea);

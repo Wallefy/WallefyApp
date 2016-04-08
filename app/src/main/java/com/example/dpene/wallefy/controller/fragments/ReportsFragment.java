@@ -284,7 +284,7 @@ public class ReportsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            rea = new ReportEntriesAdapter(getContext(), entries);
+            rea = new ReportEntriesAdapter(getContext(), entries,user);
             rea.notifyDataSetChanged();
             reportEntries.setLayoutManager(new LinearLayoutManager(getContext()));
             reportEntries.setAdapter(rea);

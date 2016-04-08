@@ -35,7 +35,9 @@ import com.example.dpene.wallefy.model.exceptions.NegativeNumberException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -84,6 +86,8 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
     User user;
 
+    Map<Long, String> mapUsersAccounts;
+
     public TransactionFragment() {
         // Required empty public constructor
     }
@@ -108,6 +112,11 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
+
+        mapUsersAccounts = new HashMap<>();
+        for(Account acc : user.getAccounts() ){
+            mapUsersAccounts.put(acc.getAccountTypeId(), acc.getAccountName());
+        }
 
 
         for (Account ac : user.getAccounts()) {
@@ -143,6 +152,15 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         if(getArguments().get("account") != null) {
             spnAccountType.setSelection(accountAdapter.getPosition(getArguments().get("account")));
         }
+
+        if(getArguments().get("entry") != null) {
+            History entry = (History) getArguments().get("entry");
+            spnCategoryType.setSelection(categoryAdapter.getPosition(entry.getCategoryName()));
+            spnAccountType.setSelection(accountAdapter.getPosition(mapUsersAccounts.get(entry.getAccountTypeId())));
+            amount.setText(String.valueOf((int) entry.getAmount()));
+
+        }
+
         return v;
     }
 
@@ -311,15 +329,10 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             ((AccountDataSource) accountDataSource).open();
             Account acc = accountDataSource.showAccount(userId,params[0]);
 
-            Log.e("ER",params[0]);
-            Log.e("ER",params[1]);
-            Log.e("ER",params[2]);
-            Log.e("ER",String.valueOf(userId));
-            Log.e("ER",String.valueOf(acc.getAccountTypeId()));
             ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
             ((CategoryDataSource) categoryDataSource).open();
             Category cat = categoryDataSource.showCategory(userId,params[1]);
-            Log.e("ER",String.valueOf(cat.getCategoryId()));
+
             IHistoryDao historyDataSource;
             historyDataSource = HistoryDataSource.getInstance(getContext());
             ((HistoryDataSource) historyDataSource).open();

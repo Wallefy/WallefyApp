@@ -1,11 +1,9 @@
 package com.example.dpene.wallefy.controller.fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.EditActivity;
+import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.model.classes.History;
+import com.example.dpene.wallefy.model.classes.User;
 
 import java.util.ArrayList;
 
@@ -21,9 +22,11 @@ public class ReportEntriesAdapter extends RecyclerView.Adapter<ReportEntriesAdap
 
     private Context context;
     private ArrayList<History> entries;
+    private User currentUser;
 
-    public ReportEntriesAdapter(Context context, ArrayList<History> entries) {
+    public ReportEntriesAdapter(Context context, ArrayList<History> entries,User user) {
         this.context = context;
+        this.currentUser = user;
         this.entries = entries;
     }
 
@@ -33,27 +36,32 @@ public class ReportEntriesAdapter extends RecyclerView.Adapter<ReportEntriesAdap
         return new CustomVH(row);
     }
 
+    /**
+     * itemView.setOnClickListener starts intent to EditActivity
+     * extras:
+     *      String          key     IRequestCodes.EDIT_TRANSACTION
+     *      Serializable    entry
+     */
     @Override
     public void onBindViewHolder(CustomVH holder, final int position) {
         holder.img.setImageResource(entries.get(position).getCategoryIconResource());
         holder.category.setText(entries.get(position).getCategoryName());
         holder.date.setText(entries.get(position).getDateOfTransaction());
         holder.note.setText(entries.get(position).getDescription());
-        holder.amount.setText( String.format("%.2f",entries.get(position).getAmount()));
+        holder.amount.setText( String.format("%.2f", entries.get(position).getAmount()));
 
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                Fragment entry = new TransactionFragment();
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("entryInfo", entries.get(position));
-//                FragmentTransaction ft = ((Activity)context) .....
-//                FragmentTransaction trans = cogetFragmentManager().beginTransaction();
-//                trans.replace(R.id.root_main, entry, "entry");
-//                trans.commit();
-//            }
-//        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent editActivity = new Intent(context, EditActivity.class);
+                editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
+                editActivity.putExtra("entry", entries.get(position));
+                editActivity.putExtra("user", currentUser);
+                context.startActivity(editActivity);
+
+            }
+        });
     }
 
     @Override

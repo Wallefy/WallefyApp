@@ -50,62 +50,92 @@ public class EditActivity extends AppCompatActivity implements IToolbar {
 
         Fragment editFragment;
         Bundle bundle = new Bundle();
-
         fragmentCode = getIntent().getStringExtra("key");
 
         switch (fragmentCode) {
             default:
+
+                /**
+                 * required extras:
+                 *      String    key         EDIT_CATEGORY
+                 *      boolean   isExpense
+                 *      String    title
+                 */
             case IRequestCodes.EDIT_CATEGORY:
                 editFragment = new EditCategoryFragment();
-                if (getIntent().getStringExtra("isExpense") != null){
+                if (getIntent().getStringExtra("isExpense") != null) {
                     bundle.putString("isExpense", getIntent().getStringExtra("isExpense"));
                 }
-                if(getIntent().getStringExtra("title") != null ){
+                if (getIntent().getStringExtra("title") != null) {
                     bundle.putString("title", getIntent().getStringExtra("title"));
                 } else {
                     bundle.putString("title", "");
                 }
                 break;
 
+            /**
+             * required extras:
+             *      String      key      EDIT_PROFILE
+             */
             case IRequestCodes.EDIT_PROFILE:
                 editFragment = new EditProfileFragment();
                 // inflate bundle
                 break;
 
+            /**
+             * required extras:
+             *      String          key         EDIT_TRANSACTION
+             *      String          account
+             *      Serializable    user
+             *      ---- or
+             *      Serializable    entry
+             *
+             */
             case IRequestCodes.EDIT_TRANSACTION:
                 editFragment = new TransactionFragment();
 
                 // inflate bundle
-                if (getIntent().getStringExtra("category") != null){
+                if (getIntent().getStringExtra("category") != null) {
                     bundle.putString("category", getIntent().getStringExtra("category"));
                 }
 
-                if (getIntent().getStringExtra("account") != null){
+                if (getIntent().getStringExtra("account") != null) {
                     bundle.putString("account", getIntent().getStringExtra("account"));
                 }
 
-                if (getIntent().getSerializableExtra("user") != null){
+                if (getIntent().getSerializableExtra("user") != null) {
                     bundle.putSerializable("user", getIntent().getSerializableExtra("user"));
+                }
+
+                if (getIntent().getSerializableExtra("entry") != null) {
+                    bundle.putSerializable("entry", getIntent().getSerializableExtra("entry"));
                 }
 
                 break;
 
+            /**
+             * required extras:
+             *      String    key      EDIT_ACCOUNT
+             *      String    title
+             *      String    amount
+             *      String    date
+             */
             case IRequestCodes.EDIT_ACCOUNT:
                 editFragment = new EditAccountFragment();
                 // inflate bundle
-                if(getIntent().getStringExtra("title") != null ){
+                if (getIntent().getStringExtra("title") != null) {
                     bundle.putString("title", getIntent().getStringExtra("title"));
                 } else {
                     bundle.putString("title", "");
                 }
 
-                if(getIntent().getStringExtra("amount") != null ){
+                if (getIntent().getStringExtra("amount") != null) {
                     bundle.putString("amount", getIntent().getStringExtra("amount"));
                 } else {
                     bundle.putString("amount", "");
                 }
 
-                if(getIntent().getStringExtra("date") != null ){
+                if (getIntent().getStringExtra("date") != null) {
                     bundle.putString("date", getIntent().getStringExtra("date"));
                 } else {
                     bundle.putString("date", "");
