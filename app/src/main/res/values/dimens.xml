@@ -31,4 +31,5 @@
     <dimen name="transfer_text_size">30sp</dimen>
     <dimen name="row_category_text_size">20sp</dimen>
     <dimen name="row_account_text_size">25sp</dimen>
+    <dimen name="main_info_small_text_size">20sp</dimen>
 </resources>

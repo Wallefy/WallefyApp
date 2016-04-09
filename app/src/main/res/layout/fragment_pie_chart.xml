@@ -7,5 +7,10 @@
     android:orientation="vertical"
     tools:context="com.example.dpene.wallefy.controller.fragments.PieChartFragment">
 
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pie_chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/activity_horizontal_margin" />
 
 </LinearLayout>

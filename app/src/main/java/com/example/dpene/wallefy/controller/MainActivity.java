@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -28,11 +29,12 @@ import com.example.dpene.wallefy.controller.fragments.ListCategoryFragment;
 import com.example.dpene.wallefy.controller.fragments.MainInfoFragment;
 import com.example.dpene.wallefy.controller.fragments.ReportsFragment;
 import com.example.dpene.wallefy.controller.fragments.TransactionFragment;
+import com.example.dpene.wallefy.controller.fragments.interfaces.IPieChartCommunicator;
 import com.example.dpene.wallefy.controller.fragments.interfaces.ISaveSpinnerPosition;
 import com.example.dpene.wallefy.model.classes.User;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ISaveSpinnerPosition {
+        implements NavigationView.OnNavigationItemSelectedListener, ISaveSpinnerPosition, IPieChartCommunicator {
 
     User user;
     int spinnerPosition;
@@ -58,17 +60,7 @@ public class MainActivity extends AppCompatActivity
         ft.replace(R.id.root_main, fr, "mainFr");
         ft.commit();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                replaceFrag(new TransactionFragment());
-
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -83,6 +75,8 @@ public class MainActivity extends AppCompatActivity
         ((TextView) headView.findViewById(R.id.nav_header_email)).setText(user.getEmail());
         ((TextView) headView.findViewById(R.id.nav_header_username)).setText(user.getUsername());
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -177,9 +171,11 @@ public class MainActivity extends AppCompatActivity
         return spinnerPosition;
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.e("ACTMain", "On restart");
+    public void notifyFragment(Fragment fragment, Bundle bundle) {
+        fragment.setArguments(bundle);
+
+        FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+        trans.replace(R.id.root_main, fragment);
+        trans.commit();
     }
 }

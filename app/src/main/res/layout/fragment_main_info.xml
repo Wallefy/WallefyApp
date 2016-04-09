@@ -1,11 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_info_root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.dpene.wallefy.controller.fragments.MainInfoFragment">
 
-
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/main_info_balance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,26 +14,35 @@
         android:orientation="horizontal"
         android:padding="@dimen/activity_horizontal_margin">
 
-        <Spinner
-            android:id="@+id/spinner_main_info_accounts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="@string/balance"
-            android:textSize="@dimen/main_info_mid_text_size" />
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="@string/balance"
+                android:textSize="@dimen/main_info_small_text_size" />
+
+            <Spinner
+                android:id="@+id/spinner_main_info_accounts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/main_info_balance_total"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_weight="2"
+            android:gravity="end"
             android:text="00,00"
             android:textSize="@dimen/main_info_big_text_size" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_info_history"
@@ -42,7 +51,6 @@
         android:layout_above="@+id/main_info_categories"
         android:layout_below="@+id/main_info_balance"
         android:layout_centerInParent="true"
-        android:paddingBottom="@dimen/activity_horizontal_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin">
 
@@ -55,6 +63,18 @@
         android:layout_alignParentBottom="true">
 
     </android.support.v7.widget.RecyclerView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|end"
+
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/plus_28" />
 
 
 </RelativeLayout>

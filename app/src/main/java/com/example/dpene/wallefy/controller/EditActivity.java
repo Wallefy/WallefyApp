@@ -3,18 +3,16 @@ package com.example.dpene.wallefy.controller;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.EventLogTags;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
-import com.example.dpene.wallefy.controller.fragments.DetailsTransactionFragment;
 import com.example.dpene.wallefy.controller.fragments.EditAccountFragment;
 import com.example.dpene.wallefy.controller.fragments.EditCategoryFragment;
 import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
@@ -22,7 +20,6 @@ import com.example.dpene.wallefy.controller.fragments.TransactionFragment;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 import com.example.dpene.wallefy.controller.fragments.interfaces.ITransactionCommunicator;
-import com.example.dpene.wallefy.controller.gesturelistener.OnSwipeGestureListener;
 import com.example.dpene.wallefy.model.classes.User;
 
 public class EditActivity extends AppCompatActivity implements IToolbar, ITransactionCommunicator {

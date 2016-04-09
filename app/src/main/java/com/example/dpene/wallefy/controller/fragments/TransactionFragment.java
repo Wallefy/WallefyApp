@@ -63,7 +63,6 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     private LinearLayout transactionView;
 
     private User user;
-    private History entry;
 
     // vars from detailsFragment
     private String note;
@@ -117,7 +116,6 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         listAccounts = new ArrayList<>();
         mapUsersAccounts = new HashMap<>();
 
-
 //        setting custom heading for every fragment
         IToolbar toolbar = (IToolbar) getActivity();
         toolbar.setTitle("Transaction");
@@ -169,11 +167,12 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             History entry = (History) getArguments().get("entry");
             spnCategoryType.setSelection(categoryAdapter.getPosition(entry.getCategoryName()));
             spnAccountType.setSelection(accountAdapter.getPosition(mapUsersAccounts.get(entry.getAccountTypeId())));
+
             amount.setText(String.valueOf(String.format("%.2f", entry.getAmount())));
             if(entry.getAmount() != 0) {
                 amount.setText(String.valueOf(entry.getAmount()));
             } else {
-                amount.setText(String.valueOf((int)entry.getAmount()));
+                amount.setText(String.valueOf((int) entry.getAmount()));
             }
         } else {
             if (getArguments().get("category") != null) {
@@ -185,11 +184,12 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             }
 
             if (getArguments().get("amount") != null) {
-                if(!getArguments().get("amount").equals(0)) {
-                    amount.setText(String.valueOf((int)getArguments().getDouble("amount")));
+                if (!getArguments().get("amount").equals(0)) {
+                    amount.setText(String.valueOf((int) getArguments().getDouble("amount")));
                 }
             }
         }
+
 
 
         transactionView.setOnTouchListener(new OnSwipeGestureListener(getContext()) {
@@ -206,6 +206,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 bundle.putString("note", getArguments().getString("note") != null ? getArguments().getString("note") : "");
                 bundle.putString("date", getArguments().getString("date") != null ? getArguments().getString("date") : "");
                 bundle.putSerializable("user", user);
+
 
                 parent.notifyFragment(new DetailsTransactionFragment(), bundle);
             }
@@ -305,6 +306,8 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         }
 
     }
+
+
 
     void calcNums(String input, String signField) {
         try {
@@ -420,3 +423,4 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         }
     }
 }
+

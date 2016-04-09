@@ -4,24 +4,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.EditActivity;
+import com.example.dpene.wallefy.controller.fragments.interfaces.IPieChartCommunicator;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.controller.fragments.interfaces.ISaveSpinnerPosition;
+import com.example.dpene.wallefy.controller.gesturelistener.OnSwipeGestureListener;
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.Category;
 import com.example.dpene.wallefy.model.classes.History;
@@ -33,7 +40,10 @@ import java.util.ArrayList;
 
 public class MainInfoFragment extends Fragment {
 
-    RelativeLayout balance;
+    IPieChartCommunicator parent;
+
+    LinearLayout balance;
+    RelativeLayout rootLayout;
     RecyclerView listHistory;
     RecyclerView listCategories;
     Spinner spnAccounts;
@@ -56,6 +66,7 @@ public class MainInfoFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         mainActivity = (ISaveSpinnerPosition) context;
+        parent = (IPieChartCommunicator) context;
     }
 
     @Override
@@ -64,8 +75,26 @@ public class MainInfoFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_main_info, container, false);
 
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                Intent editActivity = new Intent(getContext(), EditActivity.class);
+                editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
+                editActivity.putExtra("account", selectedAccount);
+                editActivity.putExtra("user", user);
+                startActivity(editActivity);
+
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+            }
+        });
+
         historyDataSource = HistoryDataSource.getInstance(getContext());
         txtAccountBalanceTotal = (TextView) view.findViewById(R.id.main_info_balance_total);
+        rootLayout = (RelativeLayout) view.findViewById(R.id.main_info_root_layout);
 
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
@@ -77,7 +106,7 @@ public class MainInfoFragment extends Fragment {
             userAccountNames.add(ac.getAccountName());
         }
 
-        balance = (RelativeLayout) view.findViewById(R.id.main_info_balance);
+        balance = (LinearLayout) view.findViewById(R.id.main_info_balance);
         listCategories = (RecyclerView) view.findViewById(R.id.main_info_categories);
 
         accountAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, accounts);
@@ -108,6 +137,22 @@ public class MainInfoFragment extends Fragment {
 
         listCategories.setLayoutManager(linLayoutManager);
         listCategories.setAdapter(categoriesAdapter);
+
+        rootLayout.setOnTouchListener(new OnSwipeGestureListener(getContext()){
+            public void onSwipeRight() {
+            }
+
+            public void onSwipeLeft() {
+                // send bundle to pieChartFragment
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("user", user);
+                // inflate bundle
+
+                parent.notifyFragment(new PieChartFragment(), bundle);
+            }
+        });
+
+
 
         return view;
 
@@ -151,9 +196,9 @@ public class MainInfoFragment extends Fragment {
                 public void onClick(View v) {
                     Intent editActivity = new Intent(getContext(), EditActivity.class);
                     editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
-                    editActivity.putExtra("category", categs.get(position).getCategoryName());
                     editActivity.putExtra("account", selectedAccount);
                     editActivity.putExtra("user", user);
+                    editActivity.putExtra("category", categs.get(position).getCategoryName());
                     startActivity(editActivity);
                 }
             });
@@ -212,4 +257,6 @@ public class MainInfoFragment extends Fragment {
         position = spnAccounts.getSelectedItemPosition();
         mainActivity.setPosition(position);
     }
+
+
 }
