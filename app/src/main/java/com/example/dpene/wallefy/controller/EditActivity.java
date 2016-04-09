@@ -5,21 +5,29 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.EventLogTags;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.fragments.DetailsTransactionFragment;
 import com.example.dpene.wallefy.controller.fragments.EditAccountFragment;
 import com.example.dpene.wallefy.controller.fragments.EditCategoryFragment;
 import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
 import com.example.dpene.wallefy.controller.fragments.TransactionFragment;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
+import com.example.dpene.wallefy.controller.fragments.interfaces.ITransactionCommunicator;
+import com.example.dpene.wallefy.controller.gesturelistener.OnSwipeGestureListener;
 import com.example.dpene.wallefy.model.classes.User;
 
-public class EditActivity extends AppCompatActivity implements IToolbar {
+public class EditActivity extends AppCompatActivity implements IToolbar, ITransactionCommunicator {
 
+    RelativeLayout editAc;
     String fragmentCode;
 
     @Override
@@ -160,5 +168,14 @@ public class EditActivity extends AppCompatActivity implements IToolbar {
     @Override
     public void setTitle(String title) {
         ((TextView)findViewById(R.id.activity_edit_title)).setText(title);
+    }
+
+    @Override
+    public void notifyFragment(Fragment fragment, Bundle bundle) {
+        Log.e("tag", fragment + " ");
+        fragment.setArguments(bundle);
+        FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+        trans.replace(R.id.root_edit, fragment);
+        trans.commit();
     }
 }

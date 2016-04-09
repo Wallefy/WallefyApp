@@ -1,11 +1,13 @@
 package com.example.dpene.wallefy.controller.fragments;
 
 import android.content.DialogInterface;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,12 +17,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
+import com.example.dpene.wallefy.controller.fragments.interfaces.ITransactionCommunicator;
+import com.example.dpene.wallefy.controller.gesturelistener.OnSwipeGestureListener;
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.Calculator;
 import com.example.dpene.wallefy.model.classes.Category;
@@ -46,54 +51,63 @@ import java.util.Map;
  */
 public class TransactionFragment extends Fragment implements View.OnClickListener {
 
+    private ITransactionCommunicator parent;
 
     private TextView tvCategoryType;
     private TextView tvAccountType;
-
     private TextView currency;
+    private TextView amount;
 
     private Spinner spnAccountType;
     private Spinner spnCategoryType;
+    private LinearLayout transactionView;
+
+    private User user;
+    private History entry;
+
+    // vars from detailsFragment
+    private String note;
+    private String date;
 
     private List<String> listCategoriest;
     private List<String> listAccounts;
+    private Map<Long, String> mapUsersAccounts;
 
     // calculator's vars
-    private TextView amount;
-    TextView sign;
+    private TextView sign;
 
-    Button btn_one;
-    Button btn_two;
-    Button btn_three;
-    Button btn_four;
-    Button btn_five;
-    Button btn_six;
-    Button btn_seven;
-    Button btn_eight;
-    Button btn_nine;
-    Button btn_plus;
+    private Button btn_one;
+    private Button btn_two;
+    private Button btn_three;
+    private Button btn_four;
+    private Button btn_five;
+    private Button btn_six;
+    private Button btn_seven;
+    private Button btn_eight;
+    private Button btn_nine;
+    private Button btn_plus;
 
-    Button btn_minus;
-    Button btn_multiply;
-    Button btn_divide;
-    Button btn_equals;
-    Button btn_zero;
-    Button btn_del;
-    Button btn_delimiter;
+    private Button btn_minus;
+    private Button btn_multiply;
+    private Button btn_divide;
+    private Button btn_equals;
+    private Button btn_zero;
+    private Button btn_del;
+    private Button btn_delimiter;
 
-    String btn_sign;
-    String prevNum;
-    BigDecimal result;
-    BigDecimal mem;
-
-    User user;
-
-    Map<Long, String> mapUsersAccounts;
+    private String btn_sign;
+    private String prevNum;
+    private BigDecimal result;
 
     public TransactionFragment() {
-        // Required empty public constructor
+
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.parent = (ITransactionCommunicator) context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,6 +115,8 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
         listCategoriest = new ArrayList<>();
         listAccounts = new ArrayList<>();
+        mapUsersAccounts = new HashMap<>();
+
 
 //        setting custom heading for every fragment
         IToolbar toolbar = (IToolbar) getActivity();
@@ -113,22 +129,22 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         setHasOptionsMenu(true);
 
         Bundle bundle = this.getArguments();
-        user = (User) bundle.getSerializable("user");
+        this.user = (User) bundle.getSerializable("user");
 
-        mapUsersAccounts = new HashMap<>();
+        // arguments from detailsFragment
+        this.note = getArguments().getString("note");
+        this.date = getArguments().getString("date");
+
         for (Account acc : user.getAccounts()) {
             mapUsersAccounts.put(acc.getAccountTypeId(), acc.getAccountName());
         }
 
-
         for (Account ac : user.getAccounts()) {
             listAccounts.add(ac.getAccountName());
-
         }
 
         for (Category cat : user.getCategories()) {
             listCategoriest.add(cat.getCategoryName());
-
         }
 
         this.initializeCalculatorVariables(v);
@@ -137,34 +153,67 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         tvAccountType = (TextView) v.findViewById(R.id.transaction_type_account);
         amount = (TextView) v.findViewById(R.id.transaction_amount);
         currency = (TextView) v.findViewById(R.id.transaction_amount_currency);
+        transactionView = (LinearLayout) v.findViewById(R.id.transaction_layout);
 
         spnAccountType = (Spinner) v.findViewById(R.id.transaction_account);
         spnCategoryType = (Spinner) v.findViewById(R.id.transaction_category);
 
-        ArrayAdapter categoryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listCategoriest);
-        ArrayAdapter accountAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listAccounts);
+        final ArrayAdapter categoryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listCategoriest);
+        final ArrayAdapter accountAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listAccounts);
 
         spnAccountType.setAdapter(accountAdapter);
         spnCategoryType.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listCategoriest));
 
-        if (getArguments().get("category") != null) {
-            spnCategoryType.setSelection(categoryAdapter.getPosition(getArguments().get("category")));
-        }
-
-        if (getArguments().get("account") != null) {
-            spnAccountType.setSelection(accountAdapter.getPosition(getArguments().get("account")));
-        }
 
         if (getArguments().get("entry") != null) {
             History entry = (History) getArguments().get("entry");
             spnCategoryType.setSelection(categoryAdapter.getPosition(entry.getCategoryName()));
             spnAccountType.setSelection(accountAdapter.getPosition(mapUsersAccounts.get(entry.getAccountTypeId())));
             amount.setText(String.valueOf(String.format("%.2f", entry.getAmount())));
+            if(entry.getAmount() != 0) {
+                amount.setText(String.valueOf(entry.getAmount()));
+            } else {
+                amount.setText(String.valueOf((int)entry.getAmount()));
+            }
+        } else {
+            if (getArguments().get("category") != null) {
+                spnCategoryType.setSelection(categoryAdapter.getPosition(getArguments().get("category")));
+            }
 
+            if (getArguments().get("account") != null) {
+                spnAccountType.setSelection(accountAdapter.getPosition(getArguments().get("account")));
+            }
+
+            if (getArguments().get("amount") != null) {
+                if(!getArguments().get("amount").equals(0)) {
+                    amount.setText(String.valueOf((int)getArguments().getDouble("amount")));
+                }
+            }
         }
+
+
+        transactionView.setOnTouchListener(new OnSwipeGestureListener(getContext()) {
+            public void onSwipeRight() {
+            }
+
+            public void onSwipeLeft() {
+                // send bundle to detailsFragment
+                Bundle bundle = new Bundle();
+
+                bundle.putDouble("amount", Double.parseDouble(amount.getText().toString()));
+                bundle.putString("category", spnCategoryType.getSelectedItem().toString());
+                bundle.putString("account", spnAccountType.getSelectedItem().toString());
+                bundle.putString("note", getArguments().getString("note") != null ? getArguments().getString("note") : "");
+                bundle.putString("date", getArguments().getString("date") != null ? getArguments().getString("date") : "");
+                bundle.putSerializable("user", user);
+
+                parent.notifyFragment(new DetailsTransactionFragment(), bundle);
+            }
+        });
 
         return v;
     }
+
 
 
     @Override
@@ -200,7 +249,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    // Calculator buttons
+    // on click for calculator's buttons
     @Override
     public void onClick(View v) {
         String btn_text = ((Button) v).getText().toString();
@@ -288,7 +337,6 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     private void initializeCalculatorVariables(View v) {
         btn_sign = "";
         result = new BigDecimal(0);
-        mem = new BigDecimal(0);
 
         sign = (TextView) v.findViewById(R.id.transaction_sign);
 
