@@ -77,11 +77,12 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
 
             /**
              * required extras:
-             *      String      key      EDIT_PROFILE
+             *      String          key      EDIT_PROFILE
+             *      Serializable    user
              */
             case IRequestCodes.EDIT_PROFILE:
                 editFragment = new EditProfileFragment();
-                // inflate bundle
+                bundle.putSerializable("user",  getIntent().getSerializableExtra("user"));
                 break;
 
             /**
