@@ -85,7 +85,6 @@ public class DetailsTransactionFragment extends Fragment {
                 bundle.putString("account", getArguments().getString("account"));
                 bundle.putString("note", note.getText().toString());
                 bundle.putString("date", date.getText().toString());
-                Log.e("DATE",date.getText().toString());
                 bundle.putSerializable("user", user);
                 // TODO put picture and location
 

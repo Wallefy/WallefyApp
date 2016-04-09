@@ -223,7 +223,9 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 String selectedCategory = spnCategoryType.getSelectedItem().toString();
                 String calculatedAmount = amount.getText().toString();
                 if (Double.parseDouble(calculatedAmount) > 0) {
-                    new TaskSaveEntry(user.getUserId()).execute(selectedAccountType, selectedCategory, calculatedAmount,note,date);
+                    Log.e("DATE",date + " asd");
+                    new TaskSaveEntry(user.getUserId()).execute(selectedAccountType, selectedCategory,
+                            calculatedAmount,note,DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(date));
                     getActivity().finish();
                 }
 
@@ -396,7 +398,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
             ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
             ((CategoryDataSource) categoryDataSource).open();
-
+            Log.e("DATE",params[4] + " asfs");
             Category cat = categoryDataSource.showCategory(userId,params[1]);
             IHistoryDao historyDataSource;
             historyDataSource = HistoryDataSource.getInstance(getContext());
