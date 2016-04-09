@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.EditActivity;
+import com.example.dpene.wallefy.controller.controllerutils.DateFormater;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.model.classes.History;
 import com.example.dpene.wallefy.model.classes.User;
@@ -46,7 +47,7 @@ public class ReportEntriesAdapter extends RecyclerView.Adapter<ReportEntriesAdap
     public void onBindViewHolder(CustomVH holder, final int position) {
         holder.img.setImageResource(entries.get(position).getCategoryIconResource());
         holder.category.setText(entries.get(position).getCategoryName());
-        holder.date.setText(entries.get(position).getDateOfTransaction());
+        holder.date.setText(DateFormater.from_yyyyMMddHHmmss_To_dMMMyyyyHHmmss(entries.get(position).getDateOfTransaction()));
         holder.note.setText(entries.get(position).getDescription());
         holder.amount.setText( String.format("%.2f", entries.get(position).getAmount()));
 

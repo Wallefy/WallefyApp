@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.controllerutils.DateFormater;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 import com.example.dpene.wallefy.controller.fragments.interfaces.ITransactionCommunicator;
 import com.example.dpene.wallefy.controller.gesturelistener.OnSwipeGestureListener;
@@ -46,9 +47,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class TransactionFragment extends Fragment implements View.OnClickListener {
 
     private ITransactionCommunicator parent;
@@ -116,6 +114,13 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         listAccounts = new ArrayList<>();
         mapUsersAccounts = new HashMap<>();
 
+        Bundle bundle = getArguments();
+        this.user = (User) bundle.getSerializable("user");
+
+        // arguments from detailsFragment
+        this.note = getArguments().getString("note");
+        this.date = getArguments().getString("date");
+
 //        setting custom heading for every fragment
         IToolbar toolbar = (IToolbar) getActivity();
         toolbar.setTitle("Transaction");
@@ -125,13 +130,6 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
 //        enable options menu
         setHasOptionsMenu(true);
-
-        Bundle bundle = this.getArguments();
-        this.user = (User) bundle.getSerializable("user");
-
-        // arguments from detailsFragment
-        this.note = getArguments().getString("note");
-        this.date = getArguments().getString("date");
 
         for (Account acc : user.getAccounts()) {
             mapUsersAccounts.put(acc.getAccountTypeId(), acc.getAccountName());
@@ -167,7 +165,8 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             History entry = (History) getArguments().get("entry");
             spnCategoryType.setSelection(categoryAdapter.getPosition(entry.getCategoryName()));
             spnAccountType.setSelection(accountAdapter.getPosition(mapUsersAccounts.get(entry.getAccountTypeId())));
-
+            date = entry.getDateOfTransaction();
+            note = entry.getDescription();
             amount.setText(String.valueOf(String.format("%.2f", entry.getAmount())));
             if(entry.getAmount() != 0) {
                 amount.setText(String.valueOf(entry.getAmount()));
@@ -190,8 +189,6 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             }
         }
 
-
-
         transactionView.setOnTouchListener(new OnSwipeGestureListener(getContext()) {
             public void onSwipeRight() {
             }
@@ -203,8 +200,8 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 bundle.putDouble("amount", Double.parseDouble(amount.getText().toString()));
                 bundle.putString("category", spnCategoryType.getSelectedItem().toString());
                 bundle.putString("account", spnAccountType.getSelectedItem().toString());
-                bundle.putString("note", getArguments().getString("note") != null ? getArguments().getString("note") : "");
-                bundle.putString("date", getArguments().getString("date") != null ? getArguments().getString("date") : "");
+                bundle.putString("note", note != null ? note : "");
+                bundle.putString("date", date != null ? date : "");
                 bundle.putSerializable("user", user);
 
 
@@ -226,7 +223,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 String selectedCategory = spnCategoryType.getSelectedItem().toString();
                 String calculatedAmount = amount.getText().toString();
                 if (Double.parseDouble(calculatedAmount) > 0) {
-                    new TaskSaveEntry(user.getUserId()).execute(selectedAccountType, selectedCategory, calculatedAmount);
+                    new TaskSaveEntry(user.getUserId()).execute(selectedAccountType, selectedCategory, calculatedAmount,note,date);
                     getActivity().finish();
                 }
 
@@ -405,9 +402,10 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             historyDataSource = HistoryDataSource.getInstance(getContext());
             ((HistoryDataSource) historyDataSource).open();
             History h = historyDataSource.createHistory(userId, acc.getAccountTypeId(),
-                    cat.getCategoryId(), Double.parseDouble(params[2]), null, null, null, null);
+                    cat.getCategoryId(), Double.parseDouble(params[2]), params[3], params[4], null, null);
 
             if (h != null) {
+                Log.e("Add entry" , user +" user");
                 user.addHistory(h);
                 return true;
             }

@@ -34,7 +34,7 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
                                  String dateOfTransaction, String imgPath, String location) {
         ContentValues values = new ContentValues();
 
-        if (dateOfTransaction == null) {
+        if (dateOfTransaction == null || dateOfTransaction.length() <= 0) {
             Calendar c = Calendar.getInstance();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             dateOfTransaction = df.format(c.getTime());

@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.controllerutils.DateFormater;
+import com.example.dpene.wallefy.controller.controllerutils.PickDate;
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.Category;
 import com.example.dpene.wallefy.model.classes.History;
@@ -53,21 +54,21 @@ public class ReportsFragment extends Fragment {
     private Spinner spnAccounts;
     private Spinner spnExpenseIncome;
 
-    IUserDao     userDataSource;
+    IUserDao userDataSource;
     ICategoryDao categoryDataSource;
-    IAccountDao  accountDataSource;
-    IHistoryDao  historyDataSource;
+    IAccountDao accountDataSource;
+    IHistoryDao historyDataSource;
 
-    ArrayAdapter            categoryAdapter;
-    ArrayAdapter            accountAdapter;
-    ReportEntriesAdapter    rea;
+    ArrayAdapter categoryAdapter;
+    ArrayAdapter accountAdapter;
+    ReportEntriesAdapter rea;
 
     RadioButton radioChooseTypeOfEntry;
     RadioButton radioChooseCategory;
-    RadioGroup  radioGroup;
+    RadioGroup radioGroup;
 
-    RecyclerView        reportEntries;
-    ArrayList<History>  entries;
+    RecyclerView reportEntries;
+    ArrayList<History> entries;
 
     String selectedCategory;
     String selectedAccount;
@@ -82,17 +83,17 @@ public class ReportsFragment extends Fragment {
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
 
-        categories       = new ArrayList<>();
-        accounts         = new ArrayList<>();
-        expenseIncome    = new ArrayList<>();
+        categories = new ArrayList<>();
+        accounts = new ArrayList<>();
+        expenseIncome = new ArrayList<>();
 
         expenseIncome.add("Expense");
         expenseIncome.add("Income");
 
-        userDataSource =        UserDataSource.getInstance(getContext());
-        categoryDataSource =    CategoryDataSource.getInstance(getContext());
-        accountDataSource =     AccountDataSource.getInstance(getContext());
-        historyDataSource =     HistoryDataSource.getInstance(getContext());
+        userDataSource = UserDataSource.getInstance(getContext());
+        categoryDataSource = CategoryDataSource.getInstance(getContext());
+        accountDataSource = AccountDataSource.getInstance(getContext());
+        historyDataSource = HistoryDataSource.getInstance(getContext());
 
         View v = inflater.inflate(R.layout.fragment_reports, container, false);
 
@@ -102,7 +103,7 @@ public class ReportsFragment extends Fragment {
         edtDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                picDate((EditText) v);
+                PickDate.pick((EditText) v, getFragmentManager());
             }
         });
 
@@ -209,36 +210,11 @@ public class ReportsFragment extends Fragment {
                         public void onNothingSelected(AdapterView<?> parent) {
                         }
                     });
-
                 }
             }
         });
 
         return v;
-    }
-
-    private void picDate(final EditText edt) {
-        class FragmentDatePicker extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                final Calendar c = Calendar.getInstance();
-                int year = c.get(Calendar.YEAR);
-                int month = c.get(Calendar.MONTH);
-                int day = c.get(Calendar.DAY_OF_MONTH);
-
-                return new DatePickerDialog(getActivity(), this, year, month, day);
-            }
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                monthOfYear++;
-                String date = year + "-" + ((monthOfYear < 10) ? "0" : "") + monthOfYear + "-" + ((dayOfMonth < 10) ? "0" : "") + dayOfMonth;
-                edt.setText(DateFormater.from_yyyyMMdd_To_dMMMyyyy(date));
-            }
-        }
-        DialogFragment dateFragment = new FragmentDatePicker();
-        dateFragment.show(getFragmentManager(), "datePicker");
     }
 
     class TaskFillSpinners extends AsyncTask<Integer, Void, Void> {
@@ -277,14 +253,14 @@ public class ReportsFragment extends Fragment {
 
         @Override
         protected Void doInBackground(String... params) {
-            ((HistoryDataSource)historyDataSource).open();
-            entries = historyDataSource.listHistoryByAccountName(Long.parseLong(params[0]),params[1]);
+            ((HistoryDataSource) historyDataSource).open();
+            entries = historyDataSource.listHistoryByAccountName(Long.parseLong(params[0]), params[1]);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            rea = new ReportEntriesAdapter(getContext(), entries,user);
+            rea = new ReportEntriesAdapter(getContext(), entries, user);
             rea.notifyDataSetChanged();
             reportEntries.setLayoutManager(new LinearLayoutManager(getContext()));
             reportEntries.setAdapter(rea);

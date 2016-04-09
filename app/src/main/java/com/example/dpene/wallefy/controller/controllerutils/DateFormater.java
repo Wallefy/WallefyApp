@@ -6,11 +6,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by Petkata on 13.3.2016 г..
- */
 public class DateFormater {
 
+
+//    exmp 2016-04-19 to 19 Apr,2016
     public static String from_yyyyMMdd_To_dMMMyyyy(String dateToFormat){
         if (dateToFormat == null || dateToFormat.equals(""))
             return "";
@@ -25,6 +24,7 @@ public class DateFormater {
         return sdf.format(date);
     }
 
+//    from 2016-04-19 23:06:16 to 19 Apr, 2016 - 23:06:16
     public static String from_yyyyMMddHHmmss_To_dMMMyyyyHHmmss(String dateToFormat){
         if (dateToFormat == null || dateToFormat.equals(""))
             return "";
@@ -39,6 +39,7 @@ public class DateFormater {
         return sdf.format(date);
     }
 
+//    from 19 Apr, 2016 - 23:06:16 to 2016-04-19 23:06:16
     public static String from_dMMMyyyy_To_yyyyMMdd(String dateToFormat){
         if (dateToFormat == null || dateToFormat.equals(""))
             return "";

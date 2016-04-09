@@ -113,4 +113,5 @@ public class User implements Serializable {
     public void setHistoryLog(ArrayList<History> historyLog) {
         this.historyLog = historyLog;
     }
+
 }
