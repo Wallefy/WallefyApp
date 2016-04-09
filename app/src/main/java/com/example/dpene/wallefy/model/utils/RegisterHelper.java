@@ -3,9 +3,6 @@ package com.example.dpene.wallefy.model.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Created by dpene on 4/7/2016.
- */
 public class RegisterHelper {
 
     public static String md5(String password) {
@@ -41,7 +38,7 @@ public class RegisterHelper {
     }
 
     public static boolean validateUsername(String username) {
-        String pattern = "(?=.*[a-z]).{3,}";
+        String pattern = "(?=.*[A-Za-z]).{3,}";
         if (username != null && username.matches(pattern)) {
             return true;
         }

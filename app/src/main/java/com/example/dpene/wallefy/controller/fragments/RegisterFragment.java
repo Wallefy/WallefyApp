@@ -2,6 +2,7 @@ package com.example.dpene.wallefy.controller.fragments;
 
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,10 +15,18 @@ import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.MainActivity;
+import com.example.dpene.wallefy.model.classes.Account;
+import com.example.dpene.wallefy.model.classes.Category;
 import com.example.dpene.wallefy.model.classes.User;
+import com.example.dpene.wallefy.model.dao.IAccountDao;
+import com.example.dpene.wallefy.model.dao.ICategoryDao;
 import com.example.dpene.wallefy.model.dao.IUserDao;
+import com.example.dpene.wallefy.model.datasources.AccountDataSource;
+import com.example.dpene.wallefy.model.datasources.CategoryDataSource;
 import com.example.dpene.wallefy.model.datasources.UserDataSource;
 import com.example.dpene.wallefy.model.utils.RegisterHelper;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,7 +41,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     Button btnRegister;
     Button btnBackToLogin;
 
-    IUserDao userDataSource;
     User user;
 
     @Override
@@ -49,9 +57,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         btnBackToLogin = (Button) view.findViewById(R.id.btn_register_login);
 
         btnRegister.setOnClickListener(this);
-
-        userDataSource = UserDataSource.getInstance(getContext());
-
         return view;
     }
 
@@ -63,7 +68,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                 String userName = edtName.getText().toString();
                 String userPassword = edtPassword.getText().toString();
                 String retypedPassword = edtRetypedPassword.getText().toString();
-                ((UserDataSource) userDataSource).open();
+
 
                 boolean isCorrect = true;
 
@@ -97,25 +102,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                     edtPassword.setError("Password must be between 5-10 characters and contain letters AND numbers");
                     isCorrect = false;
                 }
-
-
-                Log.e("tag", isCorrect + "");
-
-                //TODO
                 if (isCorrect) {
-                    user = userDataSource.registerUser(userMail, userName, RegisterHelper.md5(userPassword));
-
-                    Log.e("tag", user + "");
-                    if (user != null) {
-                        Intent i = new Intent(getContext(), MainActivity.class);
-                        i.putExtra("user", user);
-                        ((UserDataSource) userDataSource).close();
-                        startActivity(i);
-                        getActivity().finish();
-                        Toast.makeText(getContext(), "Successful registration", Toast.LENGTH_SHORT).show();
-                    } else {
-                        edtEmail.setError("This email is already used");
-                    }
+                    new TaskCreateUserInitialAccountsCategories().execute(userMail,userName, userPassword);
                 }
                 break;
             case R.id.btn_register_login:
@@ -124,4 +112,59 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+
+    private class TaskCreateUserInitialAccountsCategories extends AsyncTask<String,Void,User>{
+
+        @Override
+        protected User doInBackground(String... params) {
+
+            ArrayList<Account> pojoAccounts = new ArrayList<>();
+
+            IUserDao userDataSource = UserDataSource.getInstance(getContext());
+            ((UserDataSource) userDataSource).open();
+            user = userDataSource.registerUser(params[0], params[1], RegisterHelper.md5(params[2]));
+            ((UserDataSource) userDataSource).open();
+
+            if (user != null) {
+                IAccountDao accountDataSource = AccountDataSource.getInstance(getContext());
+                ((AccountDataSource) accountDataSource).open();
+                pojoAccounts.add(accountDataSource.createAccount(user.getUserId(), "cash"));
+                pojoAccounts.add(accountDataSource.createAccount(user.getUserId(), "card"));
+                ((AccountDataSource) accountDataSource).close();
+
+                user.setAccounts(pojoAccounts);
+
+                ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
+                ((CategoryDataSource) categoryDataSource).open();
+                ArrayList<Category> categories = new ArrayList<>();
+                categories.add(categoryDataSource.createCategory("Home", true, R.drawable.house_56, user.getUserId()));
+                categories.add(categoryDataSource.createCategory("Food", true, R.drawable.eating_56, user.getUserId()));
+                categories.add(categoryDataSource.createCategory("Transport", true, R.drawable.car_56, user.getUserId()));
+                categories.add(categoryDataSource.createCategory("Bills", true, R.drawable.bills_56, user.getUserId()));
+                categories.add(categoryDataSource.createCategory("Gifts", true, R.drawable.gift_56, user.getUserId()));
+                categories.add(categoryDataSource.createCategory("Sport", true, R.drawable.fitnes_56, user.getUserId()));
+
+                categories.add(categoryDataSource.createCategory("Deposits", false, R.drawable.deposit_56, user.getUserId()));
+                categories.add(categoryDataSource.createCategory("Salary", false, R.drawable.salary_56, user.getUserId()));
+                ((CategoryDataSource) categoryDataSource).close();
+
+                user.setCategories(categories);
+            }
+
+            return user;
+        }
+
+        @Override
+        protected void onPostExecute(User user) {
+            if (user != null) {
+                Intent i = new Intent(getContext(), MainActivity.class);
+                i.putExtra("user", user);
+                startActivity(i);
+                getActivity().finish();
+                Toast.makeText(getContext(), "Successful registration", Toast.LENGTH_SHORT).show();
+            } else {
+                edtEmail.setError("This email is already used");
+            }
+        }
+    }
 }

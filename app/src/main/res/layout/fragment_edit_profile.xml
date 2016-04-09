@@ -22,6 +22,7 @@
             android:id="@+id/edit_profile_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
             android:textSize="@dimen/edit_profile_smaller_text_size" />
 
         <TextView
@@ -34,6 +35,7 @@
             android:id="@+id/edit_profile_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
             android:textSize="@dimen/edit_profile_smaller_text_size" />
 
         <TextView
@@ -46,6 +48,7 @@
             android:id="@+id/edit_profile_old_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
             android:textSize="@dimen/edit_profile_smaller_text_size" />
 
         <TextView
@@ -58,6 +61,7 @@
             android:id="@+id/edit_profile_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
             android:textSize="@dimen/edit_profile_smaller_text_size" />
 
         <TextView
@@ -70,10 +74,11 @@
             android:id="@+id/edit_profile_retype_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
             android:textSize="@dimen/edit_profile_smaller_text_size" />
 
     </LinearLayout>
 
-    <include layout="@layout/saving_buttons" />
+    <!--<include layout="@layout/saving_buttons" />-->
 
 </LinearLayout>

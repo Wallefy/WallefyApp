@@ -28,7 +28,8 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_horizontal_margin"
-                android:text="fdfdfdsfs"/>
+                android:imeOptions="actionDone"
+                android:hint="Description"/>
 
             <TextView
                 android:layout_width="wrap_content"

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class User implements Serializable{
+public class User implements Serializable {
 
     private long userId;
     private String username;
@@ -17,25 +17,37 @@ public class User implements Serializable{
     private ArrayList<Account> accounts;
     private ArrayList<History> historyLog;
 
-    public User(){}
+    public User() {
+    }
 
     public User(long userId, String username, String password, String email,
                 ArrayList<Category> categories, ArrayList<Account> accounts, ArrayList<History> historyLog) {
+
+        this.accounts = new ArrayList<>();
+        this.categories = new ArrayList<>();
+        this.historyLog = new ArrayList<>();
+
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.email = email;
-        this.categories = categories;
-        this.accounts = accounts;
-        this.historyLog = historyLog;
+        if (accounts != null)
+            this.accounts = accounts;
+        if (categories!= null)
+            this.categories = categories;
+        if (historyLog != null)
+            this.historyLog = historyLog;
     }
 
-    public User(long userId,String email, String name, String password) {
+    public User(long userId, String email, String name, String password) {
 
         this.userId = userId;
         this.username = name;
         this.password = password;
         this.email = email;
+        this.accounts = new ArrayList<>();
+        this.categories = new ArrayList<>();
+        this.historyLog = new ArrayList<>();
     }
 
     public long getUserId() {
@@ -78,15 +90,15 @@ public class User implements Serializable{
         this.email = email;
     }
 
-    public void addCategory(Category newCategory){
+    public void addCategory(Category newCategory) {
         this.categories.add(newCategory);
     }
 
-    public void addAccount(Account newAccount){
+    public void addAccount(Account newAccount) {
         this.accounts.add(newAccount);
     }
 
-    public void adHistory(History newHistory){
+    public void addHistory(History newHistory) {
         this.historyLog.add(newHistory);
     }
 

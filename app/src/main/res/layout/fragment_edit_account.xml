@@ -22,6 +22,7 @@
             android:id="@+id/edit_account_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
             android:textSize="@dimen/edit_account_smaller_text_size" />
 
         <TextView
@@ -34,6 +35,7 @@
             android:id="@+id/edit_account_init_balance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
             android:textSize="@dimen/edit_account_smaller_text_size" />
 
 

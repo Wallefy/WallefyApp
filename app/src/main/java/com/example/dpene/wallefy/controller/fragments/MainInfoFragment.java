@@ -31,9 +31,6 @@ import com.example.dpene.wallefy.model.datasources.HistoryDataSource;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MainInfoFragment extends Fragment {
 
     RelativeLayout balance;
@@ -189,7 +186,7 @@ public class MainInfoFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Double aDouble) {
-            rea = new ReportEntriesAdapter(getContext(), entries,user);
+            rea = new ReportEntriesAdapter(getContext(), entries, user);
             rea.notifyDataSetChanged();
             listHistory.setLayoutManager(new LinearLayoutManager(getContext()));
             listHistory.setAdapter(rea);
@@ -202,7 +199,11 @@ public class MainInfoFragment extends Fragment {
         super.onResume();
         position = mainActivity.getPosition();
         spnAccounts.setSelection(position);
-        Log.e("POSITION", position + " onresume");
+        Log.e("User", user + " user");
+        Log.e("User", spnAccounts + " spnAcc");
+        Log.e("User", spnAccounts.getSelectedItem().toString() + " spnAcc name");
+        Log.e("User", position + " pos");
+        new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), spnAccounts.getSelectedItem().toString());
     }
 
     @Override

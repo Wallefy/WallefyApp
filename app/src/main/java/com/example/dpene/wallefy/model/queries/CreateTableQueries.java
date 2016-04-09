@@ -14,7 +14,7 @@ public class CreateTableQueries {
     //   ----- CREATE TABLE ACCOUNT TYPES -----
     public static final String CREATE_TABLE_ACCOUNT_TYPES = "create table if not exists " + Constants.TABLE_ACCOUNT_TYPES + " (" +
             Constants.ACCOUNT_TYPE_ID + " integer primary key autoincrement not null, " +
-            Constants.ACCOUNT_NAME + " varchar(20) not null unique," +
+            Constants.ACCOUNT_NAME + " varchar(20) not null," +
             Constants.ACCOUNT_USER_FK + " integer not null references " + Constants.TABLE_USERS + "(" + Constants.USER_ID + "))";
 
     //   ----- CREATE TABLE CATEGORIES -----

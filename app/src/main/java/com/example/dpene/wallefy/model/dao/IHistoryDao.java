@@ -22,8 +22,9 @@ public interface IHistoryDao {
     double calcAmountForAccount(long userId,String accountTypeName);
 
     ArrayList<History> listHistoryAfterDate(long userID,String afterDate);
-    ArrayList<History> listHistoryBeforeDate(long userID,String beforeDate);
-    ArrayList<History> listHistoryBetweenDate(long userID,String afterDate,String beforeDate);
 
+    ArrayList<History> listHistoryBeforeDate(long userID,String beforeDate);
+
+    ArrayList<History> listHistoryBetweenDate(long userID,String afterDate,String beforeDate);
 
 }

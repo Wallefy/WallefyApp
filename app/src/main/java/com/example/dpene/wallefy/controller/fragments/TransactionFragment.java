@@ -1,9 +1,11 @@
 package com.example.dpene.wallefy.controller.fragments;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -157,7 +159,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             History entry = (History) getArguments().get("entry");
             spnCategoryType.setSelection(categoryAdapter.getPosition(entry.getCategoryName()));
             spnAccountType.setSelection(accountAdapter.getPosition(mapUsersAccounts.get(entry.getAccountTypeId())));
-            amount.setText(String.valueOf((int) entry.getAmount()));
+            amount.setText(String.valueOf(String.format("%.2f", entry.getAmount())));
 
         }
 
@@ -173,8 +175,22 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 String selectedAccountType = spnAccountType.getSelectedItem().toString();
                 String selectedCategory = spnCategoryType.getSelectedItem().toString();
                 String calculatedAmount = amount.getText().toString();
-                new TaskSaveEntry(user.getUserId()).execute(selectedAccountType, selectedCategory, calculatedAmount);
-                getActivity().finish();
+                if (Double.parseDouble(calculatedAmount) > 0) {
+                    new TaskSaveEntry(user.getUserId()).execute(selectedAccountType, selectedCategory, calculatedAmount);
+                    getActivity().finish();
+                }
+
+                else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage("Amount must be positive");
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User clicked OK button
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
                 return true;
             case R.id.clear_values:
                 ((TextView) getActivity().findViewById(R.id.transaction_amount)).setText("0");
@@ -332,8 +348,8 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
             ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
             ((CategoryDataSource) categoryDataSource).open();
-            Category cat = categoryDataSource.showCategory(userId, params[1]);
 
+            Category cat = categoryDataSource.showCategory(userId,params[1]);
             IHistoryDao historyDataSource;
             historyDataSource = HistoryDataSource.getInstance(getContext());
             ((HistoryDataSource) historyDataSource).open();
@@ -341,7 +357,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                     cat.getCategoryId(), Double.parseDouble(params[2]), null, null, null, null);
 
             if (h != null) {
-                user.adHistory(h);
+                user.addHistory(h);
                 return true;
             }
             return false;

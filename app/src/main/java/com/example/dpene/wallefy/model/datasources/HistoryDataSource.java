@@ -139,8 +139,6 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
         String whereCaluse = "where history_user_fk = ? and account_name = ? order by transaction_date desc";
 
         searchEntriesByCriteria(historyArrayList,whereCaluse,selArgs);
-
-
         return historyArrayList;
     }
 

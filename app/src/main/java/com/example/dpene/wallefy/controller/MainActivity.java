@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Log.e("ACTMain", "On create");
 
         user = (User) getIntent().getSerializableExtra("user");
 
@@ -172,5 +175,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public int getPosition() {
         return spinnerPosition;
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e("ACTMain", "On restart");
     }
 }
