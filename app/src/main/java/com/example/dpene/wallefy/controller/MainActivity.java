@@ -30,6 +30,7 @@ import com.example.dpene.wallefy.controller.fragments.MainInfoFragment;
 import com.example.dpene.wallefy.controller.fragments.ReportsFragment;
 import com.example.dpene.wallefy.controller.fragments.TransactionFragment;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IPieChartCommunicator;
+import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.controller.fragments.interfaces.ISaveSpinnerPosition;
 import com.example.dpene.wallefy.model.classes.User;
 
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity
 
         Fragment fr = new MainInfoFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user",user);
+        bundle.putSerializable("user", user);
         fr.setArguments(bundle);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -75,8 +76,6 @@ public class MainActivity extends AppCompatActivity
         ((TextView) headView.findViewById(R.id.nav_header_email)).setText(user.getEmail());
         ((TextView) headView.findViewById(R.id.nav_header_username)).setText(user.getUsername());
     }
-
-
 
     @Override
     public void onBackPressed() {
@@ -127,7 +126,10 @@ public class MainActivity extends AppCompatActivity
             replaceFrag(new ListCategoryFragment());
 
         } else if (id == R.id.nav_settings) {
-            replaceFrag(new EditProfileFragment());
+            Intent editActivity = new Intent(this, EditActivity.class);
+            editActivity.putExtra("key", IRequestCodes.EDIT_PROFILE);
+            editActivity.putExtra("user", user);
+            startActivity(editActivity);
 
         } else if (id == R.id.nav_export) {
 
