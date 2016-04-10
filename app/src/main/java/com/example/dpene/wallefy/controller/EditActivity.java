@@ -79,6 +79,7 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
         entry = (History) getIntent().getSerializableExtra("entry");
         passedIsExpense = getIntent().getBooleanExtra("isExpense",true);
         bundle = new Bundle();
+        bundle.putSerializable("user",user);
         bundle.putBoolean("passedIsExpence",passedIsExpense);
         fragmentCode = getIntent().getStringExtra("key");
 
@@ -110,7 +111,9 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
                     bundle.putString("isExpense", getIntent().getStringExtra("isExpense"));
                 }
                 if (getIntent().getStringExtra("title") != null) {
+                    bundle.putLong("categoryIcon",getIntent().getLongExtra("categoryIcon",0));
                     bundle.putString("title", getIntent().getStringExtra("title"));
+                    bundle.putString("categoryType",getIntent().getStringExtra("categoryType"));
                 } else {
                     bundle.putString("title", "");
                 }

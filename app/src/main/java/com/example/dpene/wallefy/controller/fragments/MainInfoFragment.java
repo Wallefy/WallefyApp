@@ -76,9 +76,9 @@ public class MainInfoFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_main_info, container, false);
 
-        final FloatingActionButton fabIncome = (FloatingActionButton) view.findViewById(R.id.fab_income);
-        final FloatingActionButton fabExpense = (FloatingActionButton) view.findViewById(R.id.fab_expense);
-        final FloatingActionButton fabTransfer = (FloatingActionButton) view.findViewById(R.id.fab_transfer);
+//        final FloatingActionButton fabIncome = (FloatingActionButton) view.findViewById(R.id.fab_income);
+//        final FloatingActionButton fabExpense = (FloatingActionButton) view.findViewById(R.id.fab_expense);
+//        final FloatingActionButton fabTransfer = (FloatingActionButton) view.findViewById(R.id.fab_transfer);
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +90,6 @@ public class MainInfoFragment extends Fragment {
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.setCancelable(true);
                 dialog.setCanceledOnTouchOutside(true);
-
                 dialog.show();
                 dialog.findViewById(R.id.floating_group).setOnClickListener(new View.OnClickListener() {
                     @Override

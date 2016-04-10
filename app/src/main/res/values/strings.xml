@@ -57,8 +57,8 @@
     <string name="register_button">Register</string>
     <string name="back_to_login_button">Back to Login</string>
     <string name="add">add</string>
-    <string name="income">income</string>
-    <string name="expense">expense</string>
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
     <string name="category_name">Category name</string>
     <string name="icon">Icons</string>
     <string name="account_name">Account name</string>

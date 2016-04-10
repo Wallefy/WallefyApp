@@ -3,10 +3,13 @@ package com.example.dpene.wallefy.controller.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,9 @@ import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.EditActivity;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.model.classes.Category;
+import com.example.dpene.wallefy.model.classes.User;
+import com.example.dpene.wallefy.model.dao.ICategoryDao;
+import com.example.dpene.wallefy.model.datasources.CategoryDataSource;
 
 import java.util.ArrayList;
 
@@ -37,6 +43,7 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
     private ArrayList<Category> incomeCategs;
     private ArrayList<Category> expenseCategs;
 
+    User user;
 
     public ListCategoryFragment() {
         // Required empty public constructor
@@ -49,13 +56,16 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
         incomeCategs = new ArrayList<>();
         expenseCategs = new ArrayList<>();
 
-        incomeCategs.add(new Category(1, "Food", false, R.drawable.ghost, 1));
-        incomeCategs.add(new Category(2, "NeFood", false, R.drawable.ghost, 1));
-        incomeCategs.add(new Category(3, "NeneFood", false, R.drawable.ghost, 1));
+        Bundle bundle = this.getArguments();
+        user = (User) bundle.getSerializable("user");
 
-        expenseCategs.add(new Category(4, "Food", true, R.drawable.calendar, 1));
-        expenseCategs.add(new Category(5, "NeFood", true, R.drawable.calendar, 1));
-        expenseCategs.add(new Category(6, "NeneFood", true, R.drawable.calendar, 1));
+//        incomeCategs.add(new Category(1, "Food", false, R.drawable.ghost, 1));
+//        incomeCategs.add(new Category(2, "NeFood", false, R.drawable.ghost, 1));
+//        incomeCategs.add(new Category(3, "NeneFood", false, R.drawable.ghost, 1));
+//
+//        expenseCategs.add(new Category(4, "Food", true, R.drawable.calendar, 1));
+//        expenseCategs.add(new Category(5, "NeFood", true, R.drawable.calendar, 1));
+//        expenseCategs.add(new Category(6, "NeneFood", true, R.drawable.calendar, 1));
 
 
         View v = inflater.inflate(R.layout.fragment_list_category, container, false);
@@ -70,39 +80,39 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
 
         incomeLayout = (RelativeLayout) v.findViewById(R.id.list_category_income_layout);
         expenseLayout = (RelativeLayout) v.findViewById(R.id.list_category_expense_layout);
-        clickToShow(incomeLayout);
-        clickToShow(expenseLayout);
+        incomeLayout.setOnClickListener(this);
+        expenseLayout.setOnClickListener(this);
 
-        CategoriesAdapter incomeAdapter = new CategoriesAdapter(getContext(), incomeCategs);
-        listIncomeCategories.setLayoutManager(new LinearLayoutManager(getContext()));
-        listIncomeCategories.setAdapter(incomeAdapter);
+        new FillCategoriesTask().execute(user.getUserId());
 
-        CategoriesAdapter expenseAdapter = new CategoriesAdapter(getContext(), expenseCategs);
-        listExpenseCategories.setLayoutManager(new LinearLayoutManager(getContext()));
-        listExpenseCategories.setAdapter(expenseAdapter);
+
 
         return v;
     }
 
-    public void clickToShow(View view) {
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (v.getId() == R.id.list_category_income_layout) {
-                    if (listIncomeCategories.getVisibility() == View.GONE) {
-                        listIncomeCategories.setVisibility(View.VISIBLE);
-                    } else {
-                        listIncomeCategories.setVisibility(View.GONE);
-                    }
-                } else {
-                    if (listExpenseCategories.getVisibility() == View.GONE) {
-                        listExpenseCategories.setVisibility(View.VISIBLE);
-                    } else {
-                        listExpenseCategories.setVisibility(View.GONE);
-                    }
-                }
-            }
-        });
+    private class FillCategoriesTask extends AsyncTask<Long,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Long... params) {
+            ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
+            ((CategoryDataSource)categoryDataSource).open();
+            incomeCategs = categoryDataSource.showCategoriesByType(params[0],false);
+            expenseCategs = categoryDataSource.showCategoriesByType(params[0],true);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            CategoriesAdapter incomeAdapter = new CategoriesAdapter(getContext(), incomeCategs);
+//            listIncomeCategories.setLayoutManager(new LinearLayoutManager(getContext()));
+            listIncomeCategories.setLayoutManager(new GridLayoutManager(getContext(),2));
+            listIncomeCategories.setAdapter(incomeAdapter);
+
+            CategoriesAdapter expenseAdapter = new CategoriesAdapter(getContext(), expenseCategs);
+//            listExpenseCategories.setLayoutManager(new LinearLayoutManager(getContext()));
+            listExpenseCategories.setLayoutManager(new GridLayoutManager(getContext(),2));
+            listExpenseCategories.setAdapter(expenseAdapter);
+        }
     }
 
     /**
@@ -118,9 +128,11 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
         switch (v.getId()) {
             default:
             case R.id.category_add_income_button:
+            case R.id.list_category_income_layout:
                 isExpense = "false";
                 break;
             case R.id.category_add_expense_button:
+            case R.id.list_category_expense_layout:
                 isExpense = "true";
                 break;
         }
@@ -161,7 +173,7 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
         }
 
         @Override
-        public void onBindViewHolder(final CategoriesVH holder, int position) {
+        public void onBindViewHolder(final CategoriesVH holder, final int position) {
 //            TODO Change resources from long to int
 
             holder.img.setImageResource((int) categs.get(position).getIconResource());
@@ -170,9 +182,12 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.e("TAG", "onClick: " + ((View) v.getParent()).getTag());
                     Intent editActivity = new Intent(getContext(), EditActivity.class);
                     editActivity.putExtra("key", IRequestCodes.EDIT_CATEGORY);
                     editActivity.putExtra("title", holder.title.getText().toString());
+                    editActivity.putExtra("categoryIcon",categs.get(position).getIconResource());
+                    editActivity.putExtra("categoryType",((View)v.getParent()).getTag().toString());
                     startActivity(editActivity);
                 }
             });
@@ -200,5 +215,7 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
         }
 
     }
+
+
 
 }

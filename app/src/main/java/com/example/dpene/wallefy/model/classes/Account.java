@@ -9,6 +9,7 @@ public class Account implements Serializable {
     private long  accountTypeId;
     private long  accountUserId;
     private String accountName;
+    private double accountTempSum;
 
     public Account(long accountTypeId,long userFk, String accountName) {
         this.accountTypeId = accountTypeId;
@@ -38,5 +39,13 @@ public class Account implements Serializable {
 
     public void setAccountName(String accountName) {
         this.accountName = accountName;
+    }
+
+    public double getAccountTempSum() {
+        return accountTempSum;
+    }
+
+    public void setAccountTempSum(double accountTempSum) {
+        this.accountTempSum = accountTempSum;
     }
 }

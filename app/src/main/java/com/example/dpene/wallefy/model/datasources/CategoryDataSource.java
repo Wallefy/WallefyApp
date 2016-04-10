@@ -102,6 +102,24 @@ public class CategoryDataSource extends DataSource implements ICategoryDao{
 
     @Override
     public ArrayList<Category> showCategoriesByType(long userId, boolean isExpense) {
+        ArrayList<Category> categories = new ArrayList<>();
+        String[] selArgs = {String.valueOf(userId),String.valueOf(isExpense? 1:0)};
+        Cursor cursor = database.rawQuery("select category_id,category_icon_resource,category_name,category_is_expense,category_user_fk" +
+                " from categories where category_user_fk = ? and category_is_expense = ? ", selArgs);
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                long catId = cursor.getLong(0);
+                long catResIcon = cursor.getLong(1);
+                String catName = cursor.getString(2);
+                boolean catIsExpense = (cursor.getInt(3) == 1);
+                long catUserFk = cursor.getLong(4);
+                categories.add(new Category(catId,catName,catIsExpense,catResIcon,catUserFk));
+                cursor.moveToNext();
+            }
+            cursor.close();
+            return categories;
+        }
+        cursor.close();
         return null;
     }
 }

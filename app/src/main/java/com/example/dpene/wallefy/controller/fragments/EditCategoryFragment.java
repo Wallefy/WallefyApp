@@ -34,7 +34,7 @@ public class EditCategoryFragment extends Fragment {
 
     private IToolbar toolbar;
 
-    private ArrayList icons;
+    private ArrayList<Integer> icons;
 
     public EditCategoryFragment() {
         // Required empty public constructor
@@ -53,11 +53,13 @@ public class EditCategoryFragment extends Fragment {
             isExpense = getArguments().get("isExpense").equals("true");
             toolbar.setSubtitle(isExpense ? "Expense" : "Income");
         }
+        if (getArguments().getString("categoryType") != null)
+            toolbar.setSubtitle(getArguments().getString("categoryType"));
 
         setHasOptionsMenu(true);
 
 
-        icons = new ArrayList();
+        icons = new ArrayList<>();
         icons.add(R.drawable.eating_56);
         icons.add(R.drawable.bills_56);
         icons.add(R.drawable.clothes_56);
@@ -78,23 +80,31 @@ public class EditCategoryFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_edit_category, container, false);
 
         categoryName = (EditText) v.findViewById(R.id.edit_category_edt_name);
+
+
         imgSelectedIcon = (ImageView) v.findViewById(R.id.edit_category_selected_icon);
 
+
         categoryName.setText(getArguments().get("title").toString());
-
-
 
         categoryIconsList = (GridView) v.findViewById(R.id.edit_category_icon_gridview);
         categoryIconsList.setNumColumns(4);
         categoryIconsList.setAdapter(new IconAdapter(getContext(), icons));
 
-        imgSelectedIcon.setImageResource((Integer) icons.get(0));
+        if (getArguments().get("categoryIcon")!=null) {
+            long iconResource = (long) getArguments().get("categoryIcon");
+
+            if (iconResource != 0)
+                imgSelectedIcon.setImageResource((int) (iconResource));
+            else
+                imgSelectedIcon.setImageResource(icons.get(0));
+        }
 
         categoryIconsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                imgSelectedIcon.setImageResource((Integer) icons.get(position));
-                selectedIcon = (Integer) icons.get(position);
+                imgSelectedIcon.setImageResource( icons.get(position));
+                selectedIcon = icons.get(position);
             }
         });
 

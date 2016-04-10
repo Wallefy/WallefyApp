@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
+    android:layout_gravity="center"
+    android:baselineAligned="false"
     android:orientation="horizontal">
 
     <ImageView
-
+        android:src="@drawable/ghost_48"
         android:id="@+id/row_category_icon"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:contentDescription="category_icon" />
 
     <TextView
+        android:text="category"
+        android:layout_gravity="center_vertical"
         android:id="@+id/row_category_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="4"
-        android:gravity="center_vertical"
         android:textSize="@dimen/row_category_text_size" />
 
 </LinearLayout>
