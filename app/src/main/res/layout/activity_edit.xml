@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
+    android:orientation="vertical"
     android:id="@+id/edit_activity"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -24,6 +24,22 @@
             android:textColor="@android:color/white" />
     </android.support.v7.widget.Toolbar>
 
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabs"
+        android:background="@color/colorPrimary"
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        custom:tabSelectedTextColor="@android:color/white"/>
+    <!--custom:tabGravity="center"/> To center the tabs-->
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
     <FrameLayout
         android:id="@+id/root_edit"
         android:layout_width="match_parent"
@@ -33,4 +49,4 @@
     </FrameLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

@@ -1,9 +1,12 @@
 package com.example.dpene.wallefy.controller;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.fragments.DetailsTransactionFragment;
 import com.example.dpene.wallefy.controller.fragments.EditAccountFragment;
 import com.example.dpene.wallefy.controller.fragments.EditCategoryFragment;
 import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
@@ -26,14 +30,31 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
 
     RelativeLayout editAc;
     String fragmentCode;
+    User user;
+
+//    Communicator variables
+    String passedAmount;
+    String passedNote;
+    String passedDate;
+
+    //     Start   Tabbed test ---- >
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
+    TabLayout tabLayout;
+    //        End Tabbed  <----
+    Fragment editFragment;
+    Bundle bundle;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle("Transaction");
+
         if (getSupportActionBar() != null) {
 //            Hide initial title
             getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -48,11 +69,22 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
             }
         });
 
-        User user = (User) getIntent().getSerializableExtra("user");
+        user = (User) getIntent().getSerializableExtra("user");
 
-        Fragment editFragment;
-        Bundle bundle = new Bundle();
+        bundle = new Bundle();
         fragmentCode = getIntent().getStringExtra("key");
+
+
+        //     Start   Tabbed test ---- >
+
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setVisibility(View.GONE);
+        tabLayout.setupWithViewPager(mViewPager);
+
+//        End Tabbed  <----
 
         switch (fragmentCode) {
             default:
@@ -96,7 +128,8 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
              */
             case IRequestCodes.EDIT_TRANSACTION:
                 editFragment = new TransactionFragment();
-
+                toolbar.setTitle("Transaction");
+                tabLayout.setVisibility(View.VISIBLE);
                 // inflate bundle
                 if (getIntent().getStringExtra("category") != null) {
                     bundle.putString("category", getIntent().getStringExtra("category"));
@@ -150,10 +183,9 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
 //        bundle.putSerializable("user",user);
         editFragment.setArguments(bundle);
 
-        FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
-        trans.replace(R.id.root_edit, editFragment, "category");
-        trans.commit();
-
+//        FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+//        trans.replace(R.id.root_edit, editFragment, "category");
+//        trans.commit();
     }
 
     @Override
@@ -169,11 +201,91 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
     }
 
     @Override
+    public void setSubtitle(String subtitle) {
+        toolbar.setSubtitle(subtitle);
+    }
+
+    @Override
     public void notifyFragment(Fragment fragment, Bundle bundle) {
-        Log.e("tag", fragment + " ");
         fragment.setArguments(bundle);
         FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
         trans.replace(R.id.root_edit, fragment);
         trans.commit();
     }
+
+    @Override
+    public void getAmount(String amount) {
+        passedAmount = amount;
+        toolbar.setSubtitle(amount);
+    }
+
+    @Override
+    public String setAmount() {
+        return passedAmount;
+    }
+
+    @Override
+    public void getNote(String note) {
+        this.passedNote  = note;
+    }
+
+    @Override
+    public String setNote() {
+        return this.passedNote;
+    }
+
+    @Override
+    public void getDate(String date) {
+        this.passedDate = date;
+    }
+
+    @Override
+    public String setDate() {
+        return this.passedDate;
+    }
+    //     Start   Tabbed test ---- >
+
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+            if (position == 0) {
+                return editFragment;
+            }
+            if (position == 1) {
+                Fragment fr = new DetailsTransactionFragment();
+                fr.setArguments(bundle);
+                return fr;
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            // Show 3 total pages.
+            if (fragmentCode.equals(IRequestCodes.EDIT_TRANSACTION))
+                return 2;
+            return 1;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+//            To show the labels or not to show
+//            switch (position) {
+//                case 0:
+//                    return "History";
+//                case 1:
+//                    return "Stats";
+//            }
+            return null;
+        }
+    }
+
+//        End Tabbed  <----
 }

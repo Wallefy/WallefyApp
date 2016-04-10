@@ -2,10 +2,13 @@ package com.example.dpene.wallefy.controller.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,6 +31,7 @@ import com.example.dpene.wallefy.controller.EditActivity;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IPieChartCommunicator;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.controller.fragments.interfaces.ISaveSpinnerPosition;
+import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 import com.example.dpene.wallefy.controller.gesturelistener.OnSwipeGestureListener;
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.Category;
@@ -138,22 +142,6 @@ public class MainInfoFragment extends Fragment {
         listCategories.setLayoutManager(linLayoutManager);
         listCategories.setAdapter(categoriesAdapter);
 
-        rootLayout.setOnTouchListener(new OnSwipeGestureListener(getContext()){
-            public void onSwipeRight() {
-            }
-
-            public void onSwipeLeft() {
-                // send bundle to pieChartFragment
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("user", user);
-                // inflate bundle
-
-                parent.notifyFragment(new PieChartFragment(), bundle);
-            }
-        });
-
-
-
         return view;
 
 
@@ -235,6 +223,11 @@ public class MainInfoFragment extends Fragment {
             rea.notifyDataSetChanged();
             listHistory.setLayoutManager(new LinearLayoutManager(getContext()));
             listHistory.setAdapter(rea);
+            if (aDouble <0)
+                txtAccountBalanceTotal.setTextColor(Color.RED);
+            else{
+                txtAccountBalanceTotal.setTextColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
+            }
             txtAccountBalanceTotal.setText(String.format("%.2f", aDouble));
         }
     }
@@ -244,10 +237,6 @@ public class MainInfoFragment extends Fragment {
         super.onResume();
         position = mainActivity.getPosition();
         spnAccounts.setSelection(position);
-        Log.e("User", user + " user");
-        Log.e("User", spnAccounts + " spnAcc");
-        Log.e("User", spnAccounts.getSelectedItem().toString() + " spnAcc name");
-        Log.e("User", position + " pos");
         new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), spnAccounts.getSelectedItem().toString());
     }
 

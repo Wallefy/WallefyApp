@@ -9,5 +9,12 @@ import android.support.v4.app.Fragment;
 public interface ITransactionCommunicator {
 
     void notifyFragment(Fragment fragment, Bundle bundle);
+    void getAmount(String amount);
+    String setAmount();
+    void getNote(String note);
+    String setNote();
+    void getDate(String date);
+    String setDate();
+
 
 }

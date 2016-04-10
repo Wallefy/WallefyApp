@@ -10,6 +10,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -96,6 +98,8 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     private String prevNum;
     private BigDecimal result;
 
+    IToolbar toolbar;
+
     public TransactionFragment() {
 
     }
@@ -122,11 +126,12 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         this.date = getArguments().getString("date");
 
 //        setting custom heading for every fragment
-        IToolbar toolbar = (IToolbar) getActivity();
-        toolbar.setTitle("Transaction");
+        toolbar = (IToolbar) getActivity();
+
 
 
         View v = inflater.inflate(R.layout.fragment_transaction, container, false);
+
 
 //        enable options menu
         setHasOptionsMenu(true);
@@ -166,7 +171,11 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             spnCategoryType.setSelection(categoryAdapter.getPosition(entry.getCategoryName()));
             spnAccountType.setSelection(accountAdapter.getPosition(mapUsersAccounts.get(entry.getAccountTypeId())));
             date = entry.getDateOfTransaction();
+            if (date != null && date.length() > 0)
+                    parent.getDate(date);
             note = entry.getDescription();
+            if (note!=null && note.length() > 0)
+                parent.getNote(note);
             amount.setText(String.valueOf(String.format("%.2f", entry.getAmount())));
             if(entry.getAmount() != 0) {
                 amount.setText(String.valueOf(entry.getAmount()));
@@ -209,6 +218,25 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             }
         });
 
+        amount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                parent.getAmount(amount.getText().toString());
+            }
+        });
+
+        toolbar.setSubtitle(amount.getText().toString());
+
         return v;
     }
 
@@ -223,9 +251,8 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 String selectedCategory = spnCategoryType.getSelectedItem().toString();
                 String calculatedAmount = amount.getText().toString();
                 if (Double.parseDouble(calculatedAmount) > 0) {
-                    Log.e("DATE",date + " asd");
                     new TaskSaveEntry(user.getUserId()).execute(selectedAccountType, selectedCategory,
-                            calculatedAmount,note,DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(date));
+                            calculatedAmount,parent.setNote(),DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(parent.setDate()));
                     getActivity().finish();
                 }
 
@@ -398,16 +425,17 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
             ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
             ((CategoryDataSource) categoryDataSource).open();
-            Log.e("DATE",params[4] + " asfs");
             Category cat = categoryDataSource.showCategory(userId,params[1]);
             IHistoryDao historyDataSource;
             historyDataSource = HistoryDataSource.getInstance(getContext());
             ((HistoryDataSource) historyDataSource).open();
+            double sumForEntry = Double.parseDouble(params[2]);
+            if (cat.isExpense())
+                sumForEntry*=-1;
             History h = historyDataSource.createHistory(userId, acc.getAccountTypeId(),
-                    cat.getCategoryId(), Double.parseDouble(params[2]), params[3], params[4], null, null);
+                    cat.getCategoryId(), sumForEntry, params[3], params[4], null, null);
 
             if (h != null) {
-                Log.e("Add entry" , user +" user");
                 user.addHistory(h);
                 return true;
             }
@@ -421,6 +449,12 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             else
                 Toast.makeText(getContext(), "SAVE FAILED", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("Custom", "resume trans: ");
     }
 }
 

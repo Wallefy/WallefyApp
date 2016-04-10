@@ -2,6 +2,8 @@ package com.example.dpene.wallefy.controller.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +51,10 @@ public class ReportEntriesAdapter extends RecyclerView.Adapter<ReportEntriesAdap
         holder.category.setText(entries.get(position).getCategoryName());
         holder.date.setText(DateFormater.from_yyyyMMddHHmmss_To_dMMMyyyyHHmmss(entries.get(position).getDateOfTransaction()));
         holder.note.setText(entries.get(position).getDescription());
+        if (entries.get(position).getAmount() < 0)
+            holder.amount.setTextColor(Color.RED);
+        else
+            holder.amount.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         holder.amount.setText( String.format("%.2f", entries.get(position).getAmount()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

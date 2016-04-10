@@ -7,10 +7,13 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +30,7 @@ import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
 import com.example.dpene.wallefy.controller.fragments.ListAccountsFragment;
 import com.example.dpene.wallefy.controller.fragments.ListCategoryFragment;
 import com.example.dpene.wallefy.controller.fragments.MainInfoFragment;
+import com.example.dpene.wallefy.controller.fragments.PieChartFragment;
 import com.example.dpene.wallefy.controller.fragments.ReportsFragment;
 import com.example.dpene.wallefy.controller.fragments.TransactionFragment;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IPieChartCommunicator;
@@ -40,27 +44,23 @@ public class MainActivity extends AppCompatActivity
     User user;
     int spinnerPosition;
 
+    //     Start   Tabbed test ---- >
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
+    TabLayout tabLayout;
+    //        End Tabbed  <----
+
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.e("ACTMain", "On create");
-
         user = (User) getIntent().getSerializableExtra("user");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        Fragment fr = new MainInfoFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("user", user);
-        fr.setArguments(bundle);
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.root_main, fr, "mainFr");
-        ft.commit();
-
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -75,6 +75,17 @@ public class MainActivity extends AppCompatActivity
         View headView = navigationView.getHeaderView(0);
         ((TextView) headView.findViewById(R.id.nav_header_email)).setText(user.getEmail());
         ((TextView) headView.findViewById(R.id.nav_header_username)).setText(user.getUsername());
+
+        //     Start   Tabbed test ---- >
+
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
+
+//        End Tabbed  <----
+
     }
 
     @Override
@@ -84,6 +95,14 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+
+        if (mViewPager.getVisibility() == View.VISIBLE)
+            finish();
+        else {
+            toolbar.setSubtitle(null);
+            mViewPager.setVisibility(View.VISIBLE);
+            tabLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -114,16 +133,24 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        mViewPager.setVisibility(View.GONE);
+        tabLayout.setVisibility(View.GONE);
 
         if (id == R.id.nav_stats) {
             replaceFrag(new MainInfoFragment());
+            mViewPager.setVisibility(View.VISIBLE);
+            tabLayout.setVisibility(View.VISIBLE);
+            toolbar.setSubtitle(null);
 
         } else if (id == R.id.nav_reports) {
             replaceFrag(new ReportsFragment());
-        }else if (id == R.id.nav_accounts) {
+            toolbar.setSubtitle("Reports");
+        } else if (id == R.id.nav_accounts) {
             replaceFrag(new ListAccountsFragment());
-        }else if (id == R.id.nav_categories) {
+            toolbar.setSubtitle("Accounts");
+        } else if (id == R.id.nav_categories) {
             replaceFrag(new ListCategoryFragment());
+            toolbar.setSubtitle("Categories");
 
         } else if (id == R.id.nav_settings) {
             Intent editActivity = new Intent(this, EditActivity.class);
@@ -140,7 +167,7 @@ public class MainActivity extends AppCompatActivity
             log.edit().clear().apply();
             SharedPreferences userId = getPreferences(MODE_PRIVATE);
             userId.edit().clear().apply();
-            Intent i = new Intent(getApplicationContext(),LoginActivity.class);
+            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(i);
             finish();
 
@@ -151,12 +178,12 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void replaceFrag(Fragment fr){
+    private void replaceFrag(Fragment fr) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 //        ft.setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right,R.anim.slide_in_right,R.anim.slide_out_left);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user",user);
+        bundle.putSerializable("user", user);
         fr.setArguments(bundle);
         ft.replace(R.id.root_main, fr);
         ft.addToBackStack(null);
@@ -180,4 +207,50 @@ public class MainActivity extends AppCompatActivity
         trans.replace(R.id.root_main, fragment);
         trans.commit();
     }
+
+    //     Start   Tabbed test ---- >
+
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+            if (position == 0) {
+                Fragment fr = new MainInfoFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("user", user);
+                fr.setArguments(bundle);
+                return fr;
+            }
+            if (position == 1)
+                return new PieChartFragment();
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            // Show 3 total pages.
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+//            To show the labels or not to show
+//            switch (position) {
+//                case 0:
+//                    return "History";
+//                case 1:
+//                    return "Stats";
+//            }
+            return null;
+        }
+    }
+
+//        End Tabbed  <----
+
 }

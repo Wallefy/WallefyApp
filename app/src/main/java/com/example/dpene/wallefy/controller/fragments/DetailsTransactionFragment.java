@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +41,7 @@ public class DetailsTransactionFragment extends Fragment {
 
     private ITransactionCommunicator parent;
 
+    IToolbar toolbar;
 
     @Override
     public void onAttach(Context context) {
@@ -59,8 +62,8 @@ public class DetailsTransactionFragment extends Fragment {
         this.account = getArguments().getString("account");
         this.existingDate = getArguments().getString("date");
 
-        IToolbar toolbar = (IToolbar) getActivity();
-        toolbar.setTitle(String.valueOf(amount));
+//        toolbar = (IToolbar) getActivity();
+//        toolbar.setTitle(String.valueOf(amount));
 
         note = (TextView) v.findViewById(R.id.details_transaction_note);
         date = (TextView) v.findViewById(R.id.details_transaction_date);
@@ -75,6 +78,8 @@ public class DetailsTransactionFragment extends Fragment {
 
         note.setText(getArguments().getString("note"));
         date.setText(existingDate);
+        note.setText(parent.setNote());
+        date.setText(parent.setDate());
 
         detailsTransactionView.setOnTouchListener(new OnSwipeGestureListener(getContext()) {
             public void onSwipeRight() {
@@ -97,8 +102,46 @@ public class DetailsTransactionFragment extends Fragment {
         });
 
 
+        note.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                parent.getNote(note.getText().toString());
+            }
+        });
+
+        date.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                parent.getDate(date.getText().toString());
+            }
+        });
+
         return v;
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("Custom", "resume details: ");
+    }
 
 }
