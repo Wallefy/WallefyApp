@@ -3,18 +3,16 @@ package com.example.dpene.wallefy.controller.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -24,15 +22,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.EditActivity;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IPieChartCommunicator;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.controller.fragments.interfaces.ISaveSpinnerPosition;
-import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
-import com.example.dpene.wallefy.controller.gesturelistener.OnSwipeGestureListener;
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.Category;
 import com.example.dpene.wallefy.model.classes.History;
@@ -66,6 +61,8 @@ public class MainInfoFragment extends Fragment {
     int position;
     ISaveSpinnerPosition mainActivity;
 
+    AlertDialog dialog;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -79,20 +76,60 @@ public class MainInfoFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_main_info, container, false);
 
+        final FloatingActionButton fabIncome = (FloatingActionButton) view.findViewById(R.id.fab_income);
+        final FloatingActionButton fabExpense = (FloatingActionButton) view.findViewById(R.id.fab_expense);
+        final FloatingActionButton fabTransfer = (FloatingActionButton) view.findViewById(R.id.fab_transfer);
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setView(R.layout.dialog_floating_buttons);
+                dialog = builder.create();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.setCancelable(true);
+                dialog.setCanceledOnTouchOutside(true);
 
-                Intent editActivity = new Intent(getContext(), EditActivity.class);
-                editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
-                editActivity.putExtra("account", selectedAccount);
-                editActivity.putExtra("user", user);
-                startActivity(editActivity);
+                dialog.show();
+                dialog.findViewById(R.id.floating_group).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.findViewById(R.id.fab_income).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent editActivity = new Intent(getContext(), EditActivity.class);
+                        editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
+                        editActivity.putExtra("account", selectedAccount);
+                        editActivity.putExtra("user", user);
+                        editActivity.putExtra("isExpense",false);
+                        startActivity(editActivity);
+                    }
+                });
+                dialog.findViewById(R.id.fab_expense).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent editActivity = new Intent(getContext(), EditActivity.class);
+                        editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
+                        editActivity.putExtra("account", selectedAccount);
+                        editActivity.putExtra("user", user);
+                        editActivity.putExtra("isExpense", true);
+                        startActivity(editActivity);
+                    }
+                });
+                dialog.findViewById(R.id.fab_transfer).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent editActivity = new Intent(getContext(), EditActivity.class);
+                        editActivity.putExtra("key", IRequestCodes.TRANSFER);
+                        editActivity.putExtra("user", user);
+                        startActivity(editActivity);
+                    }
+                });
 
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
             }
         });
 
@@ -235,6 +272,9 @@ public class MainInfoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+//        if (floatingGroup.getVisibility() == View.VISIBLE)
+//            floatingGroup.setVisibility(View.GONE);
+
         position = mainActivity.getPosition();
         spnAccounts.setSelection(position);
         new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), spnAccounts.getSelectedItem().toString());
@@ -243,6 +283,8 @@ public class MainInfoFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        if (dialog!=null)
+            dialog.dismiss();
         position = spnAccounts.getSelectedItemPosition();
         mainActivity.setPosition(position);
     }

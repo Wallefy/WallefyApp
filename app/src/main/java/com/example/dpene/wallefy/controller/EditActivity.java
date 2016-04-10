@@ -1,5 +1,6 @@
 package com.example.dpene.wallefy.controller;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -38,6 +39,7 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
     String passedAmount;
     String passedNote;
     String passedDate;
+    boolean passedIsExpense;
 
     //     Start   Tabbed test ---- >
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -74,8 +76,9 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
 
         user = (User) getIntent().getSerializableExtra("user");
         entry = (History) getIntent().getSerializableExtra("entry");
-
+        passedIsExpense = getIntent().getBooleanExtra("isExpense",true);
         bundle = new Bundle();
+        bundle.putBoolean("passedIsExpence",passedIsExpense);
         fragmentCode = getIntent().getStringExtra("key");
 
 

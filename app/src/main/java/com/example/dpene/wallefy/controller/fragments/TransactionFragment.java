@@ -99,6 +99,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     private BigDecimal result;
 
     IToolbar toolbar;
+    boolean passedIsExpense;
 
     public TransactionFragment() {
 
@@ -124,7 +125,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         // arguments from detailsFragment
         this.note = getArguments().getString("note");
         this.date = getArguments().getString("date");
-
+        this.passedIsExpense = getArguments().getBoolean("passedIsExpence");
 //        setting custom heading for every fragment
         toolbar = (IToolbar) getActivity();
 
@@ -144,10 +145,27 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             listAccounts.add(ac.getAccountName());
         }
 
-        for (Category cat : user.getCategories()) {
-            listCategoriest.add(cat.getCategoryName());
-        }
 
+        if (getArguments().get("entry")!=null) {
+            for (Category cat : user.getCategories()) {
+                if (cat.isExpense())
+                    listCategoriest.add(cat.getCategoryName());
+                else {
+                    listCategoriest.add(cat.getCategoryName());
+                }
+            }
+        }
+        else {
+            for (Category cat : user.getCategories()) {
+                if (passedIsExpense) {
+                    if (cat.isExpense())
+                        listCategoriest.add(cat.getCategoryName());
+                } else {
+                    if (!cat.isExpense())
+                        listCategoriest.add(cat.getCategoryName());
+                }
+            }
+        }
         this.initializeCalculatorVariables(v);
 
         tvCategoryType = (TextView) v.findViewById(R.id.transaction_type_category);
@@ -199,26 +217,6 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             }
         }
 
-        transactionView.setOnTouchListener(new OnSwipeGestureListener(getContext()) {
-            public void onSwipeRight() {
-            }
-
-            public void onSwipeLeft() {
-                // send bundle to detailsFragment
-                Bundle bundle = new Bundle();
-
-                bundle.putDouble("amount", Double.parseDouble(amount.getText().toString()));
-                bundle.putString("category", spnCategoryType.getSelectedItem().toString());
-                bundle.putString("account", spnAccountType.getSelectedItem().toString());
-                bundle.putString("note", note != null ? note : "");
-                bundle.putString("date", date != null ? date : "");
-                bundle.putSerializable("user", user);
-
-
-                parent.notifyFragment(new DetailsTransactionFragment(), bundle);
-            }
-        });
-
         amount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -236,7 +234,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             }
         });
 
-        toolbar.setSubtitle(amount.getText().toString());
+        toolbar.setSubtitle( amount.getText().toString());
 
         return v;
     }
