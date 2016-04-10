@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,10 +29,11 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ListAccountsFragment extends Fragment {
+public class ListAccountsFragment extends Fragment implements View.OnClickListener{
 
     private ListView lvAccounts;
     private RelativeLayout addLayout;
+    private ImageButton btnAdd;
 
     private ArrayList<Account> arrayListAccounts;
 
@@ -58,6 +61,7 @@ public class ListAccountsFragment extends Fragment {
 
         lvAccounts = (ListView) v.findViewById(R.id.list_accounts_listview);
         addLayout = (RelativeLayout) v.findViewById(R.id.list_accounts_add);
+        btnAdd = (ImageButton) v.findViewById(R.id.list_accounts_add_btn);
 
         lvAccounts.setAdapter(new AccountsAdapter(getContext(), arrayListAccounts));
 
@@ -75,16 +79,17 @@ public class ListAccountsFragment extends Fragment {
             }
         });
 
-        addLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent editActivity = new Intent(getContext(), EditActivity.class);
-                editActivity.putExtra("key", IRequestCodes.EDIT_ACCOUNT);
-                startActivity(editActivity);
-            }
-        });
+        btnAdd.setOnClickListener(this);
+        addLayout.setOnClickListener(this);
 
         return v;
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent editActivity = new Intent(getContext(), EditActivity.class);
+        editActivity.putExtra("key", IRequestCodes.EDIT_ACCOUNT);
+        startActivity(editActivity);
     }
 
     private class AccountsAdapter extends ArrayAdapter<Account> {

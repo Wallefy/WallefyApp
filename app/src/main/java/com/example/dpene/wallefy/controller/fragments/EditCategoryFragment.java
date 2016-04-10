@@ -1,27 +1,21 @@
 package com.example.dpene.wallefy.controller.fragments;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
-import com.example.dpene.wallefy.controller.EditActivity;
-import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
-import com.example.dpene.wallefy.model.classes.Category;
+import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 
 import java.util.ArrayList;
 
@@ -36,7 +30,9 @@ public class EditCategoryFragment extends Fragment {
 
     // category's characteristics
     private int selectedIcon;
-    private boolean isExpend;
+    private boolean isExpense;
+
+    private IToolbar toolbar;
 
     private ArrayList icons;
 
@@ -48,6 +44,18 @@ public class EditCategoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        toolbar = (IToolbar) getActivity();
+
+        if (getArguments().get("isExpense") != null ) {
+            isExpense = getArguments().get("isExpense").equals("true");
+            toolbar.setSubtitle(isExpense ? "Expense" : "Income");
+        }
+
+        setHasOptionsMenu(true);
+
 
         icons = new ArrayList();
         icons.add(R.drawable.eating_56);
@@ -72,11 +80,9 @@ public class EditCategoryFragment extends Fragment {
         categoryName = (EditText) v.findViewById(R.id.edit_category_edt_name);
         imgSelectedIcon = (ImageView) v.findViewById(R.id.edit_category_selected_icon);
 
-        if (getArguments().get("isExpense") != null && getArguments().get("isExpense").equals("")) {
-            isExpend = getArguments().get("isExpense").equals("true");
-        }
-
         categoryName.setText(getArguments().get("title").toString());
+
+
 
         categoryIconsList = (GridView) v.findViewById(R.id.edit_category_icon_gridview);
         categoryIconsList.setNumColumns(4);

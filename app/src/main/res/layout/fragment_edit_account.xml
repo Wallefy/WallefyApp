@@ -45,12 +45,25 @@
             android:text="@string/init_balance_date"
             android:textSize="@dimen/edit_account_text_size" />
 
-        <TextView
-            android:id="@+id/edit_account_init_balance_date"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="date"
-            android:textSize="@dimen/edit_account_smaller_text_size" />
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/edit_account_init_balance_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textSize="@dimen/edit_account_smaller_text_size" />
+
+            <ImageButton
+                android:id="@+id/edit_account_calendar_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/calendar" />
+        </RelativeLayout>
     </LinearLayout>
 
     <!--insert toolbar/ statusbar-->
