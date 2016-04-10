@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:imeOptions="actionNext"
         android:hint="@string/amount"
-        android:inputType="number" />
+        android:inputType="numberDecimal" />
 
     <Button
         android:id="@+id/transfer_button"

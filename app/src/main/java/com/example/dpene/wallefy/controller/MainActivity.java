@@ -121,7 +121,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_transfer) {
+            Intent editActivity = new Intent(this, EditActivity.class);
+            editActivity.putExtra("key", IRequestCodes.TRANSFER);
+            editActivity.putExtra("user", user);
+            startActivity(editActivity);
             return true;
         }
 

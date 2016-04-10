@@ -279,6 +279,10 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     // on click for calculator's buttons
     @Override
     public void onClick(View v) {
+        if(getArguments().get("entry") != null){
+            amount.setText("");
+        }
+
         String btn_text = ((Button) v).getText().toString();
         String input = amount.getText().toString();
         String signField = sign.getText().toString();

@@ -9,4 +9,5 @@ public interface IRequestCodes {
     String EDIT_PROFILE = "EditProfile";
     String EDIT_TRANSACTION = "EditTransaction";
     String EDIT_ACCOUNT = "EditAccount";
+    String TRANSFER = "Transfer";
 }

@@ -21,6 +21,7 @@ import com.example.dpene.wallefy.controller.fragments.EditAccountFragment;
 import com.example.dpene.wallefy.controller.fragments.EditCategoryFragment;
 import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
 import com.example.dpene.wallefy.controller.fragments.TransactionFragment;
+import com.example.dpene.wallefy.controller.fragments.TransferFragment;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 import com.example.dpene.wallefy.controller.fragments.interfaces.ITransactionCommunicator;
@@ -178,6 +179,21 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
                 }
 
                 break;
+
+            /**
+             * required extras:
+             *      String          key      EDIT_ACCOUNT
+             *      Serializable    user
+             */
+            case IRequestCodes.TRANSFER:
+                editFragment = new TransferFragment();
+
+                if (getIntent().getSerializableExtra("user") != null) {
+                    bundle.putSerializable("user", getIntent().getSerializableExtra("user"));
+                }
+
+                break;
+
         }
 //         Put it in all fragments not only to transactions?
 //        bundle.putSerializable("user",user);
