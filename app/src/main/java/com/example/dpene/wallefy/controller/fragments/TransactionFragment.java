@@ -183,6 +183,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 amount.setText(String.valueOf((int) entry.getAmount()));
             }
         } else {
+
             if (getArguments().get("category") != null) {
                 spnCategoryType.setSelection(categoryAdapter.getPosition(getArguments().get("category")));
             }

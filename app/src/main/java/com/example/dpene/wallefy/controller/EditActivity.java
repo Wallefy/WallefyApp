@@ -25,6 +25,7 @@ import com.example.dpene.wallefy.controller.fragments.TransferFragment;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 import com.example.dpene.wallefy.controller.fragments.interfaces.ITransactionCommunicator;
+import com.example.dpene.wallefy.model.classes.History;
 import com.example.dpene.wallefy.model.classes.User;
 
 public class EditActivity extends AppCompatActivity implements IToolbar, ITransactionCommunicator {
@@ -46,6 +47,7 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
     Fragment editFragment;
     Bundle bundle;
     Toolbar toolbar;
+    History entry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,7 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
         });
 
         user = (User) getIntent().getSerializableExtra("user");
+        entry = (History) getIntent().getSerializableExtra("entry");
 
         bundle = new Bundle();
         fragmentCode = getIntent().getStringExtra("key");
@@ -147,6 +150,7 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
                 if (getIntent().getSerializableExtra("entry") != null) {
                     bundle.putSerializable("entry", getIntent().getSerializableExtra("entry"));
                 }
+
 
                 break;
 
