@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +56,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         btnBackToLogin = (Button) view.findViewById(R.id.btn_register_login);
 
         btnRegister.setOnClickListener(this);
+        btnBackToLogin.setOnClickListener(this);
         return view;
     }
 
@@ -68,7 +68,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                 String userName = edtName.getText().toString();
                 String userPassword = edtPassword.getText().toString();
                 String retypedPassword = edtRetypedPassword.getText().toString();
-
 
                 boolean isCorrect = true;
 
@@ -84,14 +83,10 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                     isCorrect = false;
                 }
 
-                Log.e("tag", isCorrect + "");
-
                 if (!RegisterHelper.validateUsername(userName)) {
                     edtName.setError("Name's length must be bigger than 3");
                     isCorrect = false;
                 }
-
-                Log.e("tag", isCorrect + "");
 
                 if (RegisterHelper.strongPassword(userPassword)) {
                     if (!userPassword.equals(retypedPassword)) {
@@ -107,8 +102,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.btn_register_login:
-                this.onDestroy();
-
+                getFragmentManager().popBackStack();
         }
     }
 

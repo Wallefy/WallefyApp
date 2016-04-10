@@ -1,15 +1,12 @@
 package com.example.dpene.wallefy.controller.fragments;
 
-import android.content.DialogInterface;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -41,6 +38,7 @@ import com.example.dpene.wallefy.model.datasources.AccountDataSource;
 import com.example.dpene.wallefy.model.datasources.CategoryDataSource;
 import com.example.dpene.wallefy.model.datasources.HistoryDataSource;
 import com.example.dpene.wallefy.model.exceptions.NegativeNumberException;
+import com.example.dpene.wallefy.model.utils.FormatMoney;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -63,6 +61,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     private LinearLayout transactionView;
 
     private User user;
+    private History entry;
 
     // vars from detailsFragment
     private String note;
@@ -133,7 +132,6 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
         View v = inflater.inflate(R.layout.fragment_transaction, container, false);
 
-
 //        enable options menu
         setHasOptionsMenu(true);
 
@@ -185,6 +183,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
 
         if (getArguments().get("entry") != null) {
+            this.entry = (History) getArguments().get("entry");
             History entry = (History) getArguments().get("entry");
             spnCategoryType.setSelection(categoryAdapter.getPosition(entry.getCategoryName()));
             spnAccountType.setSelection(accountAdapter.getPosition(mapUsersAccounts.get(entry.getAccountTypeId())));
@@ -194,11 +193,11 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             note = entry.getDescription();
             if (note!=null && note.length() > 0)
                 parent.getNote(note);
-            amount.setText(String.valueOf(String.format("%.2f", entry.getAmount())));
-            if(entry.getAmount() != 0) {
-                amount.setText(String.valueOf(entry.getAmount()));
-            } else {
-                amount.setText(String.valueOf((int) entry.getAmount()));
+            if(entry.getAmount() < 0){
+                amount.setText(String.valueOf(String.format("%.2f", entry.getAmount() * (-1))));
+            }
+            else {
+                amount.setText(String.valueOf(String.format("%.2f", entry.getAmount())));
             }
         } else {
 
@@ -278,8 +277,9 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     // on click for calculator's buttons
     @Override
     public void onClick(View v) {
-        if(getArguments().get("entry") != null){
-            amount.setText("");
+        if(this.entry != null){
+            amount.setText("0");
+            this.entry = null;
         }
 
         String btn_text = ((Button) v).getText().toString();
@@ -409,6 +409,14 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         btn_equals.setOnClickListener(this);
         btn_del.setOnClickListener(this);
         btn_delimiter.setOnClickListener(this);
+
+        btn_del.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                amount.setText("0");
+                return true;
+            }
+        });
     }
 
     private class TaskSaveEntry extends AsyncTask<String, Void, Boolean> {

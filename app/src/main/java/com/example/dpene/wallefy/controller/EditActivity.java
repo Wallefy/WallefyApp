@@ -60,6 +60,7 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
         setSupportActionBar(toolbar);
         toolbar.setTitle("Transaction");
 
+
         if (getSupportActionBar() != null) {
 //            Hide initial title
             getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -103,6 +104,7 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
                  *      String    title
                  */
             case IRequestCodes.EDIT_CATEGORY:
+                toolbar.setTitle("Category");
                 editFragment = new EditCategoryFragment();
                 if (getIntent().getStringExtra("isExpense") != null) {
                     bundle.putString("isExpense", getIntent().getStringExtra("isExpense"));

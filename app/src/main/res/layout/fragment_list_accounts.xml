@@ -21,6 +21,7 @@
             android:textSize="@dimen/row_account_text_size" />
 
         <ImageButton
+            android:id="@+id/list_accounts_add_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
