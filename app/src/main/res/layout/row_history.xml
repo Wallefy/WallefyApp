@@ -11,24 +11,36 @@
         android:adjustViewBounds="true" />
 
     <LinearLayout
-        android:padding="@dimen/activity_horizontal_margin"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/category_row_history"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/title_history_element"
-            android:textSize="@dimen/drawer_element_text_size" />
+        android:orientation="vertical"
+        android:padding="@dimen/activity_horizontal_margin">
 
         <LinearLayout
-            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/category_row_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_history_element"
+                android:textSize="@dimen/drawer_element_text_size" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:src="@drawable/camera"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/date_row_history"
@@ -38,10 +50,10 @@
                 android:textSize="@dimen/row_history_small_text_size" />
 
             <TextView
-                android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:id="@+id/note_row_history"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:text="@string/note_history_element"
                 android:textSize="@dimen/row_history_small_text_size" />
 
@@ -55,8 +67,8 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:gravity="center"
         android:text="00,00"
-        android:textSize="@dimen/drawer_element_text_size"
-        android:gravity="center"/>
+        android:textSize="@dimen/drawer_element_text_size" />
 
 </LinearLayout>

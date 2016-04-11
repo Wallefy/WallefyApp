@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,8 +36,8 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
 
     private RecyclerView listIncomeCategories;
     private RecyclerView listExpenseCategories;
-    private Button btnAddIncomeCateg;
-    private Button btnAddExpenseCateg;
+    private ImageButton btnAddIncomeCateg;
+    private ImageButton btnAddExpenseCateg;
     private RelativeLayout incomeLayout;
     private RelativeLayout expenseLayout;
 
@@ -75,9 +76,9 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
         listIncomeCategories = (RecyclerView) v.findViewById(R.id.category_income_recview);
         listExpenseCategories = (RecyclerView) v.findViewById(R.id.category_expense_recview);
 
-        btnAddIncomeCateg = (Button) v.findViewById(R.id.category_add_income_button);
+        btnAddIncomeCateg = (ImageButton) v.findViewById(R.id.category_add_income_button);
         btnAddIncomeCateg.setOnClickListener(this);
-        btnAddExpenseCateg = (Button) v.findViewById(R.id.category_add_expense_button);
+        btnAddExpenseCateg = (ImageButton) v.findViewById(R.id.category_add_expense_button);
         btnAddExpenseCateg.setOnClickListener(this);
 
         incomeLayout = (RelativeLayout) v.findViewById(R.id.list_category_income_layout);
@@ -107,9 +108,14 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
 
         @Override
         protected void onPostExecute(Void aVoid) {
+
             incomeAdapter = new CategoriesAdapter(getContext(), incomeCategs);
 //            listIncomeCategories.setLayoutManager(new LinearLayoutManager(getContext()));
-            listIncomeCategories.setLayoutManager(new GridLayoutManager(getContext(),2));
+
+            LinearLayoutManager linLayoutManager
+                    = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+//            listIncomeCategories.setLayoutManager(new GridLayoutManager(getContext(),2));
+            listIncomeCategories.setLayoutManager(linLayoutManager);
             listIncomeCategories.setAdapter(incomeAdapter);
 
             expenseAdapter = new CategoriesAdapter(getContext(), expenseCategs);

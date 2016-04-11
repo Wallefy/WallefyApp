@@ -260,9 +260,9 @@ public class MainInfoFragment extends Fragment {
             listHistory.setLayoutManager(new LinearLayoutManager(getContext()));
             listHistory.setAdapter(rea);
             if (aDouble <0)
-                txtAccountBalanceTotal.setTextColor(Color.RED);
+                txtAccountBalanceTotal.setTextColor(ContextCompat.getColor(getContext(), R.color.color_red));
             else{
-                txtAccountBalanceTotal.setTextColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
+                txtAccountBalanceTotal.setTextColor(ContextCompat.getColor(getContext(),R.color.color_green_dark));
             }
             txtAccountBalanceTotal.setText(String.format("%.2f", aDouble));
         }

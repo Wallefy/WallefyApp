@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,28 +12,43 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/list_category_income_layout"
+        <com.dd.ShadowLayout
+            android:id="@+id/list_category_shadow_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true">
+            app:sl_cornerRadius="0dp"
+            app:sl_dx="0dp"
+            app:sl_dy="3dp"
+            app:sl_fillColor="@color/color_orange_white"
+            app:sl_shadowColor="@color/color_shadow"
+            app:sl_shadowRadius="5dp">
 
-            <TextView
+            <RelativeLayout
+                android:id="@+id/list_category_income_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:text="@string/income"
-                android:textSize="@dimen/category_text_size" />
+                android:clickable="true"
+                android:padding="@dimen/activity_vertical_margin">
 
-            <Button
-                android:id="@+id/category_add_income_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:background="@android:drawable/ic_input_add" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:text="@string/income"
+                    android:textSize="@dimen/category_text_size" />
 
-        </RelativeLayout>
+                <ImageButton
+                    android:id="@+id/category_add_income_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/plus_28"
+                    android:textSize="@dimen/row_account_text_size" />
+
+            </RelativeLayout>
+        </com.dd.ShadowLayout>
 
 
         <android.support.v7.widget.RecyclerView
@@ -43,6 +59,8 @@
             android:visibility="visible">
 
         </android.support.v7.widget.RecyclerView>
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -51,28 +69,44 @@
         android:layout_weight="2"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/list_category_expense_layout"
+
+        <com.dd.ShadowLayout
+            android:id="@+id/list_category_shadow_layout_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true">
+            app:sl_cornerRadius="0dp"
+            app:sl_dx="0dp"
+            app:sl_dy="3dp"
+            app:sl_fillColor="@color/color_orange_white"
+            app:sl_shadowColor="@color/color_shadow"
+            app:sl_shadowRadius="5dp">
 
-            <TextView
+            <RelativeLayout
+                android:id="@+id/list_category_expense_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/expense"
-                android:textSize="@dimen/category_text_size" />
+                android:clickable="true"
+                android:padding="@dimen/activity_vertical_margin">
 
-            <Button
-                android:id="@+id/category_add_expense_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:background="@android:drawable/ic_input_add" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:text="@string/expense"
+                    android:textSize="@dimen/category_text_size" />
 
-        </RelativeLayout>
+                <ImageButton
+                    android:id="@+id/category_add_expense_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/plus_28"
+                    android:textSize="@dimen/row_account_text_size" />
 
+            </RelativeLayout>
+        </com.dd.ShadowLayout>
 
         <android.support.v7.widget.RecyclerView
 

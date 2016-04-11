@@ -1,6 +1,7 @@
 package com.example.dpene.wallefy.model.classes;
 
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -103,6 +104,7 @@ public class User implements Serializable {
     }
 
     public void addHistory(History newHistory) {
+        Log.e("error", "NullPointer");
         this.historyLog.add(newHistory);
     }
 

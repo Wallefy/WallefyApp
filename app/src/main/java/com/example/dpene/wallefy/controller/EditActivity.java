@@ -21,6 +21,7 @@ import com.example.dpene.wallefy.controller.fragments.DetailsTransactionFragment
 import com.example.dpene.wallefy.controller.fragments.EditAccountFragment;
 import com.example.dpene.wallefy.controller.fragments.EditCategoryFragment;
 import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
+import com.example.dpene.wallefy.controller.fragments.ExportFragment;
 import com.example.dpene.wallefy.controller.fragments.TransactionFragment;
 import com.example.dpene.wallefy.controller.fragments.TransferFragment;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
@@ -206,6 +207,7 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
                 }
 
                 break;
+
 
         }
 //         Put it in all fragments not only to transactions?
