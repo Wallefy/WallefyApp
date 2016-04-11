@@ -3,6 +3,7 @@ package com.example.dpene.wallefy.model.datasources;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.Category;
@@ -61,6 +62,40 @@ public class CategoryDataSource extends DataSource implements ICategoryDao{
                 " from categories where category_id = ? ", selArgs);
         if (cursor.moveToFirst()) {
             long catId = cursor.getLong(0);
+            long catResIcon = cursor.getLong(1);
+            String catName = cursor.getString(2);
+            boolean catIsExpense = (cursor.getInt(3) == 1);
+            long catUserFk = cursor.getLong(4);
+            cursor.close();
+            return new Category(catId,catName,catIsExpense,catResIcon,catUserFk);
+        }
+        cursor.close();
+        return null;
+    }
+
+    @Override
+    public Category updateCategory(String newCategoryName,long newIconResource,long userFk,String oldCategoryName) {
+        ContentValues values = new ContentValues();
+        values.put(Constants.CATEGORY_NAME, newCategoryName);
+        values.put(Constants.CATEGORY_ICON_RESOURCE, String.valueOf(newIconResource));
+        String whereCaluse = " category_name = ? and category_user_fk = ? ";
+        String[] whereArgs = {oldCategoryName,String.valueOf(userFk)};
+        long insertId = database.update(Constants.TABLE_CATEGORIES, values, whereCaluse,whereArgs);
+        Log.e("UPDATE", "updateCAtegory: new res " + newIconResource);
+        Log.e("UPDATE", "updateCAtegory: old res " + oldCategoryName);
+        Log.e("UPDATE", "updateCAtegory: user fk " + userFk);
+        Log.e("UPDATE", "updateCAtegory: cat name " + newCategoryName);
+        Log.e("UPDATE", "updateCAtegory: insertID " + insertId);
+        if (insertId < 0) {
+            return null;
+        }
+        String[] selArgs = {String.valueOf(insertId)};
+        Cursor cursor = database.rawQuery("select category_id,category_icon_resource,category_name,category_is_expense,category_user_fk" +
+                " from categories where category_id = ? ", selArgs);
+
+        if (cursor.moveToFirst()) {
+            long catId = cursor.getLong(0);
+            Log.e("UpdateCAtegory", "updateCategory: " + catId );
             long catResIcon = cursor.getLong(1);
             String catName = cursor.getString(2);
             boolean catIsExpense = (cursor.getInt(3) == 1);

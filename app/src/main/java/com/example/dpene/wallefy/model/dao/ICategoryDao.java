@@ -10,6 +10,8 @@ public interface ICategoryDao {
 
     Category createCategory(String categoryName, boolean isExpense, long iconResource,long userFk);
 
+    Category updateCategory(String categoryName,long iconResource,long userFk,String oldCategoryName);
+
     ArrayList<Category> showAllCategoriesForUser(long userId);
 
     ArrayList<Category> showCategoriesForAccount(long userId,long accountTypeId);

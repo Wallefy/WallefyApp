@@ -203,6 +203,7 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
                     editActivity.putExtra("title", holder.title.getText().toString());
                     editActivity.putExtra("categoryIcon",categs.get(position).getIconResource());
                     editActivity.putExtra("categoryType",((View)v.getParent()).getTag().toString());
+                    editActivity.putExtra("user", user);
                     startActivity(editActivity);
                 }
             });

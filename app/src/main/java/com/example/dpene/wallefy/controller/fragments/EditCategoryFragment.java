@@ -47,6 +47,9 @@ public class EditCategoryFragment extends Fragment {
 
     User user;
 
+    private String oldCategoryName;
+    private long oldIconRes;
+
     public EditCategoryFragment() {
         // Required empty public constructor
     }
@@ -75,7 +78,7 @@ public class EditCategoryFragment extends Fragment {
         setHasOptionsMenu(true);
 
         user = (User) getArguments().getSerializable("user");
-
+        oldIconRes = getArguments().getLong("categoryIcon");
 
         icons = new ArrayList<>();
         icons.add(R.drawable.eating_56);
@@ -107,16 +110,19 @@ public class EditCategoryFragment extends Fragment {
             categoryName.setText(getArguments().get("title").toString());
         }
 
+
+
         categoryIconsList = (GridView) v.findViewById(R.id.edit_category_icon_gridview);
         categoryIconsList.setNumColumns(4);
         categoryIconsList.setAdapter(new IconAdapter(getContext(), icons));
 
-        Log.e("USER", "onCreateView: " + String.valueOf(getArguments().get("categoryIcon")) );
         if (getArguments().get("categoryIcon")!= null) {
             long iconResource = (long) getArguments().get("categoryIcon");
-
-            if (iconResource != 0)
+            Log.e("Category icon", "onCreateView: "+ iconResource );
+            if (iconResource != 0) {
                 imgSelectedIcon.setImageResource((int) (iconResource));
+                Log.e("Category icon if", "onCreateView: " + iconResource);
+            }
 
         }else
             imgSelectedIcon.setImageResource(icons.get(0));
@@ -145,9 +151,11 @@ public class EditCategoryFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.save_entry:
 //                TODO if it is a new account - if there is initial balance there must be init date
-                String isExpenceForDb = getArguments().getString("categoryType").equals("true")? "1" :"0";
+                String isExpenceForDb = null;
+                if (getArguments().getString("categoryType") != null)
+                     isExpenceForDb = getArguments().getString("categoryType").equals("true")? "1" :"0";
                 new SaveCategoryTask(getArguments().get("title") == null).execute(categoryName.getText().toString(),
-                        isExpenceForDb,String.valueOf(selectedIcon));
+                        isExpenceForDb,String.valueOf(selectedIcon),oldCategoryName,String.valueOf(oldIconRes));
 
 //                String selectedAccountType = spnAccountType.getSelectedItem().toString();
 //                String selectedCategory = spnCategoryType.getSelectedItem().toString();
@@ -226,10 +234,26 @@ public class EditCategoryFragment extends Fragment {
         protected Boolean doInBackground(String... params) {
             ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
             ((CategoryDataSource)categoryDataSource).open();
-            //            TODO update existing Category for current user
+            //            TODO check existing Category for current user and update userAccountPojo
             if (isNewCategory) {
                 Category cat = categoryDataSource.createCategory(params[0], params[1].equals("1"),
                         Long.valueOf(params[2]), user.getUserId());
+                if (cat != null) {
+                    user.addCategory(cat);
+                    return true;
+                }
+            }
+            else {
+//                execute(categoryName.getText().toString(),
+//                isExpenceForDb,String.valueOf(selectedIcon),oldCategoryName,String.valueOf(oldIconRes));
+                Log.e("Category in async", "doInBackground: categoryName  " + params[0] );
+                Log.e("Category in async", "doInBackground: selectedIcon  " + params[2] );
+                Log.e("Category in async", "doInBackground: selectedIcon  old" +  params[4] );
+                Log.e("Category in async", "doInBackground: userId  " + user.getUserId() );
+                Log.e("Category in async", "doInBackground: oldCategoryName  " + params[3] );
+                String imgRes = params[2];
+//                if (imgRes.length() <2)
+                Category cat = categoryDataSource.updateCategory(params[0],Long.valueOf(params[2]),user.getUserId(),params[3]);
                 if (cat != null) {
                     user.addCategory(cat);
                     return true;

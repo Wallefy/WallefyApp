@@ -10,6 +10,8 @@ public interface IAccountDao {
 
     Account createAccount(long userId,String accountName);
 
+    Account updateAccount(long userId,String newAccountName, String oldAccoundName);
+
     ArrayList<Account> showAllAccounts(long userId);
 
 }

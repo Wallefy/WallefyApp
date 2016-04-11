@@ -3,6 +3,7 @@ package com.example.dpene.wallefy.model.datasources;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.dao.IAccountDao;
@@ -46,6 +47,29 @@ public class AccountDataSource extends DataSource implements IAccountDao {
         values.put(Constants.ACCOUNT_USER_FK, userId);
         values.put(Constants.ACCOUNT_NAME, accountName);
         long insertId = database.insert(Constants.TABLE_ACCOUNT_TYPES, null, values);
+        if (insertId < 0) {
+            return null;
+        }
+        String[] selArgs = {String.valueOf(insertId)};
+        Cursor cursor = database.rawQuery("select account_type_id, account_name,account_user_fk from Account_Types where account_type_id = ? ", selArgs);
+        if (cursor.moveToFirst()) {
+            long accTypeId = cursor.getLong(0);
+            String accName = cursor.getString(1);
+            long accUserFk = cursor.getLong(2);
+            cursor.close();
+            return new Account(accTypeId, accUserFk, accName);
+        }
+        cursor.close();
+        return null;
+    }
+
+    @Override
+    public Account updateAccount(long userId, String newAccountName, String oldAccountName) {
+        ContentValues values = new ContentValues();
+        values.put(Constants.ACCOUNT_NAME, newAccountName);
+        String whereCaluse = " account_name = ? and account_user_fk = ? ";
+        String[] whereArgs = {oldAccountName,String.valueOf(userId)};
+        long insertId = database.update(Constants.TABLE_ACCOUNT_TYPES, values, whereCaluse,whereArgs);
         if (insertId < 0) {
             return null;
         }

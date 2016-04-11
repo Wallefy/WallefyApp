@@ -125,7 +125,7 @@ public class EditAccountFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.save_entry:
 //                TODO if it is a new account - if there is initial balance there must be init date
-                new SaveAccountTask(amount.length() <= 0).execute(tvTitle.getText().toString());
+                new SaveAccountTask(amount.length() <= 0).execute(tvTitle.getText().toString(),title);
 //                String selectedAccountType = spnAccountType.getSelectedItem().toString();
 //                String selectedCategory = spnCategoryType.getSelectedItem().toString();
 //                String calculatedAmount = amount.getText().toString();
@@ -168,9 +168,11 @@ public class EditAccountFragment extends Fragment {
         protected Boolean doInBackground(String... params) {
             IAccountDao accountDataSource = AccountDataSource.getInstance(getContext());
             ((AccountDataSource) accountDataSource).open();
-//            TODO update existing account for current user
+//            TODO check existing account for current user
             if (this.isNewAccount)
                 pojoAccount = accountDataSource.createAccount(user.getUserId(), params[0]);
+            else
+                pojoAccount = accountDataSource.updateAccount(user.getUserId(),params[0],params[1]);
             ((AccountDataSource) accountDataSource).close();
             if (pojoAccount != null) {
                 user.addAccount(pojoAccount);
