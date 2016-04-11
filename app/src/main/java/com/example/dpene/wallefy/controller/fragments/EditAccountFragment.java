@@ -2,6 +2,7 @@ package com.example.dpene.wallefy.controller.fragments;
 
 
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -23,7 +24,10 @@ import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.controllerutils.DateFormater;
 import com.example.dpene.wallefy.controller.controllerutils.PickDate;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
+import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.User;
+import com.example.dpene.wallefy.model.dao.IAccountDao;
+import com.example.dpene.wallefy.model.datasources.AccountDataSource;
 
 import org.w3c.dom.Text;
 
@@ -46,6 +50,7 @@ public class EditAccountFragment extends Fragment {
     private String amount;
 
     private User user;
+    Account pojoAccount;
 
     public EditAccountFragment() {
     }
@@ -61,7 +66,6 @@ public class EditAccountFragment extends Fragment {
         user = (User) getArguments().getSerializable("user");
 
         IToolbar toolbar = (IToolbar) getActivity();
-        toolbar.setTitle("Account");
 
         this.title = getArguments().getString("title");
         this.existingDate = getArguments().getString("date");
@@ -75,7 +79,9 @@ public class EditAccountFragment extends Fragment {
         tvDate.setFocusable(false);
         tvDate.setInputType(InputType.TYPE_NULL);
 
+        toolbar.setSubtitle("Create account");
         if (existingDate.length() != 0) {
+            toolbar.setSubtitle("Edit account");
             tvAmount.setEnabled(false);
             tvAmount.setFocusable(false);
             tvAmount.setInputType(InputType.TYPE_NULL);
@@ -109,7 +115,7 @@ public class EditAccountFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        if (amount.length()<=0)
+        if (amount.length() <= 0)
             menu.removeItem(R.id.clear_values);
     }
 
@@ -118,7 +124,8 @@ public class EditAccountFragment extends Fragment {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.save_entry:
-                Toast.makeText(getContext(), "SAVE TO DB", Toast.LENGTH_SHORT).show();
+//                TODO if it is a new account - if there is initial balance there must be init date
+                new SaveAccountTask(amount.length() <= 0).execute(tvTitle.getText().toString());
 //                String selectedAccountType = spnAccountType.getSelectedItem().toString();
 //                String selectedCategory = spnCategoryType.getSelectedItem().toString();
 //                String calculatedAmount = amount.getText().toString();
@@ -146,6 +153,39 @@ public class EditAccountFragment extends Fragment {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private class SaveAccountTask extends AsyncTask<String, Void, Boolean> {
+
+        private boolean isNewAccount;
+
+        public SaveAccountTask(boolean isNewAccount) {
+            this.isNewAccount = isNewAccount;
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            IAccountDao accountDataSource = AccountDataSource.getInstance(getContext());
+            ((AccountDataSource) accountDataSource).open();
+//            TODO update existing account for current user
+            if (this.isNewAccount)
+                pojoAccount = accountDataSource.createAccount(user.getUserId(), params[0]);
+            ((AccountDataSource) accountDataSource).close();
+            if (pojoAccount != null) {
+                user.addAccount(pojoAccount);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            if (aBoolean) {
+                Toast.makeText(getContext(), "Account created", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+            } else
+                Toast.makeText(getContext(), "Failed to create account", Toast.LENGTH_SHORT).show();
         }
     }
 }

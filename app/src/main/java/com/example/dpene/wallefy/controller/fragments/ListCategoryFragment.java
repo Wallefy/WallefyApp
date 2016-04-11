@@ -44,6 +44,8 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
     private ArrayList<Category> expenseCategs;
 
     User user;
+    CategoriesAdapter incomeAdapter;
+    CategoriesAdapter expenseAdapter;
 
     public ListCategoryFragment() {
         // Required empty public constructor
@@ -94,6 +96,8 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
 
         @Override
         protected Void doInBackground(Long... params) {
+            incomeCategs.clear();
+            expenseCategs.clear();
             ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
             ((CategoryDataSource)categoryDataSource).open();
             incomeCategs = categoryDataSource.showCategoriesByType(params[0],false);
@@ -103,15 +107,25 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            CategoriesAdapter incomeAdapter = new CategoriesAdapter(getContext(), incomeCategs);
+            incomeAdapter = new CategoriesAdapter(getContext(), incomeCategs);
 //            listIncomeCategories.setLayoutManager(new LinearLayoutManager(getContext()));
             listIncomeCategories.setLayoutManager(new GridLayoutManager(getContext(),2));
             listIncomeCategories.setAdapter(incomeAdapter);
 
-            CategoriesAdapter expenseAdapter = new CategoriesAdapter(getContext(), expenseCategs);
+            expenseAdapter = new CategoriesAdapter(getContext(), expenseCategs);
 //            listExpenseCategories.setLayoutManager(new LinearLayoutManager(getContext()));
             listExpenseCategories.setLayoutManager(new GridLayoutManager(getContext(),2));
             listExpenseCategories.setAdapter(expenseAdapter);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (incomeAdapter != null) {
+            new FillCategoriesTask().execute(user.getUserId());
+            Log.e("TAG", "onResume: " );
         }
     }
 
@@ -139,7 +153,8 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
 
         Intent editActivity = new Intent(getContext(), EditActivity.class);
         editActivity.putExtra("key", IRequestCodes.EDIT_CATEGORY);
-        editActivity.putExtra("isExpense", isExpense);
+        editActivity.putExtra("editCategisExpense", isExpense);
+        editActivity.putExtra("user", user);
         startActivity(editActivity);
 
     }

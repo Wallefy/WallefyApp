@@ -1,10 +1,14 @@
 package com.example.dpene.wallefy.controller.fragments;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -13,9 +17,14 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
+import com.example.dpene.wallefy.model.classes.Category;
+import com.example.dpene.wallefy.model.classes.User;
+import com.example.dpene.wallefy.model.dao.ICategoryDao;
+import com.example.dpene.wallefy.model.datasources.CategoryDataSource;
 
 import java.util.ArrayList;
 
@@ -36,6 +45,8 @@ public class EditCategoryFragment extends Fragment {
 
     private ArrayList<Integer> icons;
 
+    User user;
+
     public EditCategoryFragment() {
         // Required empty public constructor
     }
@@ -53,10 +64,17 @@ public class EditCategoryFragment extends Fragment {
             isExpense = getArguments().get("isExpense").equals("true");
             toolbar.setSubtitle(isExpense ? "Expense" : "Income");
         }
-        if (getArguments().getString("categoryType") != null)
-            toolbar.setSubtitle(getArguments().getString("categoryType"));
+        if (getArguments().getString("categoryType") != null){
+
+            if (getArguments().getString("categoryType").equals("true"))
+                toolbar.setSubtitle("Expense");
+            else
+                toolbar.setSubtitle("Income");
+        }
 
         setHasOptionsMenu(true);
+
+        user = (User) getArguments().getSerializable("user");
 
 
         icons = new ArrayList<>();
@@ -85,20 +103,23 @@ public class EditCategoryFragment extends Fragment {
         imgSelectedIcon = (ImageView) v.findViewById(R.id.edit_category_selected_icon);
 
 
-        categoryName.setText(getArguments().get("title").toString());
+        if (getArguments().get("title") != null) {
+            categoryName.setText(getArguments().get("title").toString());
+        }
 
         categoryIconsList = (GridView) v.findViewById(R.id.edit_category_icon_gridview);
         categoryIconsList.setNumColumns(4);
         categoryIconsList.setAdapter(new IconAdapter(getContext(), icons));
 
-        if (getArguments().get("categoryIcon")!=null) {
+        Log.e("USER", "onCreateView: " + String.valueOf(getArguments().get("categoryIcon")) );
+        if (getArguments().get("categoryIcon")!= null) {
             long iconResource = (long) getArguments().get("categoryIcon");
 
             if (iconResource != 0)
                 imgSelectedIcon.setImageResource((int) (iconResource));
-            else
-                imgSelectedIcon.setImageResource(icons.get(0));
-        }
+
+        }else
+            imgSelectedIcon.setImageResource(icons.get(0));
 
         categoryIconsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -107,8 +128,55 @@ public class EditCategoryFragment extends Fragment {
                 selectedIcon = icons.get(position);
             }
         });
-
+//      To modify toolbar btns override oncreateoptionsmenu
+        setHasOptionsMenu(true);
         return v;
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (categoryName.length() <= 0)
+            menu.removeItem(R.id.clear_values);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.save_entry:
+//                TODO if it is a new account - if there is initial balance there must be init date
+                String isExpenceForDb = getArguments().getString("categoryType").equals("true")? "1" :"0";
+                new SaveCategoryTask(getArguments().get("title") == null).execute(categoryName.getText().toString(),
+                        isExpenceForDb,String.valueOf(selectedIcon));
+
+//                String selectedAccountType = spnAccountType.getSelectedItem().toString();
+//                String selectedCategory = spnCategoryType.getSelectedItem().toString();
+//                String calculatedAmount = amount.getText().toString();
+//                if (Double.parseDouble(calculatedAmount) > 0) {
+//                    new TaskSaveEntry(user.getUserId()).execute(selectedAccountType, selectedCategory,
+//                            calculatedAmount,parent.setNote(), DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(parent.setDate()));
+//                    getActivity().finish();
+//                }
+//
+//                else{
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                    builder.setMessage("Amount must be positive");
+//                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            // User clicked OK button
+//                        }
+//                    });
+//                    AlertDialog dialog = builder.create();
+//                    dialog.show();
+//                }
+                return true;
+            case R.id.clear_values:
+                Toast.makeText(getContext(), "DELETE FROM DB", Toast.LENGTH_SHORT).show();
+//                ((TextView) getActivity().findViewById(R.id.transaction_amount)).setText("0");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private class IconAdapter extends BaseAdapter {
@@ -148,4 +216,35 @@ public class EditCategoryFragment extends Fragment {
         }
     }
 
+    private class SaveCategoryTask extends AsyncTask<String,Void,Boolean>{
+        private boolean isNewCategory;
+        public SaveCategoryTask(boolean b) {
+            this.isNewCategory = b;
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
+            ((CategoryDataSource)categoryDataSource).open();
+            //            TODO update existing Category for current user
+            if (isNewCategory) {
+                Category cat = categoryDataSource.createCategory(params[0], params[1].equals("1"),
+                        Long.valueOf(params[2]), user.getUserId());
+                if (cat != null) {
+                    user.addCategory(cat);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            if (aBoolean) {
+                Toast.makeText(getContext(), "Category created", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+            } else
+                Toast.makeText(getContext(), "Failed to create category", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

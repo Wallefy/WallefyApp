@@ -30,9 +30,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/edit_category_selected_icon"
+                android:layout_toEndOf="@+id/edit_category_selected_icon"
                 android:hint="@string/category"
                 android:imeOptions="actionDone"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:textSize="@dimen/edit_category_smaller_text_size" />
 
             <ImageView

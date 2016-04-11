@@ -107,16 +107,15 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
             case IRequestCodes.EDIT_CATEGORY:
                 toolbar.setTitle("Category");
                 editFragment = new EditCategoryFragment();
+//                bundle.putSerializable("user",  getIntent().getSerializableExtra("user"));
                 if (getIntent().getStringExtra("isExpense") != null) {
                     bundle.putString("isExpense", getIntent().getStringExtra("isExpense"));
                 }
                 if (getIntent().getStringExtra("title") != null) {
-                    bundle.putLong("categoryIcon",getIntent().getLongExtra("categoryIcon",0));
+                    bundle.putLong("categoryIcon", getIntent().getLongExtra("categoryIcon", 0));
                     bundle.putString("title", getIntent().getStringExtra("title"));
-                    bundle.putString("categoryType",getIntent().getStringExtra("categoryType"));
-                } else {
-                    bundle.putString("title", "");
                 }
+                bundle.putString("categoryType",getIntent().getStringExtra("editCategisExpense"));
                 break;
 
             /**
@@ -171,6 +170,8 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
              */
             case IRequestCodes.EDIT_ACCOUNT:
                 editFragment = new EditAccountFragment();
+                toolbar.setTitle("Account");
+                bundle.putSerializable("user", getIntent().getSerializableExtra("user"));
                 // inflate bundle
                 if (getIntent().getStringExtra("title") != null) {
                     bundle.putString("title", getIntent().getStringExtra("title"));

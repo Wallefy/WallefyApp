@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +30,10 @@ import com.example.dpene.wallefy.model.classes.History;
 import com.example.dpene.wallefy.model.classes.User;
 import com.example.dpene.wallefy.model.dao.IAccountDao;
 import com.example.dpene.wallefy.model.dao.IHistoryDao;
+import com.example.dpene.wallefy.model.dao.IUserDao;
 import com.example.dpene.wallefy.model.datasources.AccountDataSource;
 import com.example.dpene.wallefy.model.datasources.HistoryDataSource;
+import com.example.dpene.wallefy.model.datasources.UserDataSource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,7 +80,7 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
         addLayout = (RelativeLayout) v.findViewById(R.id.list_accounts_add);
         btnAdd = (ImageButton) v.findViewById(R.id.list_accounts_add_btn);
 
-        new FillAccountsList().execute(user.getUserId());
+//        new FillAccountsList().execute(user.getUserId());
 
         accountAdapter = new AccountsAdapter(getContext(), arrayListAccounts);
 
@@ -89,7 +92,7 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
                 editActivity.putExtra("title", arrayListAccounts.get(position).getAccountName());
                 editActivity.putExtra("amount", ((TextView) ((ViewGroup) view).getChildAt(1)).getText().toString());
                 editActivity.putExtra("date", "Not available");
-                editActivity.putExtra("user",user);
+                editActivity.putExtra("user", user);
                 startActivity(editActivity);
             }
         });
@@ -104,6 +107,7 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         Intent editActivity = new Intent(getContext(), EditActivity.class);
         editActivity.putExtra("key", IRequestCodes.EDIT_ACCOUNT);
+        editActivity.putExtra("user",user);
         startActivity(editActivity);
     }
 
@@ -160,10 +164,13 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
     private class FillAccountsList extends AsyncTask<Long,Void,Void >{
         @Override
         protected Void doInBackground(Long... params) {
+            arrayListAccounts.clear();
             IHistoryDao historyDataSource = HistoryDataSource.getInstance(getContext());
             ((HistoryDataSource)historyDataSource).open();
+            IAccountDao accountDataSource = AccountDataSource.getInstance(getContext());
+            ((AccountDataSource)accountDataSource).open();
             for (Account acc :
-                    user.getAccounts()) {
+                    accountDataSource.showAllAccounts(user.getUserId())) {
                 double amount = historyDataSource.calcAmountForAccount(params[0],acc.getAccountName());
                 acc.setAccountTempSum(amount);
                 arrayListAccounts.add(acc);
@@ -174,6 +181,16 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
         @Override
         protected void onPostExecute(Void aVoid) {
             lvAccounts.setAdapter(accountAdapter);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (accountAdapter != null) {
+            new FillAccountsList().execute(user.getUserId());
+            Log.e("TAG", "onResume: " );
         }
     }
 }
