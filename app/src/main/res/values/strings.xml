@@ -79,5 +79,6 @@
     <string name="amount">Amount</string>
     <string name="old_password">Old password</string>
     <string name="category">Category</string>
+    <string name="export">Export</string>
 
 </resources>

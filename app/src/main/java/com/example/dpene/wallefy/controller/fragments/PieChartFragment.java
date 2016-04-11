@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IPieChartCommunicator;
-import com.example.dpene.wallefy.controller.gesturelistener.OnSwipeGestureListener;
 import com.example.dpene.wallefy.model.classes.Category;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
@@ -131,21 +130,6 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         l.setYOffset(0f);
 
 
-        root.setOnTouchListener(new OnSwipeGestureListener(getContext()){
-
-            public void onSwipeRight() {
-                // send bundle to mainInfoFragment
-                Bundle bundle = new Bundle();
-
-                // inflate bundle
-                bundle.putSerializable("user", getArguments().getSerializable("user"));
-                parent.notifyFragment(new MainInfoFragment(), bundle);
-            }
-
-            public void onSwipeLeft() {
-            }
-
-        });
 
         return v;
     }

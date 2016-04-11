@@ -157,4 +157,11 @@ public class CategoryDataSource extends DataSource implements ICategoryDao{
         cursor.close();
         return null;
     }
+
+    @Override
+    public boolean deleteCategory(long userId, String categoryName) {
+        String whereClause =Constants.CATEGORY_USER_FK + " = ? and " + Constants.CATEGORY_NAME + " = ? ";
+        String[] args = {String.valueOf(userId),categoryName};
+        return database.delete(Constants.TABLE_CATEGORIES, whereClause, args) > 0;
+    }
 }

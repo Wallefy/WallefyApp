@@ -22,11 +22,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.fragments.EditAccountFragment;
 import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
+import com.example.dpene.wallefy.controller.fragments.ExportFragment;
 import com.example.dpene.wallefy.controller.fragments.ListAccountsFragment;
 import com.example.dpene.wallefy.controller.fragments.ListCategoryFragment;
 import com.example.dpene.wallefy.controller.fragments.MainInfoFragment;
@@ -157,12 +159,18 @@ public class MainActivity extends AppCompatActivity
             toolbar.setSubtitle("Categories");
 
         } else if (id == R.id.nav_settings) {
+
+            mViewPager.setVisibility(View.VISIBLE);
+            tabLayout.setVisibility(View.VISIBLE);
+
             Intent editActivity = new Intent(this, EditActivity.class);
             editActivity.putExtra("key", IRequestCodes.EDIT_PROFILE);
             editActivity.putExtra("user", user);
             startActivity(editActivity);
 
         } else if (id == R.id.nav_export) {
+            replaceFrag(new ExportFragment());
+            toolbar.setSubtitle("Export");
 
         } else if (id == R.id.nav_logout) {
             //            Clear shared pref file
@@ -256,5 +264,4 @@ public class MainActivity extends AppCompatActivity
     }
 
 //        End Tabbed  <----
-
 }

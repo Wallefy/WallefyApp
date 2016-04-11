@@ -28,6 +28,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         try {
+            db.execSQL("PRAGMA foreign_keys = ON");
             db.execSQL(CreateTableQueries.CREATE_TABLE_ACCOUNT_TYPES);
             db.execSQL(CreateTableQueries.CREATE_TABLE_CATEGORIES);
             db.execSQL(CreateTableQueries.CREATE_TABLE_USERS);
@@ -36,6 +37,12 @@ public class DbHelper extends SQLiteOpenHelper {
         } catch (SQLiteException e) {
             Log.e("SQL ERROR", "UNABLE TO CREATE TABLES" + e);
         }
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        db.execSQL("PRAGMA foreign_keys = ON");
     }
 
     @Override

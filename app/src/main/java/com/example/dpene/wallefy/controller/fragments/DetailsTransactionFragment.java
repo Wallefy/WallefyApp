@@ -22,7 +22,6 @@ import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.controllerutils.PickDate;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 import com.example.dpene.wallefy.controller.fragments.interfaces.ITransactionCommunicator;
-import com.example.dpene.wallefy.controller.gesturelistener.OnSwipeGestureListener;
 import com.example.dpene.wallefy.model.classes.User;
 
 public class DetailsTransactionFragment extends Fragment {
@@ -83,25 +82,6 @@ public class DetailsTransactionFragment extends Fragment {
         note.setText(parent.setNote());
         date.setText(parent.setDate());
 
-        detailsTransactionView.setOnTouchListener(new OnSwipeGestureListener(getContext()) {
-            public void onSwipeRight() {
-                Bundle bundle = new Bundle();
-
-                bundle.putDouble("amount", getArguments().getDouble("amount"));
-                bundle.putString("category", getArguments().getString("category"));
-                bundle.putString("account", getArguments().getString("account"));
-                bundle.putString("note", note.getText().toString());
-                bundle.putString("date", date.getText().toString());
-                bundle.putSerializable("user", user);
-                // TODO put picture and location
-
-                parent.notifyFragment(new TransactionFragment(), bundle);
-            }
-
-            public void onSwipeLeft() {
-            }
-
-        });
 
 
         note.addTextChangedListener(new TextWatcher() {

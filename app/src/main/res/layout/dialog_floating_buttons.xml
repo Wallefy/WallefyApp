@@ -38,7 +38,7 @@
     <!--android:src="@drawable/transfer_48" />-->
     <ImageButton
         android:id="@+id/fab_transfer"
-        android:background="@drawable/hollow_btn"
+        android:background="@drawable/circle_48"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/transfer_48"
@@ -48,7 +48,7 @@
         android:layout_marginBottom="19dp" />
     <ImageButton
         android:id="@+id/fab_expense"
-        android:background="@drawable/hollow_btn"
+        android:background="@drawable/circle_48"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/expense_48"
@@ -58,7 +58,7 @@
         android:layout_marginBottom="19dp" />
     <ImageButton
         android:id="@+id/fab_income"
-        android:background="@drawable/hollow_btn"
+        android:background="@drawable/circle_48"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/income_48"

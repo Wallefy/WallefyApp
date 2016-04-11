@@ -16,33 +16,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/name"
-            android:textSize="@dimen/edit_profile_text_size" />
+            android:textSize="@dimen/edit_profile_smaller_text_size" />
 
         <EditText
             android:id="@+id/edit_profile_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
-            android:textSize="@dimen/edit_profile_smaller_text_size" />
+            android:textSize="@dimen/edit_profile_text_size" />
 
         <TextView
+            android:paddingTop="@dimen/activity_vertical_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/email"
-            android:textSize="@dimen/edit_profile_text_size" />
+            android:textSize="@dimen/edit_profile_smaller_text_size" />
 
         <EditText
             android:id="@+id/edit_profile_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
-            android:textSize="@dimen/edit_profile_smaller_text_size" />
+            android:textSize="@dimen/edit_profile_text_size" />
 
         <TextView
+            android:paddingTop="@dimen/activity_vertical_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/old_password"
-            android:textSize="@dimen/edit_profile_text_size" />
+            android:textSize="@dimen/edit_profile_smaller_text_size" />
 
         <EditText
             android:id="@+id/edit_profile_old_password"
@@ -50,13 +52,14 @@
             android:layout_height="wrap_content"
             android:imeOptions="actionNext"
             android:inputType="textPassword"
-            android:textSize="@dimen/edit_profile_smaller_text_size" />
+            android:textSize="@dimen/edit_profile_text_size" />
 
         <TextView
+            android:paddingTop="@dimen/activity_vertical_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/password"
-            android:textSize="@dimen/edit_profile_text_size" />
+            android:textSize="@dimen/edit_profile_smaller_text_size" />
 
         <EditText
             android:id="@+id/edit_profile_password"
@@ -64,13 +67,14 @@
             android:layout_height="wrap_content"
             android:imeOptions="actionNext"
             android:inputType="textPassword"
-            android:textSize="@dimen/edit_profile_smaller_text_size" />
+            android:textSize="@dimen/edit_profile_text_size" />
 
         <TextView
+            android:paddingTop="@dimen/activity_vertical_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/register_retypepass_tv"
-            android:textSize="@dimen/edit_profile_text_size" />
+            android:textSize="@dimen/edit_profile_smaller_text_size" />
 
         <EditText
             android:id="@+id/edit_profile_retype_password"
@@ -78,10 +82,9 @@
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
             android:inputType="textPassword"
-            android:textSize="@dimen/edit_profile_smaller_text_size" />
+            android:textSize="@dimen/edit_profile_text_size" />
 
     </LinearLayout>
 
-    <!--<include layout="@layout/saving_buttons" />-->
 
 </LinearLayout>

@@ -15,7 +15,7 @@ public class CreateTableQueries {
     public static final String CREATE_TABLE_ACCOUNT_TYPES = "create table if not exists " + Constants.TABLE_ACCOUNT_TYPES + " (" +
             Constants.ACCOUNT_TYPE_ID + " integer primary key autoincrement not null, " +
             Constants.ACCOUNT_NAME + " varchar(20) not null," +
-            Constants.ACCOUNT_USER_FK + " integer not null references " + Constants.TABLE_USERS + "(" + Constants.USER_ID + "))";
+            Constants.ACCOUNT_USER_FK + " integer not null references " + Constants.TABLE_USERS + "(" + Constants.USER_ID + ") ON DELETE CASCADE )";
 
     //   ----- CREATE TABLE CATEGORIES -----
     public static final String CREATE_TABLE_CATEGORIES = "create table if not exists " + Constants.TABLE_CATEGORIES + " (" +
@@ -23,13 +23,13 @@ public class CreateTableQueries {
             Constants.CATEGORY_NAME + " varchar(20) not null," +
             Constants.CATEGORY_ICON_RESOURCE + " long not null," +
             Constants.CATEGORY_IS_EXPENCE + " integer not null," +
-            Constants.CATEGORY_USER_FK + " integer not null references " + Constants.TABLE_USERS + "(" + Constants.USER_ID + "))";
+            Constants.CATEGORY_USER_FK + " integer not null references " + Constants.TABLE_USERS + "(" + Constants.USER_ID + ") ON DELETE CASCADE  )";
     //   ----- CREATE TABLE HISTORY -----
     public static final String CREATE_TABLE_HISTORY = "create table if not exists " + Constants.TABLE_HISTORY + "(" +
             Constants.HISTORY_ID + " integer primary key autoincrement not null, " +
-            Constants.HISTORY_USER_FK + " integer not null references " + Constants.TABLE_USERS + "(" + Constants.USER_ID + "), " +
-            Constants.HISTORY_ACCOUNT_TYPE_FK + " integer not null references " + Constants.TABLE_ACCOUNT_TYPES + "(" + Constants.ACCOUNT_TYPE_ID + ")," +
-            Constants.HISTORY_CATEGORY_FK + " integer not null references " + Constants.TABLE_CATEGORIES + "(" + Constants.CATEGORY_ID + ")," +
+            Constants.HISTORY_USER_FK + " integer not null references " + Constants.TABLE_USERS + "(" + Constants.USER_ID + " ) ON DELETE CASCADE  , " +
+            Constants.HISTORY_ACCOUNT_TYPE_FK + " integer not null references " + Constants.TABLE_ACCOUNT_TYPES + "(" + Constants.ACCOUNT_TYPE_ID + ") ON DELETE CASCADE ," +
+            Constants.HISTORY_CATEGORY_FK + " integer not null references " + Constants.TABLE_CATEGORIES + "(" + Constants.CATEGORY_ID + ") ON DELETE CASCADE ," +
             Constants.HISTORY_DESCRIPTION + " varchar(200), " +
             Constants.TRANSACTION_DATE + " DATETIME not null," +
             Constants.TRANSACTION_AMOUNT + " numeric not null," +

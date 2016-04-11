@@ -1,9 +1,11 @@
 package com.example.dpene.wallefy.controller.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -156,31 +158,24 @@ public class EditCategoryFragment extends Fragment {
                      isExpenceForDb = getArguments().getString("categoryType").equals("true")? "1" :"0";
                 new SaveCategoryTask(getArguments().get("title") == null).execute(categoryName.getText().toString(),
                         isExpenceForDb,String.valueOf(selectedIcon),oldCategoryName,String.valueOf(oldIconRes));
-
-//                String selectedAccountType = spnAccountType.getSelectedItem().toString();
-//                String selectedCategory = spnCategoryType.getSelectedItem().toString();
-//                String calculatedAmount = amount.getText().toString();
-//                if (Double.parseDouble(calculatedAmount) > 0) {
-//                    new TaskSaveEntry(user.getUserId()).execute(selectedAccountType, selectedCategory,
-//                            calculatedAmount,parent.setNote(), DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(parent.setDate()));
-//                    getActivity().finish();
-//                }
-//
-//                else{
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//                    builder.setMessage("Amount must be positive");
-//                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int id) {
-//                            // User clicked OK button
-//                        }
-//                    });
-//                    AlertDialog dialog = builder.create();
-//                    dialog.show();
-//                }
                 return true;
             case R.id.clear_values:
-                Toast.makeText(getContext(), "DELETE FROM DB", Toast.LENGTH_SHORT).show();
-//                ((TextView) getActivity().findViewById(R.id.transaction_amount)).setText("0");
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("DELETE Category: " + getArguments().get("title").toString());
+                builder.setMessage("All entries for this category would be deleted!");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        new DeleteCategoryTask(user.getUserId()).execute(categoryName.getText().toString());
+                        getActivity().finish();
+                    }
+                });
+                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -269,6 +264,31 @@ public class EditCategoryFragment extends Fragment {
                 getActivity().finish();
             } else
                 Toast.makeText(getContext(), "Failed to create category", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class DeleteCategoryTask extends AsyncTask<String,Void,Boolean>{
+        private long userId;
+        public DeleteCategoryTask(long userId) {
+            this.userId = userId;
+
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
+            ((CategoryDataSource)categoryDataSource).open();
+            if (categoryDataSource.deleteCategory(userId,params[0]))
+                return true;
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            if (aBoolean)
+                Toast.makeText(getContext(), "DELETE SUCCESS", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getContext(), "DELETE FAILED", Toast.LENGTH_SHORT).show();
         }
     }
 }

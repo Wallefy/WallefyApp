@@ -25,7 +25,6 @@ import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.controllerutils.DateFormater;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 import com.example.dpene.wallefy.controller.fragments.interfaces.ITransactionCommunicator;
-import com.example.dpene.wallefy.controller.gesturelistener.OnSwipeGestureListener;
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.Calculator;
 import com.example.dpene.wallefy.model.classes.Category;
@@ -248,10 +247,12 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 String selectedAccountType = spnAccountType.getSelectedItem().toString();
                 String selectedCategory = spnCategoryType.getSelectedItem().toString();
                 String calculatedAmount = amount.getText().toString();
-                if (Double.parseDouble(calculatedAmount) > 0) {
-                    new TaskSaveEntry(user.getUserId()).execute(selectedAccountType, selectedCategory,
-                            calculatedAmount,parent.setNote(),DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(parent.setDate()));
-                    getActivity().finish();
+                if (calculatedAmount.matches("(?:\\d*\\.)?\\d+") && Double.parseDouble(calculatedAmount) > 0) {
+//                    if (Double.parseDouble(calculatedAmount) > 0) {
+                        new TaskSaveEntry(user.getUserId()).execute(selectedAccountType, selectedCategory,
+                                calculatedAmount, parent.setNote(), DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(parent.setDate()));
+                        getActivity().finish();
+//                    }
                 }
 
                 else{
@@ -265,6 +266,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 }
+
                 return true;
             case R.id.clear_values:
                 ((TextView) getActivity().findViewById(R.id.transaction_amount)).setText("0");
@@ -344,7 +346,6 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             result = Calculator.calc(prevNum, input, signField);
             if (result.compareTo(BigDecimal.ZERO) < 0) {
                 throw new NegativeNumberException("The amount cannot be a negative number");
-
             }
 
             DecimalFormat f = new DecimalFormat();

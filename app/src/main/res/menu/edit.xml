@@ -5,13 +5,13 @@
 
     <item
         android:id="@+id/clear_values"
-        android:icon="@android:drawable/ic_delete"
+        android:icon="@drawable/trash"
         app:showAsAction="ifRoom|withText"
         android:title="Clear">
     </item>
     <item
         android:id="@+id/save_entry"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/save_50"
         app:showAsAction="ifRoom|withText"
         android:title="Save">
     </item>

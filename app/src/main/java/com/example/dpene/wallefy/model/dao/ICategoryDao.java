@@ -18,6 +18,8 @@ public interface ICategoryDao {
 
     ArrayList<Category> showCategoriesByType(long userId,boolean isExpense);
 
+    boolean deleteCategory(long userId, String categoryName);
+
 
 
 }

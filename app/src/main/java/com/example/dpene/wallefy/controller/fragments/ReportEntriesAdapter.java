@@ -52,9 +52,9 @@ public class ReportEntriesAdapter extends RecyclerView.Adapter<ReportEntriesAdap
         holder.date.setText(DateFormater.from_yyyyMMddHHmmss_To_dMMMyyyyHHmmss(entries.get(position).getDateOfTransaction()));
         holder.note.setText(entries.get(position).getDescription());
         if (entries.get(position).getAmount() < 0)
-            holder.amount.setTextColor(Color.RED);
+            holder.amount.setTextColor(ContextCompat.getColor(context, R.color.color_red_dark));
         else
-            holder.amount.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            holder.amount.setTextColor(ContextCompat.getColor(context, R.color.color_green_dark));
         holder.amount.setText( String.format("%.2f", entries.get(position).getAmount()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

@@ -15,14 +15,14 @@
     <dimen name="transaction_amount_text_size">50sp</dimen>
     <dimen name="description_text_size">20sp</dimen>
     <dimen name="description_picture_padding">20dp</dimen>
-    <dimen name="category_text_size">30sp</dimen>
+    <dimen name="category_text_size">20sp</dimen>
     <dimen name="edit_category_text_size">30sp</dimen>
     <dimen name="edit_category_smaller_text_size">25sp</dimen>
     <dimen name="edit_account_text_size">30sp</dimen>
     <dimen name="edit_account_smaller_text_size">25sp</dimen>
     <dimen name="edit_profile_text_size">30sp</dimen>
-    <dimen name="edit_profile_smaller_text_size">25sp</dimen>
-    <dimen name="search_by_date_text_size">30sp</dimen>
+    <dimen name="edit_profile_smaller_text_size">17sp</dimen>
+    <dimen name="search_by_date_text_size">22sp</dimen>
     <dimen name="search_by_date_smaller_text_size">25sp</dimen>
     <dimen name="main_info_big_text_size">40sp</dimen>
     <dimen name="main_info_mid_text_size">30sp</dimen>
@@ -30,6 +30,6 @@
     <dimen name="reports_text_size">30sp</dimen>
     <dimen name="transfer_text_size">30sp</dimen>
     <dimen name="row_category_text_size">20sp</dimen>
-    <dimen name="row_account_text_size">25sp</dimen>
+    <dimen name="row_account_text_size">16sp</dimen>
     <dimen name="main_info_small_text_size">20sp</dimen>
 </resources>
