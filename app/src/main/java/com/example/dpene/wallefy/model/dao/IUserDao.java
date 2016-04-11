@@ -13,6 +13,8 @@ public interface IUserDao {
 
     User registerUser(String userEmail,String userName, String password);
 
+    User updateUser(long id, String userEmail,String userName, String password);
+
     boolean editUsername(long userId,String newUsername);
 
     boolean editEmail(long userId,String newEmail);

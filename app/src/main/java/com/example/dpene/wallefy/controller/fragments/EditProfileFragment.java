@@ -135,13 +135,15 @@ public class EditProfileFragment extends Fragment {
 
                     if(newPass.equals("")) {
                         newPass = user.getPassword();
+                    } else {
+                        newPass = RegisterHelper.md5(newPass);
                     }
 
                     new TaskUpdateUserProfile(user.getUserId()).execute(newEmail, newUsername, newPass);
                 }
                 return true;
             case R.id.clear_values:
-                // NO SUCH BUTTON
+                // TODO: delete user
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -160,13 +162,13 @@ public class EditProfileFragment extends Fragment {
         @Override
         protected Boolean doInBackground(String... params) {
 
-            IUserDao userDataSource = UserDataSource.getInstance(getContext());
+            userDataSource = UserDataSource.getInstance(getContext());
             ((UserDataSource) userDataSource).open();
-            //TODO update user in DB
-            Log.e("tag", userID +", " + params[0]+", " + params[1]+", " + params[2]);
-//            User user = userDataSource.updateUser(userID, params[0], params[1], params[2]);
+
+            User user = userDataSource.updateUser(userID, params[0], params[1], params[2]);
 
             if (user != null) {
+                EditProfileFragment.this.user = user;
                 return true;
             }
             return false;
