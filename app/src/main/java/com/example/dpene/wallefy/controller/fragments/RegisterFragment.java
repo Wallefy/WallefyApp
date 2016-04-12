@@ -32,15 +32,14 @@ import java.util.ArrayList;
  */
 public class RegisterFragment extends Fragment implements View.OnClickListener {
 
+    private EditText edtEmail;
+    private EditText edtName;
+    private EditText edtPassword;
+    private EditText edtRetypedPassword;
+    private Button btnRegister;
+    private Button btnBackToLogin;
 
-    EditText edtEmail;
-    EditText edtName;
-    EditText edtPassword;
-    EditText edtRetypedPassword;
-    Button btnRegister;
-    Button btnBackToLogin;
-
-    User user;
+    private User user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,12 +71,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                 boolean isCorrect = true;
 
                 if (RegisterHelper.validateEmail(userMail)) {
-                    // check if email already exist
-
-//                    else if (user.getUserId() ==0){
-//                        Toast.makeText(getContext(), "Email already registered", Toast.LENGTH_SHORT).show();
-//                    }
-
                 } else {
                     edtEmail.setError("Invalid email");
                     isCorrect = false;

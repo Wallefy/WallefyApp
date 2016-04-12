@@ -1,13 +1,9 @@
 package com.example.dpene.wallefy.controller.fragments;
 
-
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,19 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
-import com.example.dpene.wallefy.controller.controllerutils.DateFormater;
 import com.example.dpene.wallefy.controller.controllerutils.PickDate;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.User;
 import com.example.dpene.wallefy.model.dao.IAccountDao;
 import com.example.dpene.wallefy.model.datasources.AccountDataSource;
-
-import org.w3c.dom.Text;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,7 +39,7 @@ public class EditAccountFragment extends Fragment {
     private String amount;
 
     private User user;
-    Account pojoAccount;
+    private Account pojoAccount;
 
     public EditAccountFragment() {
     }
@@ -70,7 +59,6 @@ public class EditAccountFragment extends Fragment {
         this.title = getArguments().getString("title");
         this.existingDate = getArguments().getString("date");
         this.amount = getArguments().getString("amount");
-
 
         tvTitle = (TextView) v.findViewById(R.id.edit_account_name);
         tvAmount = (TextView) v.findViewById(R.id.edit_account_init_balance);
@@ -125,7 +113,7 @@ public class EditAccountFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.save_entry:
 //                TODO if it is a new account - if there is initial balance there must be init date
-                new SaveAccountTask(amount.length() <= 0).execute(tvTitle.getText().toString(),title);
+                new SaveAccountTask(amount.length() <= 0).execute(tvTitle.getText().toString(), title);
 //                String selectedAccountType = spnAccountType.getSelectedItem().toString();
 //                String selectedCategory = spnCategoryType.getSelectedItem().toString();
 //                String calculatedAmount = amount.getText().toString();
@@ -172,7 +160,7 @@ public class EditAccountFragment extends Fragment {
             if (this.isNewAccount)
                 pojoAccount = accountDataSource.createAccount(user.getUserId(), params[0]);
             else
-                pojoAccount = accountDataSource.updateAccount(user.getUserId(),params[0],params[1]);
+                pojoAccount = accountDataSource.updateAccount(user.getUserId(), params[0], params[1]);
             ((AccountDataSource) accountDataSource).close();
             if (pojoAccount != null) {
                 user.addAccount(pojoAccount);

@@ -76,9 +76,6 @@ public class MainInfoFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_main_info, container, false);
 
-//        final FloatingActionButton fabIncome = (FloatingActionButton) view.findViewById(R.id.fab_income);
-//        final FloatingActionButton fabExpense = (FloatingActionButton) view.findViewById(R.id.fab_expense);
-//        final FloatingActionButton fabTransfer = (FloatingActionButton) view.findViewById(R.id.fab_transfer);
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -271,9 +268,6 @@ public class MainInfoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        if (floatingGroup.getVisibility() == View.VISIBLE)
-//            floatingGroup.setVisibility(View.GONE);
-
         position = mainActivity.getPosition();
         spnAccounts.setSelection(position);
         new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), spnAccounts.getSelectedItem().toString());

@@ -238,14 +238,6 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
     }
 
     @Override
-    public void notifyFragment(Fragment fragment, Bundle bundle) {
-        fragment.setArguments(bundle);
-        FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
-        trans.replace(R.id.root_edit, fragment);
-        trans.commit();
-    }
-
-    @Override
     public void getAmount(String amount) {
         passedAmount = amount;
         toolbar.setSubtitle(amount);

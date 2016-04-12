@@ -16,34 +16,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/account_name"
-            android:textSize="@dimen/edit_account_text_size" />
+            android:textSize="@dimen/edit_account_smaller_text_size" />
 
         <EditText
             android:id="@+id/edit_account_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionNext"
-            android:textSize="@dimen/edit_account_smaller_text_size" />
+            android:textSize="@dimen/edit_account_text_size" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/initial_balance"
-            android:textSize="@dimen/edit_account_text_size" />
+            android:textSize="@dimen/edit_account_smaller_text_size" />
 
         <EditText
             android:id="@+id/edit_account_init_balance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
-            android:textSize="@dimen/edit_account_smaller_text_size" />
+            android:textSize="@dimen/edit_account_text_size" />
 
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/init_balance_date"
-            android:textSize="@dimen/edit_account_text_size" />
+            android:textSize="@dimen/edit_account_smaller_text_size" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"
-                android:textSize="@dimen/edit_account_smaller_text_size" />
+                android:textSize="@dimen/edit_account_text_size" />
 
             <ImageButton
                 android:id="@+id/edit_account_calendar_btn"

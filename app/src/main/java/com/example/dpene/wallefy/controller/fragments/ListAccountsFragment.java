@@ -51,8 +51,8 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
 
     private ArrayList<Account> arrayListAccounts;
 
-    User user;
-    AccountsAdapter accountAdapter;
+    private User user;
+    private AccountsAdapter accountAdapter;
 
     public ListAccountsFragment() {
     }
@@ -63,8 +63,8 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
      * extras:
      * String key = IRequestCode
      * String title
-     * ?   amount
-     * ?String date
+     * String   amount
+     * String date
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -190,7 +190,6 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
 
         if (accountAdapter != null) {
             new FillAccountsList().execute(user.getUserId());
-            Log.e("TAG", "onResume: " );
         }
     }
 }

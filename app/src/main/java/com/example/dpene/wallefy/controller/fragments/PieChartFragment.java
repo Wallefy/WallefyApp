@@ -77,8 +77,6 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         categories.add(new Category(3, "Food3", true, R.drawable.ghost, 1 ));
         categories.add(new Category(4, "Food4", true, R.drawable.ghost, 1 ));
 
-
-
         categoriySum.add((double) 5);
         categoriySum.add((double) 8);
         categoriySum.add((double) 1);
@@ -128,8 +126,6 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         l.setXEntrySpace(7f);
         l.setYEntrySpace(0f);
         l.setYOffset(0f);
-
-
 
         return v;
     }
