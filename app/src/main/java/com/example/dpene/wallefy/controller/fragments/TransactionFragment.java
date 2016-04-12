@@ -124,6 +124,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         this.note = getArguments().getString("note");
         this.date = getArguments().getString("date");
         this.passedIsExpense = getArguments().getBoolean("passedIsExpence");
+        Log.e("MAINFRAGCAT", "onClick: trans " + getArguments().getBoolean("passedIsExpence"));
 //        setting custom heading for every fragment
         toolbar = (IToolbar) getActivity();
 
@@ -154,13 +155,13 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         }
         else {
             for (Category cat : user.getCategories()) {
-                if (passedIsExpense) {
-                    if (cat.isExpense())
+//                if (passedIsExpense) {
+//                    if (cat.isExpense() && !cat.isSystem())
                         listCategoriest.add(cat.getCategoryName());
-                } else {
-                    if (!cat.isExpense())
-                        listCategoriest.add(cat.getCategoryName());
-                }
+//                } else {
+//                    if (!cat.isExpense()&& !cat.isSystem())
+//                        listCategoriest.add(cat.getCategoryName());
+//                }
             }
         }
         this.initializeCalculatorVariables(v);

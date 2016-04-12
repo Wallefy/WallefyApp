@@ -260,7 +260,7 @@ public class EditCategoryFragment extends Fragment {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             if (aBoolean) {
-                Toast.makeText(getContext(), "Category created", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             } else
                 Toast.makeText(getContext(), "Failed to create category", Toast.LENGTH_SHORT).show();

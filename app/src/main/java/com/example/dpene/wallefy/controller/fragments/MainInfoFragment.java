@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +33,14 @@ import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.Category;
 import com.example.dpene.wallefy.model.classes.History;
 import com.example.dpene.wallefy.model.classes.User;
+import com.example.dpene.wallefy.model.dao.IAccountDao;
+import com.example.dpene.wallefy.model.dao.ICategoryDao;
 import com.example.dpene.wallefy.model.dao.IHistoryDao;
+import com.example.dpene.wallefy.model.dao.IUserDao;
+import com.example.dpene.wallefy.model.datasources.AccountDataSource;
+import com.example.dpene.wallefy.model.datasources.CategoryDataSource;
 import com.example.dpene.wallefy.model.datasources.HistoryDataSource;
+import com.example.dpene.wallefy.model.datasources.UserDataSource;
 
 import java.util.ArrayList;
 
@@ -50,7 +57,7 @@ public class MainInfoFragment extends Fragment {
 
     User user;
 
-    ArrayList<String> accounts;
+    ArrayList<String> userAccountNames;
     ArrayList<History> entries;
     ReportEntriesAdapter rea;
     IHistoryDao historyDataSource;
@@ -62,6 +69,8 @@ public class MainInfoFragment extends Fragment {
     ISaveSpinnerPosition mainActivity;
 
     AlertDialog dialog;
+
+    ArrayList<Category> userCategories;
 
     @Override
     public void onAttach(Context context) {
@@ -139,23 +148,27 @@ public class MainInfoFragment extends Fragment {
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
 
-        ArrayList<String> userAccountNames = new ArrayList<>();
+        userCategories = new ArrayList<>();
 
-        for (Account ac :
-                user.getAccounts()) {
-            userAccountNames.add(ac.getAccountName());
-        }
+        userAccountNames = new ArrayList<>();
+
+
+
+//        for (Account ac :
+//                user.getAccounts()) {
+//            userAccountNames.add(ac.getAccountName());
+//        }
 
         balance = (LinearLayout) view.findViewById(R.id.main_info_balance);
         listCategories = (RecyclerView) view.findViewById(R.id.main_info_categories);
 
-        accountAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, accounts);
+        accountAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, userAccountNames);
         listHistory = (RecyclerView) view.findViewById(R.id.main_info_history);
 
         spnAccounts = (Spinner) view.findViewById(R.id.spinner_main_info_accounts);
-        spnAccounts.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, userAccountNames));
 
-        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getContext(), user.getCategories());
+
+
 
         spnAccounts.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -170,13 +183,6 @@ public class MainInfoFragment extends Fragment {
 
             }
         });
-
-
-        LinearLayoutManager linLayoutManager
-                = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-
-        listCategories.setLayoutManager(linLayoutManager);
-        listCategories.setAdapter(categoriesAdapter);
 
         return view;
 
@@ -223,6 +229,8 @@ public class MainInfoFragment extends Fragment {
                     editActivity.putExtra("account", selectedAccount);
                     editActivity.putExtra("user", user);
                     editActivity.putExtra("category", categs.get(position).getCategoryName());
+                    Log.e("MAINFRAGCAT", "onClick: maininfo" + categs.get(position).isExpense());
+                    editActivity.putExtra("passedIsExpence",categs.get(position).isExpense());
                     startActivity(editActivity);
                 }
             });
@@ -255,6 +263,9 @@ public class MainInfoFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Double aDouble) {
+
+            if (entries == null)
+                entries = new ArrayList<>();
             rea = new ReportEntriesAdapter(getContext(), entries, user);
             rea.notifyDataSetChanged();
             listHistory.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -273,10 +284,10 @@ public class MainInfoFragment extends Fragment {
         super.onResume();
 //        if (floatingGroup.getVisibility() == View.VISIBLE)
 //            floatingGroup.setVisibility(View.GONE);
-
         position = mainActivity.getPosition();
         spnAccounts.setSelection(position);
-        new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), spnAccounts.getSelectedItem().toString());
+        new FillAccountNames(user.getUserId()).execute();
+        new FillCategoriesTask(user.getUserId()).execute();
     }
 
     @Override
@@ -288,5 +299,71 @@ public class MainInfoFragment extends Fragment {
         mainActivity.setPosition(position);
     }
 
+    private class FillAccountNames extends AsyncTask<Void,Void,Void>{
 
+        private long userId;
+
+        public FillAccountNames(long userId) {
+            this.userId = userId;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            IAccountDao accountDataSource = AccountDataSource.getInstance(getContext());
+            ((AccountDataSource)accountDataSource).open();
+            userAccountNames.clear();
+            ArrayList<Account> allAcc=accountDataSource.showAllAccounts(userId);
+            if (allAcc == null)
+                allAcc = new ArrayList<>();
+
+            for (Account acc :
+                    allAcc) {
+                userAccountNames.add(acc.getAccountName());
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            if (userAccountNames == null)
+                userAccountNames = new ArrayList<>();
+                spnAccounts.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, userAccountNames));
+                if (spnAccounts.getSelectedItem() != null)
+                    new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), spnAccounts.getSelectedItem().toString());
+        }
+    }
+
+    private class FillCategoriesTask extends AsyncTask<Void,Void,Void>{
+        private long userId;
+        public FillCategoriesTask(long userId) {
+            this.userId = userId;
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
+            ((CategoryDataSource)categoryDataSource).open();
+            userCategories.clear();
+            ArrayList<Category> nonSystemCats =  categoryDataSource.showAllCategoriesForUser(userId);
+            for (Category cat :
+                    nonSystemCats) {
+                if (!cat.isSystem())
+                    userCategories.add(cat);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (userCategories == null)
+                userCategories = new ArrayList<>();
+            CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getContext(), userCategories);
+            LinearLayoutManager linLayoutManager
+                    = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+            listCategories.setLayoutManager(linLayoutManager);
+            listCategories.setAdapter(categoriesAdapter);
+        }
+    }
 }

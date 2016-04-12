@@ -43,6 +43,11 @@ public class AccountDataSource extends DataSource implements IAccountDao {
 
     @Override
     public Account createAccount(long userId, String accountName) {
+
+        Account duplicateAccount = showAccount(userId,accountName);
+        if (duplicateAccount != null)
+            return null;
+
         ContentValues values = new ContentValues();
         values.put(Constants.ACCOUNT_USER_FK, userId);
         values.put(Constants.ACCOUNT_NAME, accountName);
@@ -65,6 +70,13 @@ public class AccountDataSource extends DataSource implements IAccountDao {
 
     @Override
     public Account updateAccount(long userId, String newAccountName, String oldAccountName) {
+//        check if acc name already exist for current user
+
+//        super.checkForExisting(Constants.TABLE_ACCOUNT_TYPES,Constants.ACCOUNT_NAME,)
+
+        Account duplicateAccount = showAccount(userId,newAccountName);
+        if (duplicateAccount != null)
+            return null;
         ContentValues values = new ContentValues();
         values.put(Constants.ACCOUNT_NAME, newAccountName);
         String whereCaluse = " account_name = ? and account_user_fk = ? ";
@@ -104,5 +116,12 @@ public class AccountDataSource extends DataSource implements IAccountDao {
         }
         cursor.close();
         return null;
+    }
+
+    @Override
+    public boolean deleteAccount(long userId, String accountName) {
+        String whereClause =Constants.ACCOUNT_USER_FK + " = ? and " + Constants.ACCOUNT_NAME + " = ? ";
+        String[] args = {String.valueOf(userId),accountName};
+        return database.delete(Constants.TABLE_ACCOUNT_TYPES, whereClause, args) > 0;
     }
 }

@@ -23,7 +23,8 @@ public class CreateTableQueries {
             Constants.CATEGORY_NAME + " varchar(20) not null," +
             Constants.CATEGORY_ICON_RESOURCE + " long not null," +
             Constants.CATEGORY_IS_EXPENCE + " integer not null," +
-            Constants.CATEGORY_USER_FK + " integer not null references " + Constants.TABLE_USERS + "(" + Constants.USER_ID + ") ON DELETE CASCADE  )";
+            Constants.CATEGORY_USER_FK + " integer not null references " + Constants.TABLE_USERS + "(" + Constants.USER_ID + ") ON DELETE CASCADE," +
+            Constants.CATEGORY_IS_SYSTEM + " integer )";
     //   ----- CREATE TABLE HISTORY -----
     public static final String CREATE_TABLE_HISTORY = "create table if not exists " + Constants.TABLE_HISTORY + "(" +
             Constants.HISTORY_ID + " integer primary key autoincrement not null, " +

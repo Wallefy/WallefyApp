@@ -4,7 +4,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/wallet"
+        android:icon="@mipmap/ic_launcher_walley"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">

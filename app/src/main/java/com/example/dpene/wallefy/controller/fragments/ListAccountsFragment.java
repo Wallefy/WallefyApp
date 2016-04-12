@@ -169,8 +169,13 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
             ((HistoryDataSource)historyDataSource).open();
             IAccountDao accountDataSource = AccountDataSource.getInstance(getContext());
             ((AccountDataSource)accountDataSource).open();
+            Log.e("LISTACCC", "doInBackground: " + String.valueOf(user));
+            Log.e("LISTACCC", "doInBackground: " +String.valueOf(accountDataSource) );
+            ArrayList<Account> allAcc = accountDataSource.showAllAccounts(user.getUserId());
+            if (allAcc == null || allAcc.size() == 0 )
+                return null;
             for (Account acc :
-                    accountDataSource.showAllAccounts(user.getUserId())) {
+                    allAcc) {
                 double amount = historyDataSource.calcAmountForAccount(params[0],acc.getAccountName());
                 acc.setAccountTempSum(amount);
                 arrayListAccounts.add(acc);
@@ -190,7 +195,6 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
 
         if (accountAdapter != null) {
             new FillAccountsList().execute(user.getUserId());
-            Log.e("TAG", "onResume: " );
         }
     }
 }

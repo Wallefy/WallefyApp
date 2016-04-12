@@ -32,6 +32,7 @@ public class Constants {
     public static final String CATEGORY_ICON_RESOURCE = "category_icon_resource";
     public static final String CATEGORY_IS_EXPENCE = "category_is_expense";
     public static final String CATEGORY_USER_FK = "category_user_fk";
+    public static final String CATEGORY_IS_SYSTEM = "category_is_system";
 
     //    ----- HISTORY -----
     public static final String HISTORY_ID = "history_id";

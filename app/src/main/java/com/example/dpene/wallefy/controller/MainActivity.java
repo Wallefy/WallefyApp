@@ -2,6 +2,8 @@ package com.example.dpene.wallefy.controller;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
@@ -63,6 +66,12 @@ public class MainActivity extends AppCompatActivity
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+//        ---- To make status bar brow on devices with android above Lollipop
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setStatusBarColor(Color.parseColor("#8F542C"));
+        }
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -193,7 +202,7 @@ public class MainActivity extends AppCompatActivity
     private void replaceFrag(Fragment fr) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-//        ft.setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right,R.anim.slide_in_right,R.anim.slide_out_left);
+        ft.setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right,R.anim.slide_in_right,R.anim.slide_out_left);
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", user);
         fr.setArguments(bundle);
@@ -214,7 +223,6 @@ public class MainActivity extends AppCompatActivity
 
     public void notifyFragment(Fragment fragment, Bundle bundle) {
         fragment.setArguments(bundle);
-
         FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
         trans.replace(R.id.root_main, fragment);
         trans.commit();
@@ -233,6 +241,7 @@ public class MainActivity extends AppCompatActivity
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             if (position == 0) {
+                Log.e("PAGER LOAD", "getItem: " );
                 Fragment fr = new MainInfoFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("user", user);

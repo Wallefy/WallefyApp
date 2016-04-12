@@ -28,7 +28,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         try {
-            db.execSQL("PRAGMA foreign_keys = ON");
+//            db.execSQL("PRAGMA foreign_keys = ON");
             db.execSQL(CreateTableQueries.CREATE_TABLE_ACCOUNT_TYPES);
             db.execSQL(CreateTableQueries.CREATE_TABLE_CATEGORIES);
             db.execSQL(CreateTableQueries.CREATE_TABLE_USERS);

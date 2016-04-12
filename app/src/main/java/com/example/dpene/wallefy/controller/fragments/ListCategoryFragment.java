@@ -101,13 +101,27 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
             expenseCategs.clear();
             ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
             ((CategoryDataSource)categoryDataSource).open();
-            incomeCategs = categoryDataSource.showCategoriesByType(params[0],false);
-            expenseCategs = categoryDataSource.showCategoriesByType(params[0],true);
+            ArrayList<Category> nonSystemCats =  categoryDataSource.showCategoriesByType(params[0], false);
+            for (Category cat :
+                    nonSystemCats) {
+                if (!cat.isSystem())
+                    incomeCategs.add(cat);
+            }
+            nonSystemCats.clear();
+            nonSystemCats =  categoryDataSource.showCategoriesByType(params[0],true);
+            for (Category cat :
+                    nonSystemCats) {
+                if (!cat.isSystem())
+                    expenseCategs.add(cat);
+            }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
+
+            if (incomeCategs == null)
+                incomeCategs = new ArrayList<>();
 
             incomeAdapter = new CategoriesAdapter(getContext(), incomeCategs);
 //            listIncomeCategories.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -117,6 +131,10 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
 //            listIncomeCategories.setLayoutManager(new GridLayoutManager(getContext(),2));
             listIncomeCategories.setLayoutManager(linLayoutManager);
             listIncomeCategories.setAdapter(incomeAdapter);
+            Log.e("LISTCAT", "onPostExecute: " +String.valueOf(expenseCategs) );
+
+            if (expenseCategs == null)
+                expenseCategs = new ArrayList<>();
 
             expenseAdapter = new CategoriesAdapter(getContext(), expenseCategs);
 //            listExpenseCategories.setLayoutManager(new LinearLayoutManager(getContext()));

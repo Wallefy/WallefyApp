@@ -230,9 +230,13 @@ public class ReportsFragment extends Fragment {
             ((AccountDataSource) accountDataSource).open();
             ArrayList<Category> cats = categoryDataSource.showAllCategoriesForUser(params[0]);
             ArrayList<Account> accs = accountDataSource.showAllAccounts(params[0]);
+            if (cats == null)
+                cats = new ArrayList<>();
             for (Category c : cats) {
                 categories.add(c.getCategoryName());
             }
+            if (accs == null)
+                accs = new ArrayList<>();
             for (Account a : accs) {
                 accounts.add(a.getAccountName());
             }

@@ -21,13 +21,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.controllerutils.ControllerConstants;
 import com.example.dpene.wallefy.controller.controllerutils.DateFormater;
 import com.example.dpene.wallefy.controller.controllerutils.PickDate;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 import com.example.dpene.wallefy.model.classes.Account;
+import com.example.dpene.wallefy.model.classes.History;
 import com.example.dpene.wallefy.model.classes.User;
 import com.example.dpene.wallefy.model.dao.IAccountDao;
+import com.example.dpene.wallefy.model.dao.IHistoryDao;
 import com.example.dpene.wallefy.model.datasources.AccountDataSource;
+import com.example.dpene.wallefy.model.datasources.HistoryDataSource;
 
 import org.w3c.dom.Text;
 
@@ -124,32 +128,32 @@ public class EditAccountFragment extends Fragment {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.save_entry:
-//                TODO if it is a new account - if there is initial balance there must be init date
-                new SaveAccountTask(amount.length() <= 0).execute(tvTitle.getText().toString(),title);
-//                String selectedAccountType = spnAccountType.getSelectedItem().toString();
-//                String selectedCategory = spnCategoryType.getSelectedItem().toString();
-//                String calculatedAmount = amount.getText().toString();
-//                if (Double.parseDouble(calculatedAmount) > 0) {
-//                    new TaskSaveEntry(user.getUserId()).execute(selectedAccountType, selectedCategory,
-//                            calculatedAmount,parent.setNote(), DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(parent.setDate()));
-//                    getActivity().finish();
-//                }
-//
-//                else{
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//                    builder.setMessage("Amount must be positive");
-//                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int id) {
-//                            // User clicked OK button
-//                        }
-//                    });
-//                    AlertDialog dialog = builder.create();
-//                    dialog.show();
-//                }
+//                TODO check for words in name  - if either balance or date are not empty must fill both
+//                ^\s*$  - if all whitespaces
+                if (tvTitle.getText().toString().matches("^\\s*$") || tvTitle.getText().toString().length()<=0)
+                    Toast.makeText(getContext(), "Name can not be empty", Toast.LENGTH_SHORT).show();
+                else {
+                    new SaveAccountTask(amount.length() <= 0).execute(tvTitle.getText().toString(), title,
+                            tvDate.getText().toString(), tvAmount.getText().toString());
+                }
                 return true;
             case R.id.clear_values:
-                Toast.makeText(getContext(), "DELETE FROM DB", Toast.LENGTH_SHORT).show();
-//                ((TextView) getActivity().findViewById(R.id.transaction_amount)).setText("0");
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("DELETE Account: " + tvTitle.getText().toString());
+                builder.setMessage("All entries for this account would be deleted!");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        new DeleteAccountTask(user.getUserId()).execute(tvTitle.getText().toString());
+                        getActivity().finish();
+                    }
+                });
+                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -166,13 +170,34 @@ public class EditAccountFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(String... params) {
+//            tvTitle.getText().toString(), title,
+//                    tvDate.getText().toString(), tvAmount.getText().toString()
+
+            String accName = params[0];
+            String oldName = params[1];
+            String date = DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss( params[2]);
+
+            String amount = params[3];
+            if (params[3].length() <= 0)
+                amount = "0";
+
             IAccountDao accountDataSource = AccountDataSource.getInstance(getContext());
             ((AccountDataSource) accountDataSource).open();
-//            TODO check existing account for current user
-            if (this.isNewAccount)
-                pojoAccount = accountDataSource.createAccount(user.getUserId(), params[0]);
+            if (this.isNewAccount) {
+                pojoAccount = accountDataSource.createAccount(user.getUserId(), accName);
+                if (pojoAccount == null)
+                    return false;
+                if (date != null || date.length() >0) {
+                    IHistoryDao historyDataSource = HistoryDataSource.getInstance(getContext());
+                    ((HistoryDataSource) historyDataSource).open();
+                    History hist = historyDataSource.createHistory(user.getUserId(), pojoAccount.getAccountTypeId(),
+                            ControllerConstants.CATEGORY_INITIAL_BALANCE, Double.parseDouble(amount), null, date, null, null);
+                    if (hist ==null)
+                        return false;
+                }
+            }
             else
-                pojoAccount = accountDataSource.updateAccount(user.getUserId(),params[0],params[1]);
+                pojoAccount = accountDataSource.updateAccount(user.getUserId(),accName,oldName);
             ((AccountDataSource) accountDataSource).close();
             if (pojoAccount != null) {
                 user.addAccount(pojoAccount);
@@ -187,7 +212,33 @@ public class EditAccountFragment extends Fragment {
                 Toast.makeText(getContext(), "Account created", Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             } else
-                Toast.makeText(getContext(), "Failed to create account", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Failed to create account. Possible duplicate name!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class DeleteAccountTask extends  AsyncTask<String,Void,Boolean>{
+
+        private long userId;
+
+        public DeleteAccountTask(long userId) {
+            this.userId = userId;
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            IAccountDao accountDataSource = AccountDataSource.getInstance(getContext());
+            ((AccountDataSource)accountDataSource).open();
+            if (accountDataSource.deleteAccount(userId, params[0]))
+                return true;
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            if (aBoolean)
+                Toast.makeText(getContext(), "DELETE SUCCESS", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getContext(), "DELETE FAILED", Toast.LENGTH_SHORT).show();
         }
     }
 }

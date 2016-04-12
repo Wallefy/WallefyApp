@@ -9,6 +9,7 @@ public class Category implements Serializable {
     private boolean isExpense;
     private long iconResource;
     private long accountUserId;
+    private boolean isSystem;
 
 
     public Category(long categoryId, String categoryName, boolean isExpense, long iconResource, long accountUserId) {
@@ -17,6 +18,11 @@ public class Category implements Serializable {
         this.isExpense = isExpense;
         this.iconResource = iconResource;
         this.accountUserId = accountUserId;
+    }
+
+    public Category(long categoryId, String categoryName, boolean isExpense, long iconResource, long accountUserId, boolean isSystem) {
+        this(categoryId,categoryName,isExpense,iconResource,accountUserId);
+        this.isSystem = isSystem;
     }
 
     public long getAccountUserId() {
@@ -59,4 +65,7 @@ public class Category implements Serializable {
         this.iconResource = iconResource;
     }
 
+    public boolean isSystem() {
+        return isSystem;
+    }
 }

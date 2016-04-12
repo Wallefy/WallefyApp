@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.MainActivity;
+import com.example.dpene.wallefy.controller.controllerutils.ControllerConstants;
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.Category;
 import com.example.dpene.wallefy.model.classes.User;
@@ -131,6 +132,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                 ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
                 ((CategoryDataSource) categoryDataSource).open();
                 ArrayList<Category> categories = new ArrayList<>();
+                categories.add(categoryDataSource.createSystemCategory("Initial Balance", false, R.drawable.salary_56, user.getUserId(),true));
                 categories.add(categoryDataSource.createCategory("Home", true, R.drawable.house_56, user.getUserId()));
                 categories.add(categoryDataSource.createCategory("Food", true, R.drawable.eating_56, user.getUserId()));
                 categories.add(categoryDataSource.createCategory("Transport", true, R.drawable.car_56, user.getUserId()));

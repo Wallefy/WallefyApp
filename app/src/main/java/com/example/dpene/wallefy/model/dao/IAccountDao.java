@@ -14,4 +14,6 @@ public interface IAccountDao {
 
     ArrayList<Account> showAllAccounts(long userId);
 
+    boolean deleteAccount(long userId, String accountName);
+
 }

@@ -48,6 +48,9 @@ public class CategoryDataSource extends DataSource implements ICategoryDao{
 
     @Override
     public Category createCategory(String categoryName, boolean isExpense, long iconResource, long userFk) {
+        Category cat = showCategory(userFk,categoryName);
+        if (cat != null)
+            return null;
         ContentValues values = new ContentValues();
         values.put(Constants.CATEGORY_NAME, categoryName);
         values.put(Constants.CATEGORY_IS_EXPENCE, isExpense);
@@ -74,7 +77,42 @@ public class CategoryDataSource extends DataSource implements ICategoryDao{
     }
 
     @Override
+    public Category createSystemCategory(String categoryName, boolean isExpense, long iconResource, long userFk, boolean isSystem) {
+        ContentValues values = new ContentValues();
+        Log.e("ISSISTEM", "DATASOURCE: " + isSystem );
+        values.put(Constants.CATEGORY_NAME, categoryName);
+        values.put(Constants.CATEGORY_IS_EXPENCE, isExpense);
+        values.put(Constants.CATEGORY_ICON_RESOURCE, iconResource);
+        values.put(Constants.CATEGORY_USER_FK, userFk);
+        values.put(Constants.CATEGORY_IS_SYSTEM,isSystem? "1":"0");
+        long insertId = database.insert(Constants.TABLE_CATEGORIES, null, values);
+        if (insertId < 0) {
+            return null;
+        }
+        String[] selArgs = {String.valueOf(insertId)};
+        Cursor cursor = database.rawQuery("select category_id,category_icon_resource,category_name," +
+                "category_is_expense,category_user_fk,category_is_system" +
+                " from categories where category_id = ? ", selArgs);
+        if (cursor.moveToFirst()) {
+            long catId = cursor.getLong(0);
+            long catResIcon = cursor.getLong(1);
+            String catName = cursor.getString(2);
+            boolean catIsExpense = (cursor.getInt(3) == 1);
+            long catUserFk = cursor.getLong(4);
+            boolean catIsSystem = (cursor.getInt(5) == 1);
+            Log.e("ISSISTEM", "DATASOURCE: in cursor " + catIsSystem );
+            cursor.close();
+            return new Category(catId,catName,catIsExpense,catResIcon,catUserFk,catIsSystem);
+        }
+        cursor.close();
+        return null;
+    }
+
+    @Override
     public Category updateCategory(String newCategoryName,long newIconResource,long userFk,String oldCategoryName) {
+//        Category cat = showCategory(userFk,newCategoryName);
+//        if (cat != null)
+//            return null;
         ContentValues values = new ContentValues();
         values.put(Constants.CATEGORY_NAME, newCategoryName);
         values.put(Constants.CATEGORY_ICON_RESOURCE, String.valueOf(newIconResource));
@@ -111,7 +149,8 @@ public class CategoryDataSource extends DataSource implements ICategoryDao{
     public ArrayList<Category> showAllCategoriesForUser(long userId) {
         ArrayList<Category> categories = new ArrayList<>();
         String[] selArgs = {String.valueOf(userId)};
-        Cursor cursor = database.rawQuery("select category_id,category_icon_resource,category_name,category_is_expense,category_user_fk" +
+        Cursor cursor = database.rawQuery("select category_id,category_icon_resource,category_name,category_is_expense," +
+                "category_user_fk,category_is_system" +
                 " from categories where category_user_fk = ? ", selArgs);
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
@@ -120,7 +159,8 @@ public class CategoryDataSource extends DataSource implements ICategoryDao{
                 String catName = cursor.getString(2);
                 boolean catIsExpense = (cursor.getInt(3) == 1);
                 long catUserFk = cursor.getLong(4);
-                categories.add(new Category(catId,catName,catIsExpense,catResIcon,catUserFk));
+                boolean catIsSystem = (cursor.getInt(5) == 1);
+                categories.add(new Category(catId,catName,catIsExpense,catResIcon,catUserFk,catIsSystem));
                 cursor.moveToNext();
             }
             cursor.close();
@@ -139,7 +179,8 @@ public class CategoryDataSource extends DataSource implements ICategoryDao{
     public ArrayList<Category> showCategoriesByType(long userId, boolean isExpense) {
         ArrayList<Category> categories = new ArrayList<>();
         String[] selArgs = {String.valueOf(userId),String.valueOf(isExpense? 1:0)};
-        Cursor cursor = database.rawQuery("select category_id,category_icon_resource,category_name,category_is_expense,category_user_fk" +
+        Cursor cursor = database.rawQuery("select category_id,category_icon_resource,category_name," +
+                "category_is_expense,category_user_fk,category_is_system" +
                 " from categories where category_user_fk = ? and category_is_expense = ? ", selArgs);
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
@@ -148,7 +189,8 @@ public class CategoryDataSource extends DataSource implements ICategoryDao{
                 String catName = cursor.getString(2);
                 boolean catIsExpense = (cursor.getInt(3) == 1);
                 long catUserFk = cursor.getLong(4);
-                categories.add(new Category(catId,catName,catIsExpense,catResIcon,catUserFk));
+                boolean catIsSystem = (cursor.getInt(5) == 1);
+                categories.add(new Category(catId,catName,catIsExpense,catResIcon,catUserFk,catIsSystem));
                 cursor.moveToNext();
             }
             cursor.close();
