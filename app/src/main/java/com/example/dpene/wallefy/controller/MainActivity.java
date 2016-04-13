@@ -3,6 +3,7 @@ package com.example.dpene.wallefy.controller;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -42,6 +43,8 @@ import com.example.dpene.wallefy.controller.fragments.interfaces.IPieChartCommun
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.controller.fragments.interfaces.ISaveSpinnerPosition;
 import com.example.dpene.wallefy.model.classes.User;
+import com.example.dpene.wallefy.model.dao.IUserDao;
+import com.example.dpene.wallefy.model.datasources.UserDataSource;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ISaveSpinnerPosition, IPieChartCommunicator {
@@ -177,11 +180,13 @@ public class MainActivity extends AppCompatActivity
             editActivity.putExtra("user", user);
             startActivity(editActivity);
 
-        } else if (id == R.id.nav_export) {
-            replaceFrag(new ExportFragment());
-            toolbar.setSubtitle("Export");
-
-        } else if (id == R.id.nav_logout) {
+        }
+//        else if (id == R.id.nav_export) {
+//            replaceFrag(new ExportFragment());
+//            toolbar.setSubtitle("Export");
+//
+//        }
+        else if (id == R.id.nav_logout) {
             //            Clear shared pref file
             SharedPreferences log = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
             //     commit writes its data to persistent storage immediately, whereas apply will handle it in the background
@@ -271,6 +276,14 @@ public class MainActivity extends AppCompatActivity
             return null;
         }
     }
-
 //        End Tabbed  <----
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e("SENDINGUSEREDIT", "reguesting user: " + String.valueOf(user));
+        user = (User) getIntent().getSerializableExtra("user");
+    }
+
 }

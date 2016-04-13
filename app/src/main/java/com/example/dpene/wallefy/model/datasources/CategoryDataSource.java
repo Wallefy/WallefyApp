@@ -109,10 +109,12 @@ public class CategoryDataSource extends DataSource implements ICategoryDao{
     }
 
     @Override
-    public Category updateCategory(String newCategoryName,long newIconResource,long userFk,String oldCategoryName) {
-//        Category cat = showCategory(userFk,newCategoryName);
-//        if (cat != null)
-//            return null;
+    public Category updateCategory(String newCategoryName,long newIconResource,long userFk,String oldCategoryName, long oldIconRes,long categId) {
+
+        Category cat = showCategory(userFk,newCategoryName);
+        Log.e("UPDATE", ": cates " + cat);
+        if (cat != null && cat.getCategoryId() != categId)
+            return null;
         ContentValues values = new ContentValues();
         values.put(Constants.CATEGORY_NAME, newCategoryName);
         values.put(Constants.CATEGORY_ICON_RESOURCE, String.valueOf(newIconResource));
@@ -123,6 +125,7 @@ public class CategoryDataSource extends DataSource implements ICategoryDao{
         Log.e("UPDATE", "updateCAtegory: old res " + oldCategoryName);
         Log.e("UPDATE", "updateCAtegory: user fk " + userFk);
         Log.e("UPDATE", "updateCAtegory: cat name " + newCategoryName);
+        Log.e("UPDATE", "updateCAtegory: old name " + oldCategoryName);
         Log.e("UPDATE", "updateCAtegory: insertID " + insertId);
         if (insertId < 0) {
             return null;

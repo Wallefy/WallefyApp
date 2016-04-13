@@ -21,5 +21,7 @@ public interface IUserDao {
 
     boolean deleteUser(String email);
 
+    User updateUser(long id, String userEmail, String userName, String password);
+
 }
 

@@ -12,7 +12,7 @@ public interface ICategoryDao {
 
     Category createSystemCategory(String categoryName, boolean isExpense, long iconResource,long userFk, boolean isSystem);
 
-    Category updateCategory(String categoryName,long iconResource,long userFk,String oldCategoryName);
+    Category updateCategory(String categoryName,long iconResource,long userFk,String oldCategoryName, long oldIconRes,long catId);
 
     ArrayList<Category> showAllCategoriesForUser(long userId);
 

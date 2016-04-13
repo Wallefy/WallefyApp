@@ -53,22 +53,40 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.25"
                 android:gravity="end"
-                android:text="00000"
+                android:text="0.0"
+                android:textColor="@color/color_green_dark"
                 android:textSize="@dimen/main_info_big_text_size" />
         </LinearLayout>
     </com.dd.ShadowLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/main_info_history"
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/coord"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@+id/main_info_categories_shadow"
         android:layout_below="@+id/main_info_shadow_layout"
-        android:layout_centerInParent="true"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
+        android:layout_centerInParent="true">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/main_info_history"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="bottom|end"
+            android:src="@drawable/plus_28"
+            app:layout_behavior="com.example.dpene.wallefy.controller.controllerutils.FABScrollBehavior" />
+
+    </android.support.design.widget.CoordinatorLayout>
 
 
     <com.dd.ShadowLayout
@@ -86,34 +104,21 @@
             android:id="@+id/main_info_categories"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:paddingRight="60dp"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            >
 
         </android.support.v7.widget.RecyclerView>
     </com.dd.ShadowLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="bottom|end"
-
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/plus_28" />
 
     <RelativeLayout
 
         android:id="@+id/relativeLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/fab"
-        android:layout_alignLeft="@+id/fab"
-        android:layout_alignStart="@+id/fab">
-
-
+        android:layout_above="@+id/coord"
+        android:layout_alignLeft="@+id/coord"
+        android:layout_alignStart="@+id/coord">
     </RelativeLayout>
     <!--<include layout="@layout/dialog_floating_buttons"/>-->
 

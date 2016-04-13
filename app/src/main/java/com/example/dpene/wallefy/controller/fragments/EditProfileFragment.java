@@ -2,6 +2,7 @@ package com.example.dpene.wallefy.controller.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.MainActivity;
+import com.example.dpene.wallefy.controller.fragments.interfaces.IEditPassUser;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.Category;
@@ -43,6 +46,13 @@ public class EditProfileFragment extends Fragment {
 
     private User user;
     IUserDao userDataSource;
+    IEditPassUser parent;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        parent = (IEditPassUser) context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,7 +100,7 @@ public class EditProfileFragment extends Fragment {
                 boolean isCorrect = true;
 
                 if (newEmail.length() > 0 && !newEmail.equals(user.getEmail())) {
-                    if (RegisterHelper.validateEmail(newEmail)) {
+                    if (!RegisterHelper.validateEmail(newEmail)) {
                         edtEmail.setError("Invalid email");
                         isCorrect = false;
                     }
@@ -129,15 +139,16 @@ public class EditProfileFragment extends Fragment {
                         newUsername = user.getUsername();
                     }
 
-                    if(newEmail.equals("")) {
-                        newEmail = user.getEmail();
-                    }
+//                    if(newEmail.equals("")) {
+//                        newEmail = user.getEmail();
+//                    }
 
                     if(newPass.equals("")) {
                         newPass = user.getPassword();
                     }
 
                     new TaskUpdateUserProfile(user.getUserId()).execute(newEmail, newUsername, newPass);
+
                 }
                 return true;
             case R.id.clear_values:
@@ -164,9 +175,11 @@ public class EditProfileFragment extends Fragment {
             ((UserDataSource) userDataSource).open();
             //TODO update user in DB
             Log.e("tag", userID +", " + params[0]+", " + params[1]+", " + params[2]);
-//            User user = userDataSource.updateUser(userID, params[0], params[1], params[2]);
+            User user = userDataSource.updateUser(userID, params[0], params[1], params[2]);
 
             if (user != null) {
+                EditProfileFragment.this.user = user;
+                parent.getUser(user);
                 return true;
             }
             return false;
@@ -174,8 +187,15 @@ public class EditProfileFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            if (aBoolean)
+            if (aBoolean) {
                 Toast.makeText(getContext(), "Save success", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getContext(), MainActivity.class);
+                i.putExtra("user",parent.sendUser());
+                Log.e("SENDINGUSEREDIT", "onPostExecute: " + String.valueOf(parent.sendUser()) );
+                startActivity(i);
+                getActivity().finish();
+            }
+
         }
     }
 }

@@ -9,6 +9,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -119,6 +121,9 @@ public class ReportsFragment extends Fragment {
         accountAdapter.setNotifyOnChange(true);
         categoryAdapter.setNotifyOnChange(true);
 
+
+
+
         spnAccounts.setAdapter(accountAdapter);
         selectedAccount = "cash";
         reportEntries = (RecyclerView) v.findViewById(R.id.report_recycler);
@@ -126,16 +131,31 @@ public class ReportsFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedAccount = ((TextView) view).getText().toString();
-
                 new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), selectedAccount);
-                Log.e("SELECTED", selectedAccount);
-
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+//        edtDate.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                Log.e("FILTERS", DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(edtDate.getText().toString()) + " dates");
+//                new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()),
+//                        DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(edtDate.getText().toString()));
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
         entries = new ArrayList<>();
 
 
@@ -182,6 +202,8 @@ public class ReportsFragment extends Fragment {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             selectedCategory = ((TextView) view).getText().toString();
+                            new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()),
+                                    selectedAccount,selectedCategory);
                         }
 
                         @Override
@@ -204,6 +226,8 @@ public class ReportsFragment extends Fragment {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             selectedExpense = ((TextView) view).getText().toString();
+                            new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()),
+                                    selectedAccount,selectedCategory,selectedExpense);
                         }
 
                         @Override
@@ -257,8 +281,23 @@ public class ReportsFragment extends Fragment {
 
         @Override
         protected Void doInBackground(String... params) {
+
+
+//            TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), selectedAccount,
+//                    DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(edtDate.getText().toString()));
+
+//            new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()),
+//                    selectedAccount,selectedCategory);
+
             ((HistoryDataSource) historyDataSource).open();
-            entries = historyDataSource.listHistoryByAccountName(Long.parseLong(params[0]), params[1]);
+            entries.clear();
+//            if (params[2]== null)
+                entries = historyDataSource.listHistoryByAccountName(Long.parseLong(params[0]), params[1]);
+            if (params.length > 3 && params[2]!=null) {
+                entries.clear();
+                entries = historyDataSource.listHistoryByCategoryNameAndAccount(Long.parseLong(params[0]), params[1], params[2]);
+            }
+            Log.e("ARRAYSIZE", "doInBackground: " + entries.size() );
             return null;
         }
 

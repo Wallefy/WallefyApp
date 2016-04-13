@@ -89,6 +89,26 @@ public class UserDataSource extends DataSource implements IUserDao {
     }
 
     @Override
+    public User updateUser(long id, String userEmail, String userName, String password) {
+
+        String[] upArgs = {String.valueOf(id)};
+        ContentValues values = new ContentValues();
+        values.put(Constants.USER_NAME, userName);
+        values.put(Constants.USER_PASSWORD, password);
+        values.put(Constants.USER_EMAIL, userEmail);
+
+        //TODO: check if email exists
+        long updateId = database.update(Constants.TABLE_USERS, values, Constants.USER_ID + " =? ", upArgs);
+
+        if (updateId < 0) {
+            Log.e("tag", "db error");
+            return null;
+        }
+
+        return loginUser(userEmail,password);
+    }
+
+    @Override
     public boolean editUsername(long userId, String newUsername) {
         return false;
     }

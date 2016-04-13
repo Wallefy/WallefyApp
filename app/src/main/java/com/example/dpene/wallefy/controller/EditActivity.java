@@ -24,13 +24,14 @@ import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
 import com.example.dpene.wallefy.controller.fragments.ExportFragment;
 import com.example.dpene.wallefy.controller.fragments.TransactionFragment;
 import com.example.dpene.wallefy.controller.fragments.TransferFragment;
+import com.example.dpene.wallefy.controller.fragments.interfaces.IEditPassUser;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 import com.example.dpene.wallefy.controller.fragments.interfaces.ITransactionCommunicator;
 import com.example.dpene.wallefy.model.classes.History;
 import com.example.dpene.wallefy.model.classes.User;
 
-public class EditActivity extends AppCompatActivity implements IToolbar, ITransactionCommunicator {
+public class EditActivity extends AppCompatActivity implements IToolbar, ITransactionCommunicator,IEditPassUser {
 
     RelativeLayout editAc;
     String fragmentCode;
@@ -274,6 +275,16 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
     @Override
     public String setDate() {
         return this.passedDate;
+    }
+
+    @Override
+    public void getUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public User sendUser() {
+        return user;
     }
     //     Start   Tabbed test ---- >
 

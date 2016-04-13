@@ -71,7 +71,7 @@ public class MainInfoFragment extends Fragment {
     AlertDialog dialog;
 
     ArrayList<Category> userCategories;
-
+    FloatingActionButton fab;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -88,7 +88,7 @@ public class MainInfoFragment extends Fragment {
 //        final FloatingActionButton fabIncome = (FloatingActionButton) view.findViewById(R.id.fab_income);
 //        final FloatingActionButton fabExpense = (FloatingActionButton) view.findViewById(R.id.fab_expense);
 //        final FloatingActionButton fabTransfer = (FloatingActionButton) view.findViewById(R.id.fab_transfer);
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -175,7 +175,7 @@ public class MainInfoFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), spnAccounts.getSelectedItem().toString());
                 selectedAccount = spnAccounts.getSelectedItem().toString();
-
+                fab.show();
             }
 
             @Override
@@ -264,8 +264,12 @@ public class MainInfoFragment extends Fragment {
         @Override
         protected void onPostExecute(Double aDouble) {
 
+
+
             if (entries == null)
                 entries = new ArrayList<>();
+            if (entries.size() <=0 && fab.getVisibility()==View.GONE)
+                fab.setVisibility(View.VISIBLE);
             rea = new ReportEntriesAdapter(getContext(), entries, user);
             rea.notifyDataSetChanged();
             listHistory.setLayoutManager(new LinearLayoutManager(getContext()));

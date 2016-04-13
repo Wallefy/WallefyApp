@@ -77,6 +77,8 @@ public class EditCategoryFragment extends Fragment {
                 toolbar.setSubtitle("Income");
         }
 
+        oldCategoryName = getArguments().getString("title");
+
         setHasOptionsMenu(true);
 
         user = (User) getArguments().getSerializable("user");
@@ -120,14 +122,17 @@ public class EditCategoryFragment extends Fragment {
 
         if (getArguments().get("categoryIcon")!= null) {
             long iconResource = (long) getArguments().get("categoryIcon");
+            selectedIcon = (int) iconResource;
             Log.e("Category icon", "onCreateView: "+ iconResource );
             if (iconResource != 0) {
                 imgSelectedIcon.setImageResource((int) (iconResource));
                 Log.e("Category icon if", "onCreateView: " + iconResource);
             }
 
-        }else
+        }else {
             imgSelectedIcon.setImageResource(icons.get(0));
+            selectedIcon = icons.get(0);
+        }
 
         categoryIconsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -154,6 +159,8 @@ public class EditCategoryFragment extends Fragment {
             case R.id.save_entry:
 //                TODO if it is a new account - if there is initial balance there must be init date
                 String isExpenceForDb = null;
+                Log.e("UPDATEFRAG", "doInBackground: oldRESICONS  " + oldIconRes );
+                Log.e("UPDATEFRAG", "doInBackground: selectedRESICONS  " + selectedIcon );
                 if (getArguments().getString("categoryType") != null)
                      isExpenceForDb = getArguments().getString("categoryType").equals("true")? "1" :"0";
                 new SaveCategoryTask(getArguments().get("title") == null).execute(categoryName.getText().toString(),
@@ -165,7 +172,7 @@ public class EditCategoryFragment extends Fragment {
                 builder.setMessage("All entries for this category would be deleted!");
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        new DeleteCategoryTask(user.getUserId()).execute(categoryName.getText().toString());
+                        new DeleteCategoryTask(user.getUserId()).execute(oldCategoryName);
                         getActivity().finish();
                     }
                 });
@@ -227,9 +234,19 @@ public class EditCategoryFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(String... params) {
+//            categoryName.getText().toString(),
+//                    isExpenceForDb,String.valueOf(selectedIcon),oldCategoryName,String.valueOf(oldIconRes)
+
+            String newCatName = params[0];
+            String isExpence = params[1];
+            String newIcon = params[2];
+            String oldName = params[3];
+            long catId = 0;
+            int oldIcon = Integer.parseInt(params[4]);
             ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
             ((CategoryDataSource)categoryDataSource).open();
             //            TODO check existing Category for current user and update userAccountPojo
+
             if (isNewCategory) {
                 Category cat = categoryDataSource.createCategory(params[0], params[1].equals("1"),
                         Long.valueOf(params[2]), user.getUserId());
@@ -241,14 +258,17 @@ public class EditCategoryFragment extends Fragment {
             else {
 //                execute(categoryName.getText().toString(),
 //                isExpenceForDb,String.valueOf(selectedIcon),oldCategoryName,String.valueOf(oldIconRes));
-                Log.e("Category in async", "doInBackground: categoryName  " + params[0] );
-                Log.e("Category in async", "doInBackground: selectedIcon  " + params[2] );
-                Log.e("Category in async", "doInBackground: selectedIcon  old" +  params[4] );
-                Log.e("Category in async", "doInBackground: userId  " + user.getUserId() );
-                Log.e("Category in async", "doInBackground: oldCategoryName  " + params[3] );
+//                Log.e("UPDATEFRAG", "doInBackground: categoryName  " + params[0] );
+//                Log.e("UPDATEFRAG", "doInBackground: selectedIcon  " + params[2] );
+//                Log.e("UPDATEFRAG", "doInBackground: selectedIcon  old" +  params[4] );
+//                Log.e("UPDATEFRAG", "doInBackground: userId  " + user.getUserId() );
+//                Log.e("UPDATEFRAG", "doInBackground: oldCategoryName  " + params[3] );
                 String imgRes = params[2];
+                Category oldcat = categoryDataSource.showCategory(user.getUserId(),params[3]);
+                catId = oldcat.getCategoryId();
+
 //                if (imgRes.length() <2)
-                Category cat = categoryDataSource.updateCategory(params[0],Long.valueOf(params[2]),user.getUserId(),params[3]);
+                Category cat = categoryDataSource.updateCategory(params[0],Long.valueOf(params[2]),user.getUserId(),params[3],oldIcon,catId);
                 if (cat != null) {
                     user.addCategory(cat);
                     return true;
@@ -263,7 +283,7 @@ public class EditCategoryFragment extends Fragment {
                 Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             } else
-                Toast.makeText(getContext(), "Failed to create category", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
         }
     }
 
