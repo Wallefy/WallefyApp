@@ -2,7 +2,7 @@
 
 ### Created by: [Donika Peneva](https://github.com/donyka) & [Petar Yonchev](https://github.com/petkata)
 
-![Wallefy logo](/../screens/main.png?raw=true "Wallefy logo")
+![Wallefy logo](/../master/screens/main.png?raw=true "Wallefy logo")
 
 <p>You can store your expences and incomes in your accounts by categories.</p>
 <p>Create, update or delete accounts and categories by your needs.</p>
