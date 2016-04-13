@@ -138,20 +138,24 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
         if (getArguments().get("entry") != null) {
             for (Category cat : user.getCategories()) {
-                if (cat.isExpense())
-                    listCategories.add(cat.getCategoryName());
-                else {
-                    listCategories.add(cat.getCategoryName());
+                if (!cat.isSystem()) {
+                    if (cat.isExpense())
+                        listCategories.add(cat.getCategoryName());
+                    else {
+                        listCategories.add(cat.getCategoryName());
+                    }
                 }
             }
         } else {
             for (Category cat : user.getCategories()) {
-                if (passedIsExpense) {
-                    if (cat.isExpense())
-                        listCategories.add(cat.getCategoryName());
-                } else {
-                    if (!cat.isExpense())
-                        listCategories.add(cat.getCategoryName());
+                if (!cat.isSystem()) {
+                    if (passedIsExpense) {
+                        if (cat.isExpense())
+                            listCategories.add(cat.getCategoryName());
+                    } else {
+                        if (!cat.isExpense())
+                            listCategories.add(cat.getCategoryName());
+                    }
                 }
             }
         }

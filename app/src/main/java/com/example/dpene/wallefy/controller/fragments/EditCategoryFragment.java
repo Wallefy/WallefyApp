@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -116,7 +115,6 @@ public class EditCategoryFragment extends Fragment {
         if (getArguments().get("categoryIcon")!= null) {
             long iconResource = (long) getArguments().get("categoryIcon");
             selectedIcon = (int) iconResource;
-            Log.e("Category icon", "onCreateView: "+ iconResource );
             if (iconResource != 0) {
                 imgSelectedIcon.setImageResource((int) (iconResource));
             }
@@ -152,8 +150,6 @@ public class EditCategoryFragment extends Fragment {
             case R.id.save_entry:
 //                TODO if it is a new account - if there is initial balance there must be init date
                 String isExpenceForDb = null;
-                Log.e("UPDATEFRAG", "doInBackground: oldRESICONS  " + oldIconRes );
-                Log.e("UPDATEFRAG", "doInBackground: selectedRESICONS  " + selectedIcon );
                 if (getArguments().getString("categoryType") != null)
                      isExpenceForDb = getArguments().getString("categoryType").equals("true")? "1" :"0";
                 new SaveCategoryTask(getArguments().get("title") == null).execute(categoryName.getText().toString(),
@@ -249,18 +245,10 @@ public class EditCategoryFragment extends Fragment {
                 }
             }
             else {
-//                execute(categoryName.getText().toString(),
-//                isExpenceForDb,String.valueOf(selectedIcon),oldCategoryName,String.valueOf(oldIconRes));
-//                Log.e("UPDATEFRAG", "doInBackground: categoryName  " + params[0] );
-//                Log.e("UPDATEFRAG", "doInBackground: selectedIcon  " + params[2] );
-//                Log.e("UPDATEFRAG", "doInBackground: selectedIcon  old" +  params[4] );
-//                Log.e("UPDATEFRAG", "doInBackground: userId  " + user.getUserId() );
-//                Log.e("UPDATEFRAG", "doInBackground: oldCategoryName  " + params[3] );
                 String imgRes = params[2];
                 Category oldcat = categoryDataSource.showCategory(user.getUserId(),params[3]);
                 catId = oldcat.getCategoryId();
 
-//                if (imgRes.length() <2)
                 Category cat = categoryDataSource.updateCategory(params[0],Long.valueOf(params[2]),user.getUserId(),params[3],oldIcon,catId);
                 if (cat != null) {
                     user.addCategory(cat);

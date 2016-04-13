@@ -43,7 +43,7 @@ public class AccountDataSource extends DataSource implements IAccountDao {
 
     @Override
     public Account createAccount(long userId, String accountName) {
-
+        accountName = accountName.toLowerCase();
         Account duplicateAccount = showAccount(userId,accountName);
         if (duplicateAccount != null)
             return null;
@@ -73,7 +73,8 @@ public class AccountDataSource extends DataSource implements IAccountDao {
 //        check if acc name already exist for current user
 
 //        super.checkForExisting(Constants.TABLE_ACCOUNT_TYPES,Constants.ACCOUNT_NAME,)
-
+        newAccountName = newAccountName.toLowerCase();
+        oldAccountName = oldAccountName.toLowerCase();
         Account duplicateAccount = showAccount(userId,newAccountName);
         if (duplicateAccount != null)
             return null;

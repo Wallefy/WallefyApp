@@ -72,6 +72,7 @@ public class MainInfoFragment extends Fragment {
 
     ArrayList<Category> userCategories;
     FloatingActionButton fab;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -97,8 +98,6 @@ public class MainInfoFragment extends Fragment {
                 builder.setView(R.layout.dialog_floating_buttons);
                 dialog = builder.create();
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.setCancelable(true);
-                dialog.setCanceledOnTouchOutside(true);
                 dialog.show();
                 dialog.findViewById(R.id.floating_group).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -113,7 +112,7 @@ public class MainInfoFragment extends Fragment {
                         editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
                         editActivity.putExtra("account", selectedAccount);
                         editActivity.putExtra("user", user);
-                        editActivity.putExtra("passedIsExpence",false);
+                        editActivity.putExtra("passedIsExpence", false);
                         startActivity(editActivity);
                     }
                 });
@@ -153,7 +152,6 @@ public class MainInfoFragment extends Fragment {
         userAccountNames = new ArrayList<>();
 
 
-
 //        for (Account ac :
 //                user.getAccounts()) {
 //            userAccountNames.add(ac.getAccountName());
@@ -167,14 +165,12 @@ public class MainInfoFragment extends Fragment {
 
         spnAccounts = (Spinner) view.findViewById(R.id.spinner_main_info_accounts);
 
-
-
-
         spnAccounts.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), spnAccounts.getSelectedItem().toString());
                 selectedAccount = spnAccounts.getSelectedItem().toString();
+                MainInfoFragment.this.position = position;
                 fab.show();
             }
 
@@ -229,8 +225,7 @@ public class MainInfoFragment extends Fragment {
                     editActivity.putExtra("account", selectedAccount);
                     editActivity.putExtra("user", user);
                     editActivity.putExtra("category", categs.get(position).getCategoryName());
-                    Log.e("MAINFRAGCAT", "onClick: maininfo" + categs.get(position).isExpense());
-                    editActivity.putExtra("passedIsExpence",categs.get(position).isExpense());
+                    editActivity.putExtra("passedIsExpence", categs.get(position).isExpense());
                     startActivity(editActivity);
                 }
             });
@@ -265,19 +260,18 @@ public class MainInfoFragment extends Fragment {
         protected void onPostExecute(Double aDouble) {
 
 
-
             if (entries == null)
                 entries = new ArrayList<>();
-            if (entries.size() <=0 && fab.getVisibility()==View.GONE)
+            if (entries.size() <= 0 && fab.getVisibility() == View.GONE)
                 fab.setVisibility(View.VISIBLE);
             rea = new ReportEntriesAdapter(getContext(), entries, user);
             rea.notifyDataSetChanged();
             listHistory.setLayoutManager(new LinearLayoutManager(getContext()));
             listHistory.setAdapter(rea);
-            if (aDouble <0)
+            if (aDouble < 0)
                 txtAccountBalanceTotal.setTextColor(ContextCompat.getColor(getContext(), R.color.color_red));
-            else{
-                txtAccountBalanceTotal.setTextColor(ContextCompat.getColor(getContext(),R.color.color_green_dark));
+            else {
+                txtAccountBalanceTotal.setTextColor(ContextCompat.getColor(getContext(), R.color.color_green_dark));
             }
             txtAccountBalanceTotal.setText(String.format("%.2f", aDouble));
         }
@@ -287,7 +281,6 @@ public class MainInfoFragment extends Fragment {
     public void onResume() {
         super.onResume();
         position = mainActivity.getPosition();
-        spnAccounts.setSelection(position);
         new FillAccountNames(user.getUserId()).execute();
         new FillCategoriesTask(user.getUserId()).execute();
     }
@@ -295,13 +288,12 @@ public class MainInfoFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (dialog!=null)
+        if (dialog != null)
             dialog.dismiss();
-        position = spnAccounts.getSelectedItemPosition();
         mainActivity.setPosition(position);
     }
 
-    private class FillAccountNames extends AsyncTask<Void,Void,Void>{
+    private class FillAccountNames extends AsyncTask<Void, Void, Void> {
 
         private long userId;
 
@@ -312,9 +304,9 @@ public class MainInfoFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... params) {
             IAccountDao accountDataSource = AccountDataSource.getInstance(getContext());
-            ((AccountDataSource)accountDataSource).open();
+            ((AccountDataSource) accountDataSource).open();
             userAccountNames.clear();
-            ArrayList<Account> allAcc=accountDataSource.showAllAccounts(userId);
+            ArrayList<Account> allAcc = accountDataSource.showAllAccounts(userId);
             if (allAcc == null)
                 allAcc = new ArrayList<>();
 
@@ -331,23 +323,26 @@ public class MainInfoFragment extends Fragment {
 
             if (userAccountNames == null)
                 userAccountNames = new ArrayList<>();
-                spnAccounts.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, userAccountNames));
-                if (spnAccounts.getSelectedItem() != null)
-                    new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), spnAccounts.getSelectedItem().toString());
+            spnAccounts.setAdapter(accountAdapter);
+            spnAccounts.setSelection(position);
+            if (spnAccounts.getSelectedItem() != null)
+                new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), spnAccounts.getSelectedItem().toString());
         }
     }
 
-    private class FillCategoriesTask extends AsyncTask<Void,Void,Void>{
+    private class FillCategoriesTask extends AsyncTask<Void, Void, Void> {
         private long userId;
+
         public FillCategoriesTask(long userId) {
             this.userId = userId;
         }
+
         @Override
         protected Void doInBackground(Void... params) {
             ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
-            ((CategoryDataSource)categoryDataSource).open();
+            ((CategoryDataSource) categoryDataSource).open();
             userCategories.clear();
-            ArrayList<Category> nonSystemCats =  categoryDataSource.showAllCategoriesForUser(userId);
+            ArrayList<Category> nonSystemCats = categoryDataSource.showAllCategoriesForUser(userId);
             for (Category cat :
                     nonSystemCats) {
                 if (!cat.isSystem())

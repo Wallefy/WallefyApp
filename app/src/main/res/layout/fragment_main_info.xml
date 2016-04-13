@@ -81,7 +81,6 @@
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_gravity="bottom|end"
             android:src="@drawable/plus_28"
             app:layout_behavior="com.example.dpene.wallefy.controller.controllerutils.FABScrollBehavior" />

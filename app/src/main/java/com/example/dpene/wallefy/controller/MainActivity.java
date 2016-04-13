@@ -282,8 +282,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("SENDINGUSEREDIT", "reguesting user: " + String.valueOf(user));
         user = (User) getIntent().getSerializableExtra("user");
     }
-
 }

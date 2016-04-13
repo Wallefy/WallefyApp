@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/floating_group"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="10dp"
-    >
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
 
 
     <!--<android.support.design.widget.FloatingActionButton-->
@@ -38,68 +37,70 @@
     <!--android:src="@drawable/transfer_48" />-->
     <ImageButton
         android:id="@+id/fab_transfer"
-        android:background="@drawable/circle_48"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/transfer_48"
-        android:layout_above="@+id/fab_expense"
-        android:layout_alignLeft="@+id/fab_expense"
-        android:layout_alignStart="@+id/fab_expense"
-        android:layout_marginBottom="19dp" />
+        android:layout_below="@+id/fab_expense"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/circle_48"
+        android:src="@drawable/transfer_48" />
+
     <ImageButton
         android:id="@+id/fab_expense"
-        android:background="@drawable/circle_48"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/expense_48"
-        android:layout_above="@+id/fab_income"
-        android:layout_alignLeft="@+id/fab_income"
-        android:layout_alignStart="@+id/fab_income"
-        android:layout_marginBottom="19dp" />
+        android:layout_below="@+id/fab_income"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="19dp"
+        android:background="@drawable/circle_48"
+        android:src="@drawable/expense_48" />
+
     <ImageButton
         android:id="@+id/fab_income"
-        android:background="@drawable/circle_48"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/income_48"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="64dp"
-        />
+        android:background="@drawable/circle_48"
+        android:layout_marginBottom="19dp"
+        android:src="@drawable/income_48" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Transfer"
-        android:textColor="@android:color/white"
         android:id="@+id/textView2"
-        android:layout_marginRight="33dp"
-        android:layout_marginEnd="33dp"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/fab_transfer"
+        android:layout_alignTop="@+id/fab_transfer"
+        android:layout_marginEnd="33dp"
+        android:layout_marginRight="33dp"
         android:layout_toLeftOf="@+id/fab_transfer"
-        android:layout_toStartOf="@+id/fab_transfer" />
+        android:layout_toStartOf="@+id/fab_transfer"
+        android:text="Transfer"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/white" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Expense"
-        android:textColor="@android:color/white"
         android:id="@+id/textView3"
-        android:layout_alignBottom="@+id/fab_expense"
-        android:layout_alignRight="@+id/textView2"
-        android:layout_alignEnd="@+id/textView2" />
-
-    <TextView
+        android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/fab_expense"
+        android:layout_alignEnd="@+id/textView2"
+        android:layout_alignRight="@+id/textView2"
+        android:layout_alignTop="@+id/fab_expense"
+        android:text="Expense"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Income"
+        android:textColor="@android:color/white" />
+
+    <TextView
         android:id="@+id/textView4"
-        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/fab_income"
+        android:layout_alignEnd="@+id/textView3"
         android:layout_alignRight="@+id/textView3"
-        android:layout_alignEnd="@+id/textView3" />
+        android:layout_alignTop="@+id/fab_income"
+        android:text="Income"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/white" />
 </RelativeLayout>
