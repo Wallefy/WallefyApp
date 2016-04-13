@@ -11,12 +11,13 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +38,6 @@ import com.example.dpene.wallefy.model.datasources.AccountDataSource;
 import com.example.dpene.wallefy.model.datasources.CategoryDataSource;
 import com.example.dpene.wallefy.model.datasources.HistoryDataSource;
 import com.example.dpene.wallefy.model.exceptions.NegativeNumberException;
-import com.example.dpene.wallefy.model.utils.FormatMoney;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -48,25 +48,19 @@ import java.util.Map;
 
 public class TransactionFragment extends Fragment implements View.OnClickListener {
 
-    private ITransactionCommunicator parent;
-
-    private TextView tvCategoryType;
-    private TextView tvAccountType;
-    private TextView currency;
     private TextView amount;
-
     private Spinner spnAccountType;
     private Spinner spnCategoryType;
-    private LinearLayout transactionView;
 
     private User user;
     private History entry;
+    private ITransactionCommunicator parent;
 
     // vars from detailsFragment
     private String note;
     private String date;
 
-    private List<String> listCategoriest;
+    private List<String> listCategories;
     private List<String> listAccounts;
     private Map<Long, String> mapUsersAccounts;
 
@@ -96,8 +90,8 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     private String prevNum;
     private BigDecimal result;
 
-    IToolbar toolbar;
-    boolean passedIsExpense;
+    private IToolbar toolbar;
+    private boolean passedIsExpense;
 
     public TransactionFragment() {
 
@@ -113,7 +107,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        listCategoriest = new ArrayList<>();
+        listCategories = new ArrayList<>();
         listAccounts = new ArrayList<>();
         mapUsersAccounts = new HashMap<>();
 
@@ -121,18 +115,17 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         this.user = (User) bundle.getSerializable("user");
 
         // arguments from detailsFragment
-        this.note = getArguments().getString("note");
-        this.date = getArguments().getString("date");
         this.passedIsExpense = getArguments().getBoolean("passedIsExpence");
-        Log.e("MAINFRAGCAT", "onClick: trans " + getArguments().getBoolean("passedIsExpence"));
 //        setting custom heading for every fragment
         toolbar = (IToolbar) getActivity();
 
+        // setting custom heading for every fragment
+        toolbar = (IToolbar) getActivity();
 
 
         View v = inflater.inflate(R.layout.fragment_transaction, container, false);
 
-//        enable options menu
+        // enable options menu
         setHasOptionsMenu(true);
 
         for (Account acc : user.getAccounts()) {
@@ -143,43 +136,38 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             listAccounts.add(ac.getAccountName());
         }
 
-
-        if (getArguments().get("entry")!=null) {
+        if (getArguments().get("entry") != null) {
             for (Category cat : user.getCategories()) {
                 if (cat.isExpense())
-                    listCategoriest.add(cat.getCategoryName());
+                    listCategories.add(cat.getCategoryName());
                 else {
-                    listCategoriest.add(cat.getCategoryName());
+                    listCategories.add(cat.getCategoryName());
+                }
+            }
+        } else {
+            for (Category cat : user.getCategories()) {
+                if (passedIsExpense) {
+                    if (cat.isExpense())
+                        listCategories.add(cat.getCategoryName());
+                } else {
+                    if (!cat.isExpense())
+                        listCategories.add(cat.getCategoryName());
                 }
             }
         }
-        else {
-            for (Category cat : user.getCategories()) {
-//                if (passedIsExpense) {
-//                    if (cat.isExpense() && !cat.isSystem())
-                        listCategoriest.add(cat.getCategoryName());
-//                } else {
-//                    if (!cat.isExpense()&& !cat.isSystem())
-//                        listCategoriest.add(cat.getCategoryName());
-//                }
-            }
-        }
+
+
         this.initializeCalculatorVariables(v);
 
-        tvCategoryType = (TextView) v.findViewById(R.id.transaction_type_category);
-        tvAccountType = (TextView) v.findViewById(R.id.transaction_type_account);
         amount = (TextView) v.findViewById(R.id.transaction_amount);
-        currency = (TextView) v.findViewById(R.id.transaction_amount_currency);
-        transactionView = (LinearLayout) v.findViewById(R.id.transaction_layout);
-
         spnAccountType = (Spinner) v.findViewById(R.id.transaction_account);
         spnCategoryType = (Spinner) v.findViewById(R.id.transaction_category);
 
-        final ArrayAdapter categoryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listCategoriest);
+        final ArrayAdapter categoryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listCategories);
         final ArrayAdapter accountAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listAccounts);
 
         spnAccountType.setAdapter(accountAdapter);
-        spnCategoryType.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listCategoriest));
+        spnCategoryType.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listCategories));
 
 
         if (getArguments().get("entry") != null) {
@@ -187,28 +175,27 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             History entry = (History) getArguments().get("entry");
             spnCategoryType.setSelection(categoryAdapter.getPosition(entry.getCategoryName()));
             spnAccountType.setSelection(accountAdapter.getPosition(mapUsersAccounts.get(entry.getAccountTypeId())));
+
             date = entry.getDateOfTransaction();
             if (date != null && date.length() > 0)
-                    parent.getDate(date);
+                parent.getDate(date);
+
             note = entry.getDescription();
-            if (note!=null && note.length() > 0)
+            if (note != null && note.length() > 0)
                 parent.getNote(note);
-            if(entry.getAmount() < 0){
+
+            if (entry.getAmount() < 0) {
                 amount.setText(String.valueOf(String.format("%.2f", entry.getAmount() * (-1))));
-            }
-            else {
+            } else {
                 amount.setText(String.valueOf(String.format("%.2f", entry.getAmount())));
             }
         } else {
-
             if (getArguments().get("category") != null) {
                 spnCategoryType.setSelection(categoryAdapter.getPosition(getArguments().get("category")));
             }
-
             if (getArguments().get("account") != null) {
                 spnAccountType.setSelection(accountAdapter.getPosition(getArguments().get("account")));
             }
-
             if (getArguments().get("amount") != null) {
                 if (!getArguments().get("amount").equals(0)) {
                     amount.setText(String.valueOf((int) getArguments().getDouble("amount")));
@@ -233,12 +220,17 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             }
         });
 
-        toolbar.setSubtitle( amount.getText().toString());
+        toolbar.setSubtitle(amount.getText().toString());
 
         return v;
     }
 
-
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (amount.getText().toString().equals("0") )
+            menu.removeItem(R.id.clear_values);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -249,14 +241,9 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 String selectedCategory = spnCategoryType.getSelectedItem().toString();
                 String calculatedAmount = amount.getText().toString();
                 if (calculatedAmount.matches("(?:\\d*\\.)?\\d+") && Double.parseDouble(calculatedAmount) > 0) {
-//                    if (Double.parseDouble(calculatedAmount) > 0) {
-                        new TaskSaveEntry(user.getUserId()).execute(selectedAccountType, selectedCategory,
-                                calculatedAmount, parent.setNote(), DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(parent.setDate()));
-                        getActivity().finish();
-//                    }
-                }
-
-                else{
+                    new TaskSaveEntry(user.getUserId()).execute(selectedAccountType, selectedCategory,
+                            calculatedAmount, parent.setNote(), DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(parent.setDate()));
+                } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setMessage("Amount must be positive");
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -280,7 +267,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     // on click for calculator's buttons
     @Override
     public void onClick(View v) {
-        if(this.entry != null){
+        if (this.entry != null) {
             amount.setText("0");
             this.entry = null;
         }
@@ -338,7 +325,6 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         }
 
     }
-
 
 
     void calcNums(String input, String signField) {
@@ -438,13 +424,13 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
             ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
             ((CategoryDataSource) categoryDataSource).open();
-            Category cat = categoryDataSource.showCategory(userId,params[1]);
+            Category cat = categoryDataSource.showCategory(userId, params[1]);
             IHistoryDao historyDataSource;
             historyDataSource = HistoryDataSource.getInstance(getContext());
             ((HistoryDataSource) historyDataSource).open();
             double sumForEntry = Double.parseDouble(params[2]);
             if (cat.isExpense())
-                sumForEntry*=-1;
+                sumForEntry *= -1;
             History h = historyDataSource.createHistory(userId, acc.getAccountTypeId(),
                     cat.getCategoryId(), sumForEntry, params[3], params[4], null, null);
 
@@ -457,8 +443,10 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            if (aBoolean)
+            if (aBoolean) {
                 Toast.makeText(getContext(), "Save success", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+            }
             else
                 Toast.makeText(getContext(), "SAVE FAILED", Toast.LENGTH_SHORT).show();
         }

@@ -113,7 +113,7 @@ public class MainInfoFragment extends Fragment {
                         editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
                         editActivity.putExtra("account", selectedAccount);
                         editActivity.putExtra("user", user);
-                        editActivity.putExtra("isExpense",false);
+                        editActivity.putExtra("passedIsExpence",false);
                         startActivity(editActivity);
                     }
                 });
@@ -124,7 +124,7 @@ public class MainInfoFragment extends Fragment {
                         editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
                         editActivity.putExtra("account", selectedAccount);
                         editActivity.putExtra("user", user);
-                        editActivity.putExtra("isExpense", true);
+                        editActivity.putExtra("passedIsExpence", true);
                         startActivity(editActivity);
                     }
                 });
@@ -286,8 +286,6 @@ public class MainInfoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        if (floatingGroup.getVisibility() == View.VISIBLE)
-//            floatingGroup.setVisibility(View.GONE);
         position = mainActivity.getPosition();
         spnAccounts.setSelection(position);
         new FillAccountNames(user.getUserId()).execute();

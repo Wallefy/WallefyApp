@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -15,24 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.MainActivity;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IEditPassUser;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
-import com.example.dpene.wallefy.model.classes.Account;
-import com.example.dpene.wallefy.model.classes.Category;
-import com.example.dpene.wallefy.model.classes.History;
 import com.example.dpene.wallefy.model.classes.User;
-import com.example.dpene.wallefy.model.dao.IAccountDao;
-import com.example.dpene.wallefy.model.dao.ICategoryDao;
-import com.example.dpene.wallefy.model.dao.IHistoryDao;
 import com.example.dpene.wallefy.model.dao.IUserDao;
-import com.example.dpene.wallefy.model.datasources.AccountDataSource;
-import com.example.dpene.wallefy.model.datasources.CategoryDataSource;
-import com.example.dpene.wallefy.model.datasources.HistoryDataSource;
 import com.example.dpene.wallefy.model.datasources.UserDataSource;
 import com.example.dpene.wallefy.model.utils.RegisterHelper;
 
@@ -66,7 +55,6 @@ public class EditProfileFragment extends Fragment {
         toolbar.setTitle("Edit profile");
 
         View v = inflater.inflate(R.layout.fragment_edit_profile, container, false);
-
 
 
         setHasOptionsMenu(true);
@@ -121,7 +109,7 @@ public class EditProfileFragment extends Fragment {
                 }
 
                 if (newPass.length() > 0) {
-                    if(!RegisterHelper.strongPassword(newPass)){
+                    if (!RegisterHelper.strongPassword(newPass)) {
                         edtPassword.setError("Password must be between 5-10 characters and contain letters AND numbers");
                         isCorrect = false;
                     } else {
@@ -135,15 +123,15 @@ public class EditProfileFragment extends Fragment {
 
                 if (isCorrect) {
 
-                    if(newUsername.equals("")) {
+                    if (newUsername.equals("")) {
                         newUsername = user.getUsername();
                     }
 
-//                    if(newEmail.equals("")) {
-//                        newEmail = user.getEmail();
-//                    }
+                    if (newEmail.equals("")) {
+                        newEmail = user.getEmail();
+                    }
 
-                    if(newPass.equals("")) {
+                    if (newPass.equals("")) {
                         newPass = user.getPassword();
                     }
 
@@ -159,7 +147,7 @@ public class EditProfileFragment extends Fragment {
         }
     }
 
-    private class TaskUpdateUserProfile extends AsyncTask<String, Void, Boolean>{
+    private class TaskUpdateUserProfile extends AsyncTask<String, Void, Boolean> {
 
         private long userID;
 

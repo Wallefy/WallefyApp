@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -44,9 +43,9 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
     private ArrayList<Category> incomeCategs;
     private ArrayList<Category> expenseCategs;
 
-    User user;
-    CategoriesAdapter incomeAdapter;
-    CategoriesAdapter expenseAdapter;
+    private User user;
+    private CategoriesAdapter incomeAdapter;
+    private CategoriesAdapter expenseAdapter;
 
     public ListCategoryFragment() {
         // Required empty public constructor
@@ -61,15 +60,6 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
 
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
-
-//        incomeCategs.add(new Category(1, "Food", false, R.drawable.ghost, 1));
-//        incomeCategs.add(new Category(2, "NeFood", false, R.drawable.ghost, 1));
-//        incomeCategs.add(new Category(3, "NeneFood", false, R.drawable.ghost, 1));
-//
-//        expenseCategs.add(new Category(4, "Food", true, R.drawable.calendar, 1));
-//        expenseCategs.add(new Category(5, "NeFood", true, R.drawable.calendar, 1));
-//        expenseCategs.add(new Category(6, "NeneFood", true, R.drawable.calendar, 1));
-
 
         View v = inflater.inflate(R.layout.fragment_list_category, container, false);
 
@@ -88,12 +78,10 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
 
         new FillCategoriesTask().execute(user.getUserId());
 
-
-
         return v;
     }
 
-    private class FillCategoriesTask extends AsyncTask<Long,Void,Void>{
+    private class FillCategoriesTask extends AsyncTask<Long, Void, Void> {
 
         @Override
         protected Void doInBackground(Long... params) {
@@ -124,11 +112,9 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
                 incomeCategs = new ArrayList<>();
 
             incomeAdapter = new CategoriesAdapter(getContext(), incomeCategs);
-//            listIncomeCategories.setLayoutManager(new LinearLayoutManager(getContext()));
 
             LinearLayoutManager linLayoutManager
                     = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-//            listIncomeCategories.setLayoutManager(new GridLayoutManager(getContext(),2));
             listIncomeCategories.setLayoutManager(linLayoutManager);
             listIncomeCategories.setAdapter(incomeAdapter);
             Log.e("LISTCAT", "onPostExecute: " +String.valueOf(expenseCategs) );
@@ -137,8 +123,7 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
                 expenseCategs = new ArrayList<>();
 
             expenseAdapter = new CategoriesAdapter(getContext(), expenseCategs);
-//            listExpenseCategories.setLayoutManager(new LinearLayoutManager(getContext()));
-            listExpenseCategories.setLayoutManager(new GridLayoutManager(getContext(),2));
+            listExpenseCategories.setLayoutManager(new GridLayoutManager(getContext(), 2));
             listExpenseCategories.setAdapter(expenseAdapter);
         }
     }
@@ -149,15 +134,15 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
 
         if (incomeAdapter != null) {
             new FillCategoriesTask().execute(user.getUserId());
-            Log.e("TAG", "onResume: " );
         }
     }
 
     /**
      * Sends intent to EditActivity
      * bundle params:
-     *      String key = IRequestCode
-     *      String isExpense = true / false
+     *       String key = IRequestCode
+     *       String isExpense = true / false
+     *       Serializable user
      */
     @Override
     public void onClick(View v) {
@@ -190,7 +175,6 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
      *      String key = IRequestCode
      *      String title
      */
-    //TODO: outer class
     class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoriesVH> {
 
         private Context context;
@@ -225,8 +209,8 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
                     Intent editActivity = new Intent(getContext(), EditActivity.class);
                     editActivity.putExtra("key", IRequestCodes.EDIT_CATEGORY);
                     editActivity.putExtra("title", holder.title.getText().toString());
-                    editActivity.putExtra("categoryIcon",categs.get(position).getIconResource());
-                    editActivity.putExtra("categoryType",((View)v.getParent()).getTag().toString());
+                    editActivity.putExtra("categoryIcon", categs.get(position).getIconResource());
+                    editActivity.putExtra("categoryType", ((View) v.getParent()).getTag().toString());
                     editActivity.putExtra("user", user);
                     startActivity(editActivity);
                 }
@@ -244,7 +228,6 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
             ImageView img;
             TextView title;
 
-
             public CategoriesVH(View itemView) {
                 super(itemView);
                 img = (ImageView) itemView.findViewById(R.id.row_category_icon);
@@ -255,7 +238,6 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
         }
 
     }
-
 
 
 }

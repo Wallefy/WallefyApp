@@ -57,9 +57,6 @@ public class TransferFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_transfer, container, false);
 
-//        getActivity().findViewById(R.id.save_entry).setVisibility(View.GONE);
-//        getActivity().findViewById(R.id.clear_values).setVisibility(View.GONE);
-
         spnFromAcc = (Spinner) v.findViewById(R.id.transfer_from_account_spinner);
         spnToAcc = (Spinner) v.findViewById(R.id.transfer_to_account_spinner);
         btnTransfer = (Button) v.findViewById(R.id.transfer_button);

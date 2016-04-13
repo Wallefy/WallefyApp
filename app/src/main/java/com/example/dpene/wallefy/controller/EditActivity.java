@@ -80,7 +80,7 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
 
         user = (User) getIntent().getSerializableExtra("user");
         entry = (History) getIntent().getSerializableExtra("entry");
-        passedIsExpense = getIntent().getBooleanExtra("isExpense",true);
+        passedIsExpense = getIntent().getBooleanExtra("passedIsExpence",true);
         bundle = new Bundle();
         bundle.putSerializable("user",user);
         bundle.putBoolean("passedIsExpence",passedIsExpense);
@@ -236,14 +236,6 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
     @Override
     public void setSubtitle(String subtitle) {
         toolbar.setSubtitle(subtitle);
-    }
-
-    @Override
-    public void notifyFragment(Fragment fragment, Bundle bundle) {
-        fragment.setArguments(bundle);
-        FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
-        trans.replace(R.id.root_edit, fragment);
-        trans.commit();
     }
 
     @Override

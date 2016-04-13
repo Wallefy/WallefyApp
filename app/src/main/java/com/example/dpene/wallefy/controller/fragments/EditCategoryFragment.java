@@ -47,15 +47,14 @@ public class EditCategoryFragment extends Fragment {
 
     private ArrayList<Integer> icons;
 
-    User user;
+    private User user;
 
     private String oldCategoryName;
     private long oldIconRes;
 
     public EditCategoryFragment() {
-        // Required empty public constructor
-    }
 
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,20 +104,14 @@ public class EditCategoryFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_edit_category, container, false);
 
         categoryName = (EditText) v.findViewById(R.id.edit_category_edt_name);
-
-
         imgSelectedIcon = (ImageView) v.findViewById(R.id.edit_category_selected_icon);
-
+        categoryIconsList = (GridView) v.findViewById(R.id.edit_category_icon_gridview);
+        categoryIconsList.setNumColumns(4);
+        categoryIconsList.setAdapter(new IconAdapter(getContext(), icons));
 
         if (getArguments().get("title") != null) {
             categoryName.setText(getArguments().get("title").toString());
         }
-
-
-
-        categoryIconsList = (GridView) v.findViewById(R.id.edit_category_icon_gridview);
-        categoryIconsList.setNumColumns(4);
-        categoryIconsList.setAdapter(new IconAdapter(getContext(), icons));
 
         if (getArguments().get("categoryIcon")!= null) {
             long iconResource = (long) getArguments().get("categoryIcon");
@@ -126,7 +119,6 @@ public class EditCategoryFragment extends Fragment {
             Log.e("Category icon", "onCreateView: "+ iconResource );
             if (iconResource != 0) {
                 imgSelectedIcon.setImageResource((int) (iconResource));
-                Log.e("Category icon if", "onCreateView: " + iconResource);
             }
 
         }else {
@@ -141,10 +133,11 @@ public class EditCategoryFragment extends Fragment {
                 selectedIcon = icons.get(position);
             }
         });
-//      To modify toolbar btns override oncreateoptionsmenu
+
         setHasOptionsMenu(true);
         return v;
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);

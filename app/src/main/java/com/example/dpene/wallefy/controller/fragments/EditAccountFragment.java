@@ -1,13 +1,11 @@
 package com.example.dpene.wallefy.controller.fragments;
 
-
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,12 +31,6 @@ import com.example.dpene.wallefy.model.dao.IHistoryDao;
 import com.example.dpene.wallefy.model.datasources.AccountDataSource;
 import com.example.dpene.wallefy.model.datasources.HistoryDataSource;
 
-import org.w3c.dom.Text;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -54,7 +46,7 @@ public class EditAccountFragment extends Fragment {
     private String amount;
 
     private User user;
-    Account pojoAccount;
+    private Account pojoAccount;
 
     public EditAccountFragment() {
     }
@@ -74,7 +66,6 @@ public class EditAccountFragment extends Fragment {
         this.title = getArguments().getString("title");
         this.existingDate = getArguments().getString("date");
         this.amount = getArguments().getString("amount");
-
 
         tvTitle = (TextView) v.findViewById(R.id.edit_account_name);
         tvAmount = (TextView) v.findViewById(R.id.edit_account_init_balance);
