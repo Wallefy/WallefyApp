@@ -1,6 +1,7 @@
 package com.example.dpene.wallefy.controller;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -62,6 +64,11 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
         setSupportActionBar(toolbar);
         toolbar.setTitle("Transaction");
         toolbar.setSubtitleTextColor(Color.WHITE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setStatusBarColor(Color.parseColor("#8F542C"));
+        }
 
 
         if (getSupportActionBar() != null) {
