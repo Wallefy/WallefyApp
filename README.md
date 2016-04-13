@@ -1,5 +1,5 @@
-# Wallefy - Your pocket accountant
-
+# Wallefy 
+## your trusted pocket accountant
 ### Created by: [Donika Peneva](https://github.com/donyka) & [Petar Yonchev](https://github.com/petkata)
 
 ![Wallefy logo](/../master/screens/main.png?raw=true "Wallefy logo")
