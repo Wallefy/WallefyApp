@@ -7,6 +7,31 @@
     tools:context="com.example.dpene.wallefy.controller.fragments.ReportsFragment">
 
     <com.dd.ShadowLayout
+
+        android:id="@+id/filters_label_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:sl_cornerRadius="0dp"
+        app:sl_dx="0dp"
+        app:sl_dy="3dp"
+        app:sl_shadowColor="@color/color_shadow"
+        app:sl_shadowRadius="5dp">
+
+        <TextView
+            android:gravity="center"
+            android:id="@+id/filters_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/reports_calendar_btn"
+            android:layout_centerHorizontal="true"
+            android:background="@color/color_orange_white"
+            android:text="Filters"
+            android:padding="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </com.dd.ShadowLayout>
+
+    <com.dd.ShadowLayout
         android:id="@+id/reports_shadow_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,6 +78,7 @@
                     android:layout_toLeftOf="@+id/reports_calendar_btn"
                     android:background="@android:color/transparent"
                     android:src="@android:drawable/ic_menu_delete" />
+
             </RelativeLayout>
 
             <LinearLayout

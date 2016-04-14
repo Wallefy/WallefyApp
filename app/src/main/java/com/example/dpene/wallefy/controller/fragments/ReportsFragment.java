@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -27,6 +29,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.dd.ShadowLayout;
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.controllerutils.DateFormater;
 import com.example.dpene.wallefy.controller.controllerutils.PickDate;
@@ -100,7 +103,7 @@ public class ReportsFragment extends Fragment {
         accountDataSource = AccountDataSource.getInstance(getContext());
         historyDataSource = HistoryDataSource.getInstance(getContext());
 
-        View v = inflater.inflate(R.layout.fragment_reports, container, false);
+        final View v = inflater.inflate(R.layout.fragment_reports, container, false);
 
         edtDate = (EditText) v.findViewById(R.id.reports_date);
         edtDate.setCursorVisible(false);
@@ -159,8 +162,46 @@ public class ReportsFragment extends Fragment {
         spnAccounts.setAdapter(accountAdapter);
         selectedAccount = "cash";
         reportEntries = (RecyclerView) v.findViewById(R.id.report_recycler);
-        entries = new ArrayList<>();
+        final com.dd.ShadowLayout filtersLabel = (ShadowLayout) v.findViewById(R.id.filters_label_shadow);
+        final com.dd.ShadowLayout mainFilterWindow = (ShadowLayout) v.findViewById(R.id.reports_shadow_top);
+        filtersLabel.setVisibility(View.GONE);
+        final Animation moveUp = AnimationUtils.loadAnimation(getContext(), R.anim.move_up);
+        moveUp.setDuration(220);
+        final Animation moveDown = AnimationUtils.loadAnimation(getContext(), R.anim.move_down);
+        moveDown.setDuration(220);
+        filtersLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainFilterWindow.setVisibility(View.VISIBLE);
+                mainFilterWindow.startAnimation(moveDown);
+                filtersLabel.startAnimation(moveUp);
+                filtersLabel.setVisibility(View.GONE);
+            }
+        });
+        reportEntries.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+//                Log.e("SCROLLLOSTENER", "onScrolled: dx: "  + dx );
+                Log.e("SCROLLLOSTENER", "onScrolled: VSP: "  + recyclerView.getScrollY() );
+                Log.e("SCROLLLOSTENER", "onScrolled: chldCount: "  + recyclerView.getChildCount() );
+                if (dy>30 && mainFilterWindow.getVisibility() == View.VISIBLE) {
 
+                    mainFilterWindow.startAnimation(moveUp);
+                    mainFilterWindow.setVisibility(View.GONE);
+                    filtersLabel.setVisibility(View.VISIBLE);
+                    filtersLabel.startAnimation(moveDown);
+                }
+
+//                if ( dy < - 100 && mainFilterWindow.getVisibility() == View.GONE) {
+//                    mainFilterWindow.setVisibility(View.VISIBLE);
+//                    mainFilterWindow.startAnimation(moveDown);
+//                    filtersLabel.startAnimation(moveUp);
+//                    filtersLabel.setVisibility(View.GONE);
+//                }
+            }
+        });
+        entries = new ArrayList<>();
 
         spnCategories.setAdapter(categoryAdapter);
         new TaskFillSpinners().execute(1);
