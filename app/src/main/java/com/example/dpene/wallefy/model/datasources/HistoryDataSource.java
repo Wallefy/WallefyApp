@@ -47,7 +47,6 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
         values.put(Constants.HISTORY_DESCRIPTION, description);
         values.put(Constants.TRANSACTION_DATE, dateOfTransaction);
         values.put(Constants.IMG_PATH, imgPath);
-        values.put(Constants.TRANSACTION_LOCATION, location);
         long insertId = database.insert(Constants.TABLE_HISTORY, null, values);
         if (insertId < 0) {
             return null;
@@ -55,8 +54,9 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
 
         String[] selArgs = {String.valueOf(insertId)};
         Cursor cursor = database.rawQuery("select history_id,history_user_fk,history_account_type_fk," +
-                "history_category_fk,history_description,transaction_date,transaction_amount,img_path,transaction_location, " +
-                "category_name,category_icon_resource" +
+                "history_category_fk,history_description,transaction_date,transaction_amount,img_path,"+Constants.TRANSACTION_LOCATION_LAT+"," +
+                Constants.TRANSACTION_LOCATION_LONG +
+                ",category_name,category_icon_resource" +
                 " from history  join categories on history.history_category_fk = categories.category_id  where history_id = ? ", selArgs);
         if (cursor.moveToFirst()) {
             long historyId = cursor.getLong(0);
@@ -67,12 +67,13 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
             String historyDate = cursor.getString(5);
             double historyAmount = cursor.getDouble(6);
             String historyImgPath = cursor.getString(7);
-            String historyLocation = cursor.getString(8);
-            String historyCategoryName = cursor.getString(9);
-            int historyCategoryIconResource = cursor.getInt(10);
+            String historyLocationLat = cursor.getString(8);
+            String historyLocationLong = cursor.getString(9);
+            String historyCategoryName = cursor.getString(10);
+            int historyCategoryIconResource = cursor.getInt(11);
             cursor.close();
             return new History(historyId, historyUserFk, historyAccType, historyCatFk, historyCategoryName, historyCategoryIconResource,
-                    historyAmount, historyDescr, historyDate, historyImgPath, historyLocation);
+                    historyAmount, historyDescr, historyDate, historyImgPath, historyLocationLat,historyLocationLong);
         }
         cursor.close();
         return null;
@@ -99,8 +100,10 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
         ArrayList<History> historyArrayList = new ArrayList<>();
         String[] selArgs = {String.valueOf(userID)};
         Cursor cursor = database.rawQuery("select history_id,history_user_fk,history_account_type_fk," +
-                "history_category_fk,history_description,transaction_date,transaction_amount,img_path,transaction_location, " +
-                "category_name,category_icon_resource " +
+                "history_category_fk,history_description,transaction_date,transaction_amount,img_path,"+
+                Constants.TRANSACTION_LOCATION_LAT+"," +
+                 Constants.TRANSACTION_LOCATION_LONG +
+                ",category_name,category_icon_resource " +
                 " from history join categories on history.history_category_fk = categories.category_id where history_user_fk = ? ", selArgs);
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
@@ -112,11 +115,12 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
                 String historyDate = cursor.getString(5);
                 double historyAmount = cursor.getDouble(6);
                 String historyImgPath = cursor.getString(7);
-                String historyLocation = cursor.getString(8);
-                String historyCategoryName = cursor.getString(9);
-                int historyCategoryIconResource = cursor.getInt(10);
+                String historyLocationLat = cursor.getString(8);
+                String historyLocationLong = cursor.getString(9);
+                String historyCategoryName = cursor.getString(10);
+                int historyCategoryIconResource = cursor.getInt(11);
                 historyArrayList.add(new History(historyId, historyUserFk, historyAccType, historyCatFk, historyCategoryName, historyCategoryIconResource,
-                        historyAmount, historyDescr, historyDate, historyImgPath, historyLocation));
+                        historyAmount, historyDescr, historyDate, historyImgPath, historyLocationLat,historyLocationLong));
                 cursor.moveToNext();
             }
 
@@ -148,35 +152,11 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
     }
 
     @Override
-    public ArrayList<History> listHistoryByCategoryNameAndAccount(long userID, String category, String accountName) {
+    public ArrayList<History> listHistoryByCategoryNameAndAccount(long userID,String accountName,String category) {
         String[] arg = {String.valueOf(userID),accountName,category};
         ArrayList<History> historyArrayList = new ArrayList<>();
-        Cursor cursor = database.rawQuery("select history_id,history_user_fk,history_account_type_fk," +
-                "history_category_fk,history_description,transaction_date,transaction_amount,img_path,transaction_location, " +
-                "category_name,category_icon_resource " +
-                " from history " +
-                "join categories on history.history_category_fk = categories.category_id " +
-                " join Account_Types on history.history_account_type_fk = Account_Types.account_type_id " +
-                " where history_user_fk = ? and account_name = ? and category_name = ? order by transaction_date desc ",arg);
-        if (cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-                long historyId = cursor.getLong(0);
-                long historyUserFk = cursor.getLong(1);
-                long historyAccType = cursor.getLong(2);
-                long historyCatFk = cursor.getLong(3);
-                String historyDescr = cursor.getString(4);
-                String historyDate = cursor.getString(5);
-                double historyAmount = cursor.getDouble(6);
-                String historyImgPath = cursor.getString(7);
-                String historyLocation = cursor.getString(8);
-                String historyCategoryName = cursor.getString(9);
-                int historyCategoryIconResource = cursor.getInt(10);
-                historyArrayList.add(new History(historyId, historyUserFk, historyAccType, historyCatFk, historyCategoryName, historyCategoryIconResource,
-                        historyAmount, historyDescr, historyDate, historyImgPath, historyLocation));
-                cursor.moveToNext();
-            }
-        }
-        cursor.close();
+        String whereCaluse = "where history_user_fk = ? and account_name = ? and category_name = ? order by transaction_date desc";
+        searchEntriesByCriteria(historyArrayList, whereCaluse, arg);
         return historyArrayList;
     }
 
@@ -196,11 +176,35 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
         return null;
     }
 
+    @Override
+    public ArrayList<History> filterEntries(String userId, String accName, String typeOfEntry, String catName, String dateAfter) {
+        ArrayList<History> historyArrayList = listHistoryByAccountName(Long.parseLong(userId),accName);
+        if (typeOfEntry != null && !typeOfEntry.equalsIgnoreCase("all")){
+            String[] args = {userId,typeOfEntry};
+            String whereCaluse = "where history_user_fk = ? and category_is_expense = ? order by transaction_date desc";
+            searchEntriesByCriteria(historyArrayList, whereCaluse, args);
+        }
+        if (catName != null){
+            String[] args = {userId,catName};
+            String whereCaluse = "where history_user_fk = ? and category_name = ? order by transaction_date desc";
+            searchEntriesByCriteria(historyArrayList, whereCaluse, args);
+        }
+        if (dateAfter != null && dateAfter.length() > 1){
+            String[] args = {userId,dateAfter};
+            String whereCaluse = "where history_user_fk = ? and transaction_date > ? order by transaction_date desc";
+            searchEntriesByCriteria(historyArrayList, whereCaluse, args);
+        }
+
+        return historyArrayList;
+    }
+
     private ArrayList<History> searchEntriesByCriteria(ArrayList<History> hist, String whereClause,String[] selArgs){
 
        Cursor cursor = database.rawQuery("select history_id,history_user_fk,history_account_type_fk," +
-                "history_category_fk,history_description,transaction_date,transaction_amount,img_path,transaction_location, " +
-                "category_name,category_icon_resource " +
+                "history_category_fk,history_description,transaction_date,transaction_amount,img_path, " +
+               Constants.TRANSACTION_LOCATION_LAT+"," +
+               Constants.TRANSACTION_LOCATION_LONG +
+                ",category_name,category_icon_resource " +
                 " from history " +
                 "join categories on history.history_category_fk = categories.category_id " +
                 " join Account_Types on history.history_account_type_fk = Account_Types.account_type_id " +
@@ -215,11 +219,12 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
                 String historyDate = cursor.getString(5);
                 double historyAmount = cursor.getDouble(6);
                 String historyImgPath = cursor.getString(7);
-                String historyLocation = cursor.getString(8);
-                String historyCategoryName = cursor.getString(9);
-                int historyCategoryIconResource = cursor.getInt(10);
+                String historyLocationLat = cursor.getString(8);
+                String historyLocationLong = cursor.getString(9);
+                String historyCategoryName = cursor.getString(10);
+                int historyCategoryIconResource = cursor.getInt(11);
                 hist.add(new History(historyId, historyUserFk, historyAccType, historyCatFk, historyCategoryName, historyCategoryIconResource,
-                        historyAmount, historyDescr, historyDate, historyImgPath, historyLocation));
+                        historyAmount, historyDescr, historyDate, historyImgPath, historyLocationLat,historyLocationLong));
                 cursor.moveToNext();
             }
         }

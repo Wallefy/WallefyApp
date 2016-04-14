@@ -16,7 +16,7 @@ public interface IHistoryDao {
 
     ArrayList<History> listHistoryByCategoryName(long userID,String category);
 
-    ArrayList<History> listHistoryByCategoryNameAndAccount(long userID,String category,String accountName);
+    ArrayList<History> listHistoryByCategoryNameAndAccount(long userID,String accountName,String category);
 
     History createHistory(long userId, long accountTypeId, long categoryId, double amount,
                           String description,String dateOfTransaction,String imgPath,String location);
@@ -29,4 +29,5 @@ public interface IHistoryDao {
 
     ArrayList<History> listHistoryBetweenDate(long userID,String afterDate,String beforeDate);
 
+    ArrayList<History> filterEntries(String userId, String accName, String typeOfEntry, String catName, String dateAfter);
 }

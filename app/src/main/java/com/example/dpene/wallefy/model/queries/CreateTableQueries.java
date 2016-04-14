@@ -35,5 +35,6 @@ public class CreateTableQueries {
             Constants.TRANSACTION_DATE + " DATETIME not null," +
             Constants.TRANSACTION_AMOUNT + " numeric not null," +
             Constants.IMG_PATH + " text," +
-            Constants.TRANSACTION_LOCATION + " text)";
+            Constants.TRANSACTION_LOCATION_LAT + " text," +
+            Constants.TRANSACTION_LOCATION_LONG + " text)";
 }

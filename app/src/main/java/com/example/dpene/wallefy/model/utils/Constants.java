@@ -43,5 +43,6 @@ public class Constants {
     public static final String TRANSACTION_DATE = "transaction_date";
     public static final String TRANSACTION_AMOUNT = "transaction_amount";
     public static final String IMG_PATH = "img_path";
-    public static final String TRANSACTION_LOCATION = "transaction_location";
+    public static final String TRANSACTION_LOCATION_LAT = "transaction_location_lat";
+    public static final String TRANSACTION_LOCATION_LONG = "transaction_location_long";
 }

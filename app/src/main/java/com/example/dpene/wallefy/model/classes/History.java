@@ -16,7 +16,8 @@ public class History implements Serializable {
     private String description;
     private String dateOfTransaction;
     private String imgPath;
-    private String location;
+    private String locationLat;
+    private String locationLong;
 
     public History(){}
 
@@ -30,7 +31,7 @@ public class History implements Serializable {
 
     public History(long historyId, long userId, long accountTypeId, long categoryId,String categoryName,
                    int categoryIconResource, double amount,
-                   String description, String dateOfTransaction, String imgPath, String location) {
+                   String description, String dateOfTransaction, String imgPath, String locationLat,String locationLong) {
         this.historyId = historyId;
         this.userId = userId;
         this.accountTypeId = accountTypeId;
@@ -41,7 +42,8 @@ public class History implements Serializable {
         this.description = description;
         this.dateOfTransaction = dateOfTransaction;
         this.imgPath = imgPath;
-        this.location = location;
+        this.locationLat = locationLat;
+        this.locationLong = locationLong;
     }
 
     public String getCategoryName() {
@@ -80,12 +82,20 @@ public class History implements Serializable {
         return imgPath;
     }
 
-    public String getLocation() {
-        return location;
+    public String getLocationLat() {
+        return locationLat;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocationLat(String locationLat) {
+        this.locationLat = locationLat;
+    }
+
+    public String getLocationLong() {
+        return locationLong;
+    }
+
+    public void setLocationLong(String locationLong) {
+        this.locationLong = locationLong;
     }
 
     public void setDescription(String description) {
