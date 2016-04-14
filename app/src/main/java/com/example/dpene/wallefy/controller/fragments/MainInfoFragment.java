@@ -260,10 +260,10 @@ public class MainInfoFragment extends Fragment {
         protected void onPostExecute(Double aDouble) {
 
 
-            if (entries == null)
-                entries = new ArrayList<>();
-            if (entries.size() <= 0 && fab.getVisibility() == View.GONE)
-                fab.setVisibility(View.VISIBLE);
+//            if (entries == null)
+//                entries = new ArrayList<>();
+//            if (entries.size() <= 0 && fab.getVisibility() == View.GONE)
+//                fab.setVisibility(View.VISIBLE);
             rea = new ReportEntriesAdapter(getContext(), entries, user);
             rea.notifyDataSetChanged();
             listHistory.setLayoutManager(new LinearLayoutManager(getContext()));

@@ -111,4 +111,19 @@ public class History implements Serializable {
         this.imgPath = imgPath;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        History history = (History) o;
+
+        return historyId == history.historyId;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (historyId ^ (historyId >>> 32));
+    }
 }

@@ -17,9 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -51,6 +53,8 @@ public class ReportsFragment extends Fragment {
     private ArrayList<String> expenseIncome;
 
     private EditText edtDate;
+    private ImageButton btnPickDate;
+    private ImageButton btnclearDate;
 
     private Spinner spnCategories;
     private Spinner spnAccounts;
@@ -72,9 +76,7 @@ public class ReportsFragment extends Fragment {
     RecyclerView reportEntries;
     ArrayList<History> entries;
 
-    String selectedCategory;
     String selectedAccount;
-    String selectedExpense;
 
     User user;
 
@@ -89,6 +91,7 @@ public class ReportsFragment extends Fragment {
         accounts = new ArrayList<>();
         expenseIncome = new ArrayList<>();
 
+        expenseIncome.add("All");
         expenseIncome.add("Expense");
         expenseIncome.add("Income");
 
@@ -105,7 +108,39 @@ public class ReportsFragment extends Fragment {
         edtDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PickDate.pick((EditText) v, getFragmentManager());
+                PickDate.pick(v, getFragmentManager());
+            }
+        });
+        btnPickDate = (ImageButton) v.findViewById(R.id.reports_calendar_btn);
+        btnPickDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PickDate.pick(edtDate, getFragmentManager());
+            }
+        });
+        btnclearDate = (ImageButton) v.findViewById(R.id.reports_clear_calendar_btn);
+        btnclearDate.setVisibility(View.GONE);
+        btnclearDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edtDate.setText(null);
+                v.setVisibility(View.GONE);
+            }
+        });
+        edtDate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                btnclearDate.setVisibility(View.VISIBLE);
             }
         });
 
@@ -113,7 +148,7 @@ public class ReportsFragment extends Fragment {
         spnCategories = (Spinner) v.findViewById(R.id.reports_categories);
         spnCategories.setVisibility(View.GONE);
         spnExpenseIncome = (Spinner) v.findViewById(R.id.reports_expense_income);
-        spnExpenseIncome.setVisibility(View.GONE);
+        spnExpenseIncome.setVisibility(View.VISIBLE);
 
         categoryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, categories);
         accountAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, accounts);
@@ -121,41 +156,9 @@ public class ReportsFragment extends Fragment {
         accountAdapter.setNotifyOnChange(true);
         categoryAdapter.setNotifyOnChange(true);
 
-
-
-
         spnAccounts.setAdapter(accountAdapter);
         selectedAccount = "cash";
         reportEntries = (RecyclerView) v.findViewById(R.id.report_recycler);
-        spnAccounts.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedAccount = ((TextView) view).getText().toString();
-                new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), selectedAccount);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-//        edtDate.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                Log.e("FILTERS", DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(edtDate.getText().toString()) + " dates");
-//                new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()),
-//                        DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(edtDate.getText().toString()));
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
         entries = new ArrayList<>();
 
 
@@ -164,52 +167,16 @@ public class ReportsFragment extends Fragment {
 
         spnExpenseIncome.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, expenseIncome));
 
-        radioChooseCategory = (RadioButton) v.findViewById(R.id.reports_radio_category);
         radioChooseTypeOfEntry = (RadioButton) v.findViewById(R.id.reports_radio_expense);
+        radioChooseTypeOfEntry.setChecked(true);
+        radioChooseCategory = (RadioButton) v.findViewById(R.id.reports_radio_category);
         radioGroup = (RadioGroup) v.findViewById(R.id.reports_radio_group);
-
-//        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(RadioGroup group, int checkedId) {
-//                if (checkedId == R.id.reports_radio_category){
-//                    spnCategories.setVisibility(View.VISIBLE);
-//
-//                    spnCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                        @Override
-//                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                            selectedCategory = ((TextView) view).getText().toString();
-//                            Log.e("CATEG", selectedCategory + " ...");
-//                            Log.e("Exp", selectedExpense + " ...");
-//                        }
-//                        @Override
-//                        public void onNothingSelected(AdapterView<?> parent) {
-//                        }
-//                    });
-//                    Log.e("ASD", spnCategories.getChildCount() + " id");
-////                    selectedCategory = ((TextView) spnCategories.getSelectedItem()).getText().toString();
-//                    selectedExpense = null;
-//                }
-//            }
-//        });
 
         radioChooseCategory.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     spnCategories.setVisibility(View.VISIBLE);
-
-                    spnCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            selectedCategory = ((TextView) view).getText().toString();
-                            new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()),
-                                    selectedAccount,selectedCategory);
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-                        }
-                    });
                     spnExpenseIncome.setVisibility(View.GONE);
                 }
             }
@@ -221,20 +188,36 @@ public class ReportsFragment extends Fragment {
                 if (isChecked) {
                     spnCategories.setVisibility(View.GONE);
                     spnExpenseIncome.setVisibility(View.VISIBLE);
-
-                    spnExpenseIncome.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            selectedExpense = ((TextView) view).getText().toString();
-                            new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()),
-                                    selectedAccount,selectedCategory,selectedExpense);
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-                        }
-                    });
                 }
+            }
+        });
+        Button btnFilter = (Button) v.findViewById(R.id.reports_btn_filter);
+        btnFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                String accName = spnAccounts.getSelectedItem().toString();
+                String typeOfEntry = null;
+                if (spnExpenseIncome.getSelectedItem() != null)
+                    typeOfEntry = spnExpenseIncome.getSelectedItem().toString();
+                String catName = null;
+                if (spnCategories.getSelectedItem() != null)
+                    catName = spnCategories.getSelectedItem().toString();
+
+                if (spnExpenseIncome.getVisibility() == View.GONE)
+                    typeOfEntry = null;
+                if (spnCategories.getVisibility()==View.GONE)
+                    catName = null;
+
+                new TaskFillFilteredEntries().execute(
+                        String.valueOf(user.getUserId()),
+                        accName,
+                        typeOfEntry,
+                        catName,
+                        DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(edtDate.getText().toString()
+                        )
+                );
             }
         });
 
@@ -282,22 +265,36 @@ public class ReportsFragment extends Fragment {
         @Override
         protected Void doInBackground(String... params) {
 
+//                    String.valueOf(user.getUserId()),
+//                    spnAccounts.getSelectedItem().toString(),
+//                    spnExpenseIncome.getSelectedItem().toString(),
+//                    spnCategories.getSelectedItem().toString(),
+//                    DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(edtDate.getText().toString()
 
-//            TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), selectedAccount,
-//                    DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(edtDate.getText().toString()));
+            String userId = params[0];
+            String accName = params[1];
+            String typeOfEntry = null;
+            if (params[2] != null) {
+                switch (params[2]) {
+                    case "Expense":
+                        typeOfEntry = "1";
+                        break;
+                    case "Income":
+                        typeOfEntry = "0";
+                        break;
+                    default:
+                        typeOfEntry = "all";
+                        break;
+                }
+            }
+            String catName = params[3];
+            String dateAfter = params[4];
 
-//            new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()),
-//                    selectedAccount,selectedCategory);
+            Log.e("FILTRING", "doInBackground: " + userId + accName + typeOfEntry + catName + dateAfter);
 
             ((HistoryDataSource) historyDataSource).open();
             entries.clear();
-//            if (params[2]== null)
-                entries = historyDataSource.listHistoryByAccountName(Long.parseLong(params[0]), params[1]);
-            if (params.length > 3 && params[2]!=null) {
-                entries.clear();
-                entries = historyDataSource.listHistoryByCategoryNameAndAccount(Long.parseLong(params[0]), params[1], params[2]);
-            }
-            Log.e("ARRAYSIZE", "doInBackground: " + entries.size() );
+            entries = historyDataSource.filterEntries(userId,accName,typeOfEntry,catName,dateAfter);
             return null;
         }
 
@@ -309,5 +306,4 @@ public class ReportsFragment extends Fragment {
             reportEntries.setAdapter(rea);
         }
     }
-
 }

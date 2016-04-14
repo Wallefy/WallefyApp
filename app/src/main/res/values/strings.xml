@@ -72,7 +72,7 @@
     <string name="keep_me_logged">Keep me logged</string>
     <string name="balance">Balance</string>
     <string name="planned">Planned</string>
-    <string name="choose_date">Choose date</string>
+    <string name="entries_after_date">After date</string>
     <string name="from_account">From account</string>
     <string name="transfer_to_account">To account</string>
     <string name="transfer">Transfer</string>

@@ -142,22 +142,13 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
         String[] selArgs = {String.valueOf(userID), accountType};
         String whereCaluse = "where history_user_fk = ? and account_name = ? order by transaction_date desc";
 
-        searchEntriesByCriteria(historyArrayList,whereCaluse,selArgs);
+        historyArrayList = searchEntriesByCriteria(whereCaluse,selArgs);
         return historyArrayList;
     }
 
     @Override
     public ArrayList<History> listHistoryByCategoryName(long userID, String categoryName) {
         return null;
-    }
-
-    @Override
-    public ArrayList<History> listHistoryByCategoryNameAndAccount(long userID,String accountName,String category) {
-        String[] arg = {String.valueOf(userID),accountName,category};
-        ArrayList<History> historyArrayList = new ArrayList<>();
-        String whereCaluse = "where history_user_fk = ? and account_name = ? and category_name = ? order by transaction_date desc";
-        searchEntriesByCriteria(historyArrayList, whereCaluse, arg);
-        return historyArrayList;
     }
 
 
@@ -178,28 +169,30 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
 
     @Override
     public ArrayList<History> filterEntries(String userId, String accName, String typeOfEntry, String catName, String dateAfter) {
+
         ArrayList<History> historyArrayList = listHistoryByAccountName(Long.parseLong(userId),accName);
+
         if (typeOfEntry != null && !typeOfEntry.equalsIgnoreCase("all")){
-            String[] args = {userId,typeOfEntry};
-            String whereCaluse = "where history_user_fk = ? and category_is_expense = ? order by transaction_date desc";
-            searchEntriesByCriteria(historyArrayList, whereCaluse, args);
+            String[] args = {userId,accName,typeOfEntry};
+            String whereCaluse = "where history_user_fk = ? and account_name = ? and category_is_expense = ? order by transaction_date desc";
+            historyArrayList.retainAll(searchEntriesByCriteria(whereCaluse, args));
         }
         if (catName != null){
-            String[] args = {userId,catName};
-            String whereCaluse = "where history_user_fk = ? and category_name = ? order by transaction_date desc";
-            searchEntriesByCriteria(historyArrayList, whereCaluse, args);
+            String[] args = {userId,accName,catName};
+            String whereCaluse = "where history_user_fk = ? and account_name = ? and category_name = ? order by transaction_date desc";
+            historyArrayList.retainAll(searchEntriesByCriteria(whereCaluse, args));
         }
         if (dateAfter != null && dateAfter.length() > 1){
-            String[] args = {userId,dateAfter};
-            String whereCaluse = "where history_user_fk = ? and transaction_date > ? order by transaction_date desc";
-            searchEntriesByCriteria(historyArrayList, whereCaluse, args);
+            String[] args = {userId,accName,dateAfter};
+            String whereCaluse = "where history_user_fk = ? and account_name = ? and transaction_date > ? order by transaction_date desc";
+            historyArrayList.retainAll(searchEntriesByCriteria(whereCaluse, args));
         }
 
         return historyArrayList;
     }
 
-    private ArrayList<History> searchEntriesByCriteria(ArrayList<History> hist, String whereClause,String[] selArgs){
-
+    private ArrayList<History> searchEntriesByCriteria(String whereClause,String[] selArgs){
+        ArrayList<History> historyArrayList = new ArrayList<>();
        Cursor cursor = database.rawQuery("select history_id,history_user_fk,history_account_type_fk," +
                 "history_category_fk,history_description,transaction_date,transaction_amount,img_path, " +
                Constants.TRANSACTION_LOCATION_LAT+"," +
@@ -223,12 +216,12 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
                 String historyLocationLong = cursor.getString(9);
                 String historyCategoryName = cursor.getString(10);
                 int historyCategoryIconResource = cursor.getInt(11);
-                hist.add(new History(historyId, historyUserFk, historyAccType, historyCatFk, historyCategoryName, historyCategoryIconResource,
+                historyArrayList.add(new History(historyId, historyUserFk, historyAccType, historyCatFk, historyCategoryName, historyCategoryIconResource,
                         historyAmount, historyDescr, historyDate, historyImgPath, historyLocationLat,historyLocationLong));
                 cursor.moveToNext();
             }
         }
         cursor.close();
-        return hist;
+        return historyArrayList;
     }
 }
