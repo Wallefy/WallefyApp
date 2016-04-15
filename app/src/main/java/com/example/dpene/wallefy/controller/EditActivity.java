@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -63,7 +64,7 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle("Transaction");
-        toolbar.setSubtitleTextColor(Color.WHITE);
+        toolbar.setSubtitleTextColor(ContextCompat.getColor(getBaseContext(), R.color.subtitle_color));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -118,8 +119,9 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
                 toolbar.setTitle("Category");
                 editFragment = new EditCategoryFragment();
 //                bundle.putSerializable("user",  getIntent().getSerializableExtra("user"));
-                if (getIntent().getStringExtra("isExpense") != null) {
-                    bundle.putString("isExpense", getIntent().getStringExtra("isExpense"));
+                if (getIntent().getStringExtra("categoryType") != null) {
+                    Log.e("CATEGORYEDITFRAG", "onCreateView: EDTACT " + getIntent().getStringExtra("categoryType"));
+                    bundle.putString("isExpense", getIntent().getStringExtra("categoryType"));
                 }
                 if (getIntent().getStringExtra("title") != null) {
                     bundle.putLong("categoryIcon", getIntent().getLongExtra("categoryIcon", 0));

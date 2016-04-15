@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -64,15 +65,16 @@ public class EditCategoryFragment extends Fragment {
         toolbar = (IToolbar) getActivity();
 
         if (getArguments().get("isExpense") != null ) {
-            isExpense = getArguments().get("isExpense").equals("true");
-            toolbar.setSubtitle(isExpense ? "Expense" : "Income");
+            Log.e("CATEGORYEDITFRAG", "onCreateView: EDTFRAG" );
+            isExpense = getArguments().get("isExpense").equals("Expense");
+            toolbar.setSubtitle(isExpense ? "Edit: Expense" : "Edit: Income");
         }
         if (getArguments().getString("categoryType") != null){
 
             if (getArguments().getString("categoryType").equals("true"))
-                toolbar.setSubtitle("Expense");
+                toolbar.setSubtitle("Create: Expense");
             else
-                toolbar.setSubtitle("Income");
+                toolbar.setSubtitle("Create: Income");
         }
 
         oldCategoryName = getArguments().getString("title");

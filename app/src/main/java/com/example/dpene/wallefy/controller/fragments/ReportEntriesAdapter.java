@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ public class ReportEntriesAdapter extends RecyclerView.Adapter<ReportEntriesAdap
     private Context context;
     private ArrayList<History> entries;
     private User currentUser;
+    private int isLast;
 
     public ReportEntriesAdapter(Context context, ArrayList<History> entries,User user) {
         this.context = context;
@@ -49,8 +51,12 @@ public class ReportEntriesAdapter extends RecyclerView.Adapter<ReportEntriesAdap
     public void onBindViewHolder(CustomVH holder, final int position) {
         holder.img.setImageResource(entries.get(position).getCategoryIconResource());
         holder.category.setText(entries.get(position).getCategoryName());
-        holder.date.setText(DateFormater.from_yyyyMMddHHmmss_To_dMMMyyyyHHmmss(entries.get(position).getDateOfTransaction()));
+        holder.date.setText(DateFormater.from_yyyyMMddHHmmss_To_dMMMyyyy(entries.get(position).getDateOfTransaction()));
         holder.note.setText(entries.get(position).getDescription());
+        if (isLast == 1)
+            holder.lineSepatator.setVisibility(View.GONE);
+        else
+            holder.lineSepatator.setVisibility(View.VISIBLE);
         if (entries.get(position).getAmount() < 0)
             holder.amount.setTextColor(ContextCompat.getColor(context, R.color.color_red_dark));
         else
@@ -76,12 +82,22 @@ public class ReportEntriesAdapter extends RecyclerView.Adapter<ReportEntriesAdap
         return entries.size();
     }
 
+//    Check if the last file is reached
+    @Override
+    public int getItemViewType(int position) {
+        if (position == entries.size()-1){
+            return isLast=1;
+        }
+        return isLast=0;
+    }
+
     public class CustomVH extends RecyclerView.ViewHolder {
         ImageView img;
         TextView category;
         TextView note;
         TextView date;
         TextView amount;
+        View lineSepatator;
 
         public CustomVH(View itemView) {
             super(itemView);
@@ -90,6 +106,7 @@ public class ReportEntriesAdapter extends RecyclerView.Adapter<ReportEntriesAdap
             date = (TextView) itemView.findViewById(R.id.date_row_history);
             note = (TextView) itemView.findViewById(R.id.note_row_history);
             amount = (TextView) itemView.findViewById(R.id.amount_row_history);
+            lineSepatator =  itemView.findViewById(R.id.line_separator);
         }
     }
 }

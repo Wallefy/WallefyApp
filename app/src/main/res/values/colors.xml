@@ -18,6 +18,6 @@
     <color name="color_orange_white">#FFFFBB</color>
     <color name="color_orange_white_transp">#000000</color>
     <color name="color_orange">#ffffbb33</color>
-
+    <color name="subtitle_color">#DECCC0</color>
     <color name="color_shadow">#D7D7D2</color>
 </resources>

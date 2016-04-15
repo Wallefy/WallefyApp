@@ -141,9 +141,9 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
 
             holder.name.setText(acc.getAccountName());
             if (acc.getAccountTempSum() < 0)
-                holder.amount.setTextColor(Color.RED);
+                holder.amount.setTextColor(ContextCompat.getColor(getContext(), R.color.color_red_dark));
             else
-                holder.amount.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+                holder.amount.setTextColor(ContextCompat.getColor(getContext(), R.color.color_green_dark));
             holder.amount.setText(String.valueOf(acc.getAccountTempSum()));
             return row;
         }
@@ -169,8 +169,6 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
             ((HistoryDataSource)historyDataSource).open();
             IAccountDao accountDataSource = AccountDataSource.getInstance(getContext());
             ((AccountDataSource)accountDataSource).open();
-            Log.e("LISTACCC", "doInBackground: " + String.valueOf(user));
-            Log.e("LISTACCC", "doInBackground: " +String.valueOf(accountDataSource) );
             ArrayList<Account> allAcc = accountDataSource.showAllAccounts(user.getUserId());
             if (allAcc == null || allAcc.size() == 0 )
                 return null;

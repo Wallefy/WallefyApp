@@ -117,7 +117,6 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
                     = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             listIncomeCategories.setLayoutManager(linLayoutManager);
             listIncomeCategories.setAdapter(incomeAdapter);
-            Log.e("LISTCAT", "onPostExecute: " +String.valueOf(expenseCategs) );
 
             if (expenseCategs == null)
                 expenseCategs = new ArrayList<>();

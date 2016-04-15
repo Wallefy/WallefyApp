@@ -182,7 +182,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
             date = entry.getDateOfTransaction();
             if (date != null && date.length() > 0)
-                parent.getDate(date);
+                parent.getDate(DateFormater.from_yyyyMMddHHmmss_To_dMMMyyyy(date));
 
             note = entry.getDescription();
             if (note != null && note.length() > 0)

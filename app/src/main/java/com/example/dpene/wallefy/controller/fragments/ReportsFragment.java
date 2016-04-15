@@ -183,8 +183,8 @@ public class ReportsFragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 //                Log.e("SCROLLLOSTENER", "onScrolled: dx: "  + dx );
-                Log.e("SCROLLLOSTENER", "onScrolled: VSP: "  + recyclerView.getScrollY() );
-                Log.e("SCROLLLOSTENER", "onScrolled: chldCount: "  + recyclerView.getChildCount() );
+//                Log.e("SCROLLLOSTENER", "onScrolled: VSP: "  + recyclerView.getScrollY() );
+//                Log.e("SCROLLLOSTENER", "onScrolled: chldCount: "  + recyclerView.getChildCount() );
                 if (dy>30 && mainFilterWindow.getVisibility() == View.VISIBLE) {
 
                     mainFilterWindow.startAnimation(moveUp);
@@ -193,7 +193,7 @@ public class ReportsFragment extends Fragment {
                     filtersLabel.startAnimation(moveDown);
                 }
 
-//                if ( dy < - 100 && mainFilterWindow.getVisibility() == View.GONE) {
+//                if ( dy < - 10 && dy> -15 && mainFilterWindow.getVisibility() == View.GONE) {
 //                    mainFilterWindow.setVisibility(View.VISIBLE);
 //                    mainFilterWindow.startAnimation(moveDown);
 //                    filtersLabel.startAnimation(moveUp);
