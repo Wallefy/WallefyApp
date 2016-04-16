@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.MainActivity;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 import com.example.dpene.wallefy.model.classes.Category;
 import com.example.dpene.wallefy.model.classes.User;
@@ -81,7 +82,7 @@ public class EditCategoryFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        user = (User) getArguments().getSerializable("user");
+//        user = (User) getArguments().getSerializable("user");
         oldIconRes = getArguments().getLong("categoryIcon");
 
         icons = new ArrayList<>();
@@ -163,7 +164,7 @@ public class EditCategoryFragment extends Fragment {
                 builder.setMessage("All entries for this category would be deleted!");
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        new DeleteCategoryTask(user.getUserId()).execute(oldCategoryName);
+                        new DeleteCategoryTask(MainActivity.user.getUserId()).execute(oldCategoryName);
                         getActivity().finish();
                     }
                 });
@@ -240,20 +241,20 @@ public class EditCategoryFragment extends Fragment {
 
             if (isNewCategory) {
                 Category cat = categoryDataSource.createCategory(params[0], params[1].equals("1"),
-                        Long.valueOf(params[2]), user.getUserId());
+                        Long.valueOf(params[2]), MainActivity.user.getUserId());
                 if (cat != null) {
-                    user.addCategory(cat);
+                    MainActivity.user.addCategory(cat);
                     return true;
                 }
             }
             else {
                 String imgRes = params[2];
-                Category oldcat = categoryDataSource.showCategory(user.getUserId(),params[3]);
+                Category oldcat = categoryDataSource.showCategory(MainActivity.user.getUserId(),params[3]);
                 catId = oldcat.getCategoryId();
 
-                Category cat = categoryDataSource.updateCategory(params[0],Long.valueOf(params[2]),user.getUserId(),params[3],oldIcon,catId);
+                Category cat = categoryDataSource.updateCategory(params[0],Long.valueOf(params[2]),MainActivity.user.getUserId(),params[3],oldIcon,catId);
                 if (cat != null) {
-                    user.addCategory(cat);
+                    MainActivity.user.addCategory(cat);
                     return true;
                 }
             }

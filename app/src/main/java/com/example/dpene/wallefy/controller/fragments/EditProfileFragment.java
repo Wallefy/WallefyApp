@@ -65,9 +65,9 @@ public class EditProfileFragment extends Fragment {
         this.edtPassword = (EditText) v.findViewById(R.id.edit_profile_password);
         this.edtRetypePassword = (EditText) v.findViewById(R.id.edit_profile_retype_password);
 
-        this.user = (User) getArguments().get("user");
-        this.edtUsername.setText(user.getUsername());
-        this.edtEmail.setText(user.getEmail());
+//        this.user = (User) getArguments().get("user");
+        this.edtUsername.setText(MainActivity.user.getUsername());
+        this.edtEmail.setText(MainActivity.user.getEmail());
 
         return v;
     }
@@ -87,14 +87,14 @@ public class EditProfileFragment extends Fragment {
 
                 boolean isCorrect = true;
 
-                if (newEmail.length() > 0 && !newEmail.equals(user.getEmail())) {
+                if (newEmail.length() > 0 && !newEmail.equals(MainActivity.user.getEmail())) {
                     if (!RegisterHelper.validateEmail(newEmail)) {
                         edtEmail.setError("Invalid email");
                         isCorrect = false;
                     }
                 }
 
-                if (newUsername.length() > 0 && !newUsername.equals(user.getUsername())) {
+                if (newUsername.length() > 0 && !newUsername.equals(MainActivity.user.getUsername())) {
                     if (!RegisterHelper.validateUsername(newUsername)) {
                         edtUsername.setError("Name's length must be bigger than 3");
                         isCorrect = false;
@@ -102,8 +102,8 @@ public class EditProfileFragment extends Fragment {
                 }
 
                 // TODO: remove the getPassword() method and check in DB
-                if (oldPass.length() > 0 && !RegisterHelper.md5(oldPass).equals(user.getPassword())) {
-                    Log.e("tag", RegisterHelper.md5(oldPass) + " " + oldPass + "  " + user.getPassword());
+                if (oldPass.length() > 0 && !RegisterHelper.md5(oldPass).equals(MainActivity.user.getPassword())) {
+                    Log.e("tag", RegisterHelper.md5(oldPass) + " " + oldPass + "  " + MainActivity.user.getPassword());
                     this.edtOldPassword.setError("Wrong password!");
                     isCorrect = false;
                 }
@@ -124,18 +124,18 @@ public class EditProfileFragment extends Fragment {
                 if (isCorrect) {
 
                     if (newUsername.equals("")) {
-                        newUsername = user.getUsername();
+                        newUsername = MainActivity.user.getUsername();
                     }
 
                     if (newEmail.equals("")) {
-                        newEmail = user.getEmail();
+                        newEmail = MainActivity.user.getEmail();
                     }
 
                     if (newPass.equals("")) {
-                        newPass = user.getPassword();
+                        newPass = MainActivity.user.getPassword();
                     }
 
-                    new TaskUpdateUserProfile(user.getUserId()).execute(newEmail, newUsername, newPass);
+                    new TaskUpdateUserProfile(MainActivity.user.getUserId()).execute(newEmail, newUsername, newPass);
 
                 }
                 return true;
@@ -161,13 +161,13 @@ public class EditProfileFragment extends Fragment {
 
             IUserDao userDataSource = UserDataSource.getInstance(getContext());
             ((UserDataSource) userDataSource).open();
-            //TODO update user in DB
-            Log.e("tag", userID +", " + params[0]+", " + params[1]+", " + params[2]);
-            User user = userDataSource.updateUser(userID, params[0], params[1], params[2]);
-
-            if (user != null) {
-                EditProfileFragment.this.user = user;
-                parent.getUser(user);
+            User updateUser = userDataSource.updateUser(userID, params[0], params[1], params[2]);
+            if (updateUser != null) {
+                MainActivity.user.setEmail(updateUser.getEmail());
+                MainActivity.user.setUsername(updateUser.getUsername());
+                if (updateUser.getPassword().length()>0)
+                    MainActivity.user.setPassword(updateUser.getPassword());
+                parent.getUser(MainActivity.user);
                 return true;
             }
             return false;
@@ -179,7 +179,6 @@ public class EditProfileFragment extends Fragment {
                 Toast.makeText(getContext(), "Save success", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(getContext(), MainActivity.class);
                 i.putExtra("user",parent.sendUser());
-                Log.e("SENDINGUSEREDIT", "onPostExecute: " + String.valueOf(parent.sendUser()) );
                 startActivity(i);
                 getActivity().finish();
             }

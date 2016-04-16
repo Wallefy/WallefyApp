@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.EditActivity;
+import com.example.dpene.wallefy.controller.MainActivity;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IPieChartCommunicator;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.controller.fragments.interfaces.ISaveSpinnerPosition;
@@ -73,6 +74,8 @@ public class MainInfoFragment extends Fragment {
     ArrayList<Category> userCategories;
     FloatingActionButton fab;
 
+    Bundle savedBundle;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -85,6 +88,8 @@ public class MainInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_main_info, container, false);
+
+        savedBundle = savedInstanceState;
 
 //        final FloatingActionButton fabIncome = (FloatingActionButton) view.findViewById(R.id.fab_income);
 //        final FloatingActionButton fabExpense = (FloatingActionButton) view.findViewById(R.id.fab_expense);
@@ -111,7 +116,7 @@ public class MainInfoFragment extends Fragment {
                         Intent editActivity = new Intent(getContext(), EditActivity.class);
                         editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
                         editActivity.putExtra("account", selectedAccount);
-                        editActivity.putExtra("user", user);
+//                        editActivity.putExtra("user", user);
                         editActivity.putExtra("passedIsExpence", false);
                         startActivity(editActivity);
                     }
@@ -122,7 +127,7 @@ public class MainInfoFragment extends Fragment {
                         Intent editActivity = new Intent(getContext(), EditActivity.class);
                         editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
                         editActivity.putExtra("account", selectedAccount);
-                        editActivity.putExtra("user", user);
+//                        editActivity.putExtra("user", user);
                         editActivity.putExtra("passedIsExpence", true);
                         startActivity(editActivity);
                     }
@@ -132,7 +137,7 @@ public class MainInfoFragment extends Fragment {
                     public void onClick(View v) {
                         Intent editActivity = new Intent(getContext(), EditActivity.class);
                         editActivity.putExtra("key", IRequestCodes.TRANSFER);
-                        editActivity.putExtra("user", user);
+//                        editActivity.putExtra("user", user);
                         startActivity(editActivity);
                     }
                 });
@@ -145,7 +150,7 @@ public class MainInfoFragment extends Fragment {
         rootLayout = (RelativeLayout) view.findViewById(R.id.main_info_root_layout);
 
         Bundle bundle = this.getArguments();
-        user = (User) bundle.getSerializable("user");
+//        user = (User) bundle.getSerializable("user");
 
         userCategories = new ArrayList<>();
 
@@ -168,7 +173,7 @@ public class MainInfoFragment extends Fragment {
         spnAccounts.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), spnAccounts.getSelectedItem().toString());
+                new TaskFillFilteredEntries().execute(String.valueOf(MainActivity.user.getUserId()), spnAccounts.getSelectedItem().toString());
                 selectedAccount = spnAccounts.getSelectedItem().toString();
                 MainInfoFragment.this.position = position;
                 fab.show();
@@ -222,8 +227,8 @@ public class MainInfoFragment extends Fragment {
                 public void onClick(View v) {
                     Intent editActivity = new Intent(getContext(), EditActivity.class);
                     editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
-                    editActivity.putExtra("account", selectedAccount);
-                    editActivity.putExtra("user", user);
+                    editActivity.putExtra("account", spnAccounts.getSelectedItem().toString());
+//                    editActivity.putExtra("user", user);
                     editActivity.putExtra("category", categs.get(position).getCategoryName());
                     editActivity.putExtra("passedIsExpence", categs.get(position).isExpense());
                     startActivity(editActivity);
@@ -264,7 +269,8 @@ public class MainInfoFragment extends Fragment {
 //                entries = new ArrayList<>();
 //            if (entries.size() <= 0 && fab.getVisibility() == View.GONE)
 //                fab.setVisibility(View.VISIBLE);
-            rea = new ReportEntriesAdapter(getContext(), entries, user);
+            rea = new ReportEntriesAdapter(getContext(), entries, MainActivity.user);
+            Log.e("USERACCOUNTS", "onPostExecute: " + MainActivity.user.getAccounts());
             rea.notifyDataSetChanged();
             listHistory.setLayoutManager(new LinearLayoutManager(getContext()));
             listHistory.setAdapter(rea);
@@ -281,8 +287,9 @@ public class MainInfoFragment extends Fragment {
     public void onResume() {
         super.onResume();
         position = mainActivity.getPosition();
-        new FillAccountNames(user.getUserId()).execute();
-        new FillCategoriesTask(user.getUserId()).execute();
+
+        new FillAccountNames(MainActivity.user.getUserId()).execute();
+        new FillCategoriesTask(MainActivity.user.getUserId()).execute();
     }
 
     @Override
@@ -324,9 +331,17 @@ public class MainInfoFragment extends Fragment {
             if (userAccountNames == null)
                 userAccountNames = new ArrayList<>();
             spnAccounts.setAdapter(accountAdapter);
-            spnAccounts.setSelection(position);
+            if (savedBundle != null)
+            {
+                spnAccounts.setSelection(savedBundle.getInt("accPosition"));
+            }
+            if (position > userAccountNames.size()-1 ) {
+                position = 0;
+                spnAccounts.setSelection(position);
+
+            }
             if (spnAccounts.getSelectedItem() != null)
-                new TaskFillFilteredEntries().execute(String.valueOf(user.getUserId()), spnAccounts.getSelectedItem().toString());
+                new TaskFillFilteredEntries().execute(String.valueOf(MainActivity.user.getUserId()), spnAccounts.getSelectedItem().toString());
         }
     }
 
@@ -362,5 +377,12 @@ public class MainInfoFragment extends Fragment {
             listCategories.setLayoutManager(linLayoutManager);
             listCategories.setAdapter(categoriesAdapter);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt("accPosition",position);
+        savedBundle = outState;
+        super.onSaveInstanceState(outState);
     }
 }

@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.EditActivity;
+import com.example.dpene.wallefy.controller.MainActivity;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.model.classes.Category;
 import com.example.dpene.wallefy.model.classes.User;
@@ -59,7 +60,7 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
         expenseCategs = new ArrayList<>();
 
         Bundle bundle = this.getArguments();
-        user = (User) bundle.getSerializable("user");
+//        user = (User) bundle.getSerializable("user");
 
         View v = inflater.inflate(R.layout.fragment_list_category, container, false);
 
@@ -76,7 +77,7 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
         incomeLayout.setOnClickListener(this);
         expenseLayout.setOnClickListener(this);
 
-        new FillCategoriesTask().execute(user.getUserId());
+        new FillCategoriesTask().execute(MainActivity.user.getUserId());
 
         return v;
     }
@@ -90,17 +91,23 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
             ICategoryDao categoryDataSource = CategoryDataSource.getInstance(getContext());
             ((CategoryDataSource)categoryDataSource).open();
             ArrayList<Category> nonSystemCats =  categoryDataSource.showCategoriesByType(params[0], false);
-            for (Category cat :
-                    nonSystemCats) {
-                if (!cat.isSystem())
-                    incomeCategs.add(cat);
+            if (nonSystemCats != null) {
+                for (Category cat :
+                        nonSystemCats) {
+                    if (!cat.isSystem())
+                        incomeCategs.add(cat);
+                }
             }
-            nonSystemCats.clear();
+            if (nonSystemCats != null) {
+                nonSystemCats.clear();
+            }
             nonSystemCats =  categoryDataSource.showCategoriesByType(params[0],true);
-            for (Category cat :
-                    nonSystemCats) {
-                if (!cat.isSystem())
-                    expenseCategs.add(cat);
+            if (nonSystemCats != null) {
+                for (Category cat :
+                        nonSystemCats) {
+                    if (!cat.isSystem())
+                        expenseCategs.add(cat);
+                }
             }
             return null;
         }
@@ -132,7 +139,7 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
         super.onResume();
 
         if (incomeAdapter != null) {
-            new FillCategoriesTask().execute(user.getUserId());
+            new FillCategoriesTask().execute(MainActivity.user.getUserId());
         }
     }
 
@@ -162,7 +169,7 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
         Intent editActivity = new Intent(getContext(), EditActivity.class);
         editActivity.putExtra("key", IRequestCodes.EDIT_CATEGORY);
         editActivity.putExtra("editCategisExpense", isExpense);
-        editActivity.putExtra("user", user);
+//        editActivity.putExtra("user", user);
         startActivity(editActivity);
 
     }
@@ -204,13 +211,12 @@ public class ListCategoryFragment extends Fragment implements View.OnClickListen
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("TAG", "onClick: " + ((View) v.getParent()).getTag());
                     Intent editActivity = new Intent(getContext(), EditActivity.class);
                     editActivity.putExtra("key", IRequestCodes.EDIT_CATEGORY);
                     editActivity.putExtra("title", holder.title.getText().toString());
                     editActivity.putExtra("categoryIcon", categs.get(position).getIconResource());
                     editActivity.putExtra("categoryType", ((View) v.getParent()).getTag().toString());
-                    editActivity.putExtra("user", user);
+//                    editActivity.putExtra("user", user);
                     startActivity(editActivity);
                 }
             });

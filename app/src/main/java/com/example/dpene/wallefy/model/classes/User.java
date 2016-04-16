@@ -123,4 +123,13 @@ public class User implements Serializable {
         this.historyLog = historyLog;
     }
 
+    public void deleteAccount(String accName){
+        for (Account acc :
+                this.accounts) {
+            if (acc.getAccountName().equalsIgnoreCase(accName)){
+                this.accounts.remove(acc);
+            }
+        }
+    }
+
 }

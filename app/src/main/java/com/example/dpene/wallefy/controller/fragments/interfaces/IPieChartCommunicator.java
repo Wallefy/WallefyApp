@@ -9,5 +9,7 @@ import android.support.v4.app.Fragment;
 public interface IPieChartCommunicator {
 
     void notifyFragment(Fragment fragment, Bundle bundle);
+    void setPosition(int position);
+    int getPosition();
 
 }

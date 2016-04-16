@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.MainActivity;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.User;
@@ -48,10 +49,10 @@ public class TransferFragment extends Fragment {
         IToolbar toolbar = (IToolbar) getActivity();
         toolbar.setTitle("Transfer");
 
-        this.user = (User) getArguments().get("user");
+//        this.user = (User) getArguments().get("user");
 
         accounts = new ArrayList<>();
-        for(Account acc : this.user.getAccounts()){
+        for(Account acc : MainActivity.user.getAccounts()){
             accounts.add(acc.getAccountName());
         }
 

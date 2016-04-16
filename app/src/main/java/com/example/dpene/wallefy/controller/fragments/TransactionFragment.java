@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.MainActivity;
 import com.example.dpene.wallefy.controller.controllerutils.DateFormater;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IToolbar;
 import com.example.dpene.wallefy.controller.fragments.interfaces.ITransactionCommunicator;
@@ -112,7 +113,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         mapUsersAccounts = new HashMap<>();
 
         Bundle bundle = getArguments();
-        this.user = (User) bundle.getSerializable("user");
+//        this.user = (User) bundle.getSerializable("user");
 
         // arguments from detailsFragment
         this.passedIsExpense = getArguments().getBoolean("passedIsExpence");
@@ -128,16 +129,16 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         // enable options menu
         setHasOptionsMenu(true);
 
-        for (Account acc : user.getAccounts()) {
+        for (Account acc : MainActivity.user.getAccounts()) {
             mapUsersAccounts.put(acc.getAccountTypeId(), acc.getAccountName());
         }
 
-        for (Account ac : user.getAccounts()) {
+        for (Account ac : MainActivity.user.getAccounts()) {
             listAccounts.add(ac.getAccountName());
         }
 
         if (getArguments().get("entry") != null) {
-            for (Category cat : user.getCategories()) {
+            for (Category cat : MainActivity.user.getCategories()) {
                 if (!cat.isSystem()) {
                     if (cat.isExpense())
                         listCategories.add(cat.getCategoryName());
@@ -147,7 +148,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 }
             }
         } else {
-            for (Category cat : user.getCategories()) {
+            for (Category cat : MainActivity.user.getCategories()) {
                 if (!cat.isSystem()) {
                     if (passedIsExpense) {
                         if (cat.isExpense())
@@ -245,7 +246,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 String selectedCategory = spnCategoryType.getSelectedItem().toString();
                 String calculatedAmount = amount.getText().toString();
                 if (calculatedAmount.matches("(?:\\d*\\.)?\\d+") && Double.parseDouble(calculatedAmount) > 0) {
-                    new TaskSaveEntry(user.getUserId()).execute(selectedAccountType, selectedCategory,
+                    new TaskSaveEntry(MainActivity.user.getUserId()).execute(selectedAccountType, selectedCategory,
                             calculatedAmount, parent.setNote(), DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(parent.setDate()));
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -439,7 +440,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                     cat.getCategoryId(), sumForEntry, params[3], params[4], null, null);
 
             if (h != null) {
-                user.addHistory(h);
+                MainActivity.user.addHistory(h);
                 return true;
             }
             return false;

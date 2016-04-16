@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 import com.dd.ShadowLayout;
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.MainActivity;
 import com.example.dpene.wallefy.controller.controllerutils.DateFormater;
 import com.example.dpene.wallefy.controller.controllerutils.PickDate;
 import com.example.dpene.wallefy.model.classes.Account;
@@ -88,10 +89,11 @@ public class ReportsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         Bundle bundle = this.getArguments();
-        user = (User) bundle.getSerializable("user");
+//        user = (User) bundle.getSerializable("user");
 
         categories = new ArrayList<>();
         accounts = new ArrayList<>();
+        accounts.add("All");
         expenseIncome = new ArrayList<>();
 
         expenseIncome.add("All");
@@ -144,6 +146,7 @@ public class ReportsFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 btnclearDate.setVisibility(View.VISIBLE);
+                filter();
             }
         });
 
@@ -160,7 +163,17 @@ public class ReportsFragment extends Fragment {
         categoryAdapter.setNotifyOnChange(true);
 
         spnAccounts.setAdapter(accountAdapter);
-        selectedAccount = "cash";
+        spnAccounts.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filter();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         reportEntries = (RecyclerView) v.findViewById(R.id.report_recycler);
         final com.dd.ShadowLayout filtersLabel = (ShadowLayout) v.findViewById(R.id.filters_label_shadow);
         final com.dd.ShadowLayout mainFilterWindow = (ShadowLayout) v.findViewById(R.id.reports_shadow_top);
@@ -182,10 +195,7 @@ public class ReportsFragment extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-//                Log.e("SCROLLLOSTENER", "onScrolled: dx: "  + dx );
-//                Log.e("SCROLLLOSTENER", "onScrolled: VSP: "  + recyclerView.getScrollY() );
-//                Log.e("SCROLLLOSTENER", "onScrolled: chldCount: "  + recyclerView.getChildCount() );
-                if (dy>30 && mainFilterWindow.getVisibility() == View.VISIBLE) {
+                if (dy > 30 && mainFilterWindow.getVisibility() == View.VISIBLE) {
 
                     mainFilterWindow.startAnimation(moveUp);
                     mainFilterWindow.setVisibility(View.GONE);
@@ -218,8 +228,20 @@ public class ReportsFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     spnCategories.setVisibility(View.VISIBLE);
+                    filter();
                     spnExpenseIncome.setVisibility(View.GONE);
                 }
+            }
+        });
+        spnCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filter();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
@@ -229,36 +251,19 @@ public class ReportsFragment extends Fragment {
                 if (isChecked) {
                     spnCategories.setVisibility(View.GONE);
                     spnExpenseIncome.setVisibility(View.VISIBLE);
+                    filter();
                 }
             }
         });
-        Button btnFilter = (Button) v.findViewById(R.id.reports_btn_filter);
-        btnFilter.setOnClickListener(new View.OnClickListener() {
+        spnExpenseIncome.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filter();
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-                String accName = spnAccounts.getSelectedItem().toString();
-                String typeOfEntry = null;
-                if (spnExpenseIncome.getSelectedItem() != null)
-                    typeOfEntry = spnExpenseIncome.getSelectedItem().toString();
-                String catName = null;
-                if (spnCategories.getSelectedItem() != null)
-                    catName = spnCategories.getSelectedItem().toString();
-
-                if (spnExpenseIncome.getVisibility() == View.GONE)
-                    typeOfEntry = null;
-                if (spnCategories.getVisibility()==View.GONE)
-                    catName = null;
-
-                new TaskFillFilteredEntries().execute(
-                        String.valueOf(user.getUserId()),
-                        accName,
-                        typeOfEntry,
-                        catName,
-                        DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(edtDate.getText().toString()
-                        )
-                );
             }
         });
 
@@ -330,21 +335,45 @@ public class ReportsFragment extends Fragment {
             }
             String catName = params[3];
             String dateAfter = params[4];
-
-            Log.e("FILTRING", "doInBackground: " + userId + accName + typeOfEntry + catName + dateAfter);
-
             ((HistoryDataSource) historyDataSource).open();
+            if (entries == null) {
+                entries = new ArrayList<>();
+            }
             entries.clear();
-            entries = historyDataSource.filterEntries(userId,accName,typeOfEntry,catName,dateAfter);
+            entries = historyDataSource.filterEntries(userId, accName, typeOfEntry, catName, dateAfter);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            rea = new ReportEntriesAdapter(getContext(), entries, user);
+            rea = new ReportEntriesAdapter(getContext(), entries, MainActivity.user);
             rea.notifyDataSetChanged();
             reportEntries.setLayoutManager(new LinearLayoutManager(getContext()));
             reportEntries.setAdapter(rea);
         }
+    }
+
+    private void filter(){
+        String accName = spnAccounts.getSelectedItem().toString();
+        String typeOfEntry = null;
+        if (spnExpenseIncome.getSelectedItem() != null)
+            typeOfEntry = spnExpenseIncome.getSelectedItem().toString();
+        String catName = null;
+        if (spnCategories.getSelectedItem() != null)
+            catName = spnCategories.getSelectedItem().toString();
+
+        if (spnExpenseIncome.getVisibility() == View.GONE)
+            typeOfEntry = null;
+        if (spnCategories.getVisibility()==View.GONE)
+            catName = null;
+
+        new TaskFillFilteredEntries().execute(
+                String.valueOf(MainActivity.user.getUserId()),
+                accName,
+                typeOfEntry,
+                catName,
+                DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(edtDate.getText().toString()
+                )
+        );
     }
 }

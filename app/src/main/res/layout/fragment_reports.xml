@@ -159,14 +159,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-
-            <Button
-                android:id="@+id/reports_btn_filter"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Filter" />
         </LinearLayout>
 
     </com.dd.ShadowLayout>

@@ -43,7 +43,7 @@ public class DetailsTransactionFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_details_transaction, container, false);
 
         // initialize vars from transactionFragment
-        this.user = (User) getArguments().getSerializable("user");
+//        this.user = (User) getArguments().getSerializable("user");
         this.existingDate = getArguments().getString("date");
 
         note = (TextView) v.findViewById(R.id.details_transaction_note);

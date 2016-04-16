@@ -104,7 +104,7 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
                 Constants.TRANSACTION_LOCATION_LAT+"," +
                  Constants.TRANSACTION_LOCATION_LONG +
                 ",category_name,category_icon_resource " +
-                " from history join categories on history.history_category_fk = categories.category_id where history_user_fk = ? ", selArgs);
+                " from history join categories on history.history_category_fk = categories.category_id where history_user_fk = ? order by transaction_date desc ", selArgs);
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 long historyId = cursor.getLong(0);
@@ -170,21 +170,31 @@ public class HistoryDataSource extends DataSource implements IHistoryDao {
     @Override
     public ArrayList<History> filterEntries(String userId, String accName, String typeOfEntry, String catName, String dateAfter) {
 
-        ArrayList<History> historyArrayList = listHistoryByAccountName(Long.parseLong(userId),accName);
+        ArrayList<History> historyArrayList = listAllHistory(Long.parseLong(userId));
+        if (historyArrayList == null)
+            historyArrayList = new ArrayList<>();
+
+        if (accName != null && !accName.equalsIgnoreCase("all")){
+            historyArrayList.retainAll(listHistoryByAccountName(Long.parseLong(userId),accName));
+        }
 
         if (typeOfEntry != null && !typeOfEntry.equalsIgnoreCase("all")){
-            String[] args = {userId,accName,typeOfEntry};
-            String whereCaluse = "where history_user_fk = ? and account_name = ? and category_is_expense = ? order by transaction_date desc";
+            String[] args = {userId,typeOfEntry};
+            String whereCaluse = "where history_user_fk = ? and category_is_expense = ? order by transaction_date desc";
             historyArrayList.retainAll(searchEntriesByCriteria(whereCaluse, args));
         }
+        if (typeOfEntry != null && !typeOfEntry.equalsIgnoreCase("1")) {
+
+        }
+
         if (catName != null){
-            String[] args = {userId,accName,catName};
-            String whereCaluse = "where history_user_fk = ? and account_name = ? and category_name = ? order by transaction_date desc";
+            String[] args = {userId,catName};
+            String whereCaluse = "where history_user_fk = ?  and category_name = ? order by transaction_date desc";
             historyArrayList.retainAll(searchEntriesByCriteria(whereCaluse, args));
         }
         if (dateAfter != null && dateAfter.length() > 1){
-            String[] args = {userId,accName,dateAfter};
-            String whereCaluse = "where history_user_fk = ? and account_name = ? and transaction_date > ? order by transaction_date desc";
+            String[] args = {userId,dateAfter};
+            String whereCaluse = "where history_user_fk = ?  and transaction_date > ? order by transaction_date desc";
             historyArrayList.retainAll(searchEntriesByCriteria(whereCaluse, args));
         }
 

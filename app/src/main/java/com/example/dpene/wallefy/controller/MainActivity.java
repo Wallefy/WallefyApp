@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -49,7 +50,7 @@ import com.example.dpene.wallefy.model.datasources.UserDataSource;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ISaveSpinnerPosition, IPieChartCommunicator {
 
-    User user;
+    public static User user;
     int spinnerPosition;
 
     //     Start   Tabbed test ---- >
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Log.e("PIECHART", "onCreate: MAIN ");
         user = (User) getIntent().getSerializableExtra("user");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 //      Get user email and username
         View headView = navigationView.getHeaderView(0);
-        ((TextView) headView.findViewById(R.id.nav_header_email)).setText(user.getEmail());
+        ((TextView) headView.findViewById(R.id.nav_header_email)).setText(MainActivity.user.getEmail());
         ((TextView) headView.findViewById(R.id.nav_header_username)).setText(user.getUsername());
 
         //     Start   Tabbed test ---- >
@@ -246,15 +247,20 @@ public class MainActivity extends AppCompatActivity
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             if (position == 0) {
-                Log.e("PAGER LOAD", "getItem: " );
                 Fragment fr = new MainInfoFragment();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("user", user);
+//                bundle.putSerializable("user", user);
                 fr.setArguments(bundle);
                 return fr;
             }
-            if (position == 1)
-                return new PieChartFragment();
+            if (position == 1) {
+                Fragment fr = new PieChartFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("user", user);
+                bundle.putInt("accountPosition", getPosition());
+                fr.setArguments(bundle);
+                return fr;
+            }
             return null;
         }
 
@@ -284,4 +290,5 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         user = (User) getIntent().getSerializableExtra("user");
     }
+
 }

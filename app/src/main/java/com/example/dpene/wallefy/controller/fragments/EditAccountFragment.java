@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.MainActivity;
 import com.example.dpene.wallefy.controller.controllerutils.ControllerConstants;
 import com.example.dpene.wallefy.controller.controllerutils.DateFormater;
 import com.example.dpene.wallefy.controller.controllerutils.PickDate;
@@ -28,8 +29,10 @@ import com.example.dpene.wallefy.model.classes.History;
 import com.example.dpene.wallefy.model.classes.User;
 import com.example.dpene.wallefy.model.dao.IAccountDao;
 import com.example.dpene.wallefy.model.dao.IHistoryDao;
+import com.example.dpene.wallefy.model.dao.IUserDao;
 import com.example.dpene.wallefy.model.datasources.AccountDataSource;
 import com.example.dpene.wallefy.model.datasources.HistoryDataSource;
+import com.example.dpene.wallefy.model.datasources.UserDataSource;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,7 +62,7 @@ public class EditAccountFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_edit_account, container, false);
 
-        user = (User) getArguments().getSerializable("user");
+//        user = (User) getArguments().getSerializable("user");
 
         IToolbar toolbar = (IToolbar) getActivity();
 
@@ -121,7 +124,7 @@ public class EditAccountFragment extends Fragment {
             case R.id.save_entry:
 //                TODO check for words in name  - if either balance or date are not empty must fill both
 //                ^\s*$  - if all whitespaces
-                if (tvTitle.getText().toString().matches("^\\s*$") || tvTitle.getText().toString().length()<=0)
+                if (tvTitle.getText().toString().matches("^\\s*$") || tvTitle.getText().toString().length() <= 0)
                     Toast.makeText(getContext(), "Name can not be empty", Toast.LENGTH_SHORT).show();
                 else {
                     new SaveAccountTask(amount.length() <= 0).execute(tvTitle.getText().toString(), title,
@@ -134,7 +137,7 @@ public class EditAccountFragment extends Fragment {
                 builder.setMessage("All entries for this account would be deleted!");
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        new DeleteAccountTask(user.getUserId()).execute(tvTitle.getText().toString());
+                        new DeleteAccountTask(MainActivity.user.getUserId()).execute(tvTitle.getText().toString());
                         getActivity().finish();
                     }
                 });
@@ -164,9 +167,12 @@ public class EditAccountFragment extends Fragment {
 //            tvTitle.getText().toString(), title,
 //                    tvDate.getText().toString(), tvAmount.getText().toString()
 
+            IUserDao userDataSource = UserDataSource.getInstance(getContext());
+            ((UserDataSource) userDataSource).open();
+
             String accName = params[0];
             String oldName = params[1];
-            String date = DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss( params[2]);
+            String date = DateFormater.from_dMMMyyyy_To_yyyyMMddHHmmss(params[2]);
 
             String amount = params[3];
             if (params[3].length() <= 0)
@@ -175,23 +181,21 @@ public class EditAccountFragment extends Fragment {
             IAccountDao accountDataSource = AccountDataSource.getInstance(getContext());
             ((AccountDataSource) accountDataSource).open();
             if (this.isNewAccount) {
-                pojoAccount = accountDataSource.createAccount(user.getUserId(), accName);
+                pojoAccount = accountDataSource.createAccount(MainActivity.user.getUserId(), accName);
                 if (pojoAccount == null)
                     return false;
-                if (date != null || date.length() >0) {
+                if (date.length() > 0) {
                     IHistoryDao historyDataSource = HistoryDataSource.getInstance(getContext());
                     ((HistoryDataSource) historyDataSource).open();
-                    History hist = historyDataSource.createHistory(user.getUserId(), pojoAccount.getAccountTypeId(),
+                    History hist = historyDataSource.createHistory(MainActivity.user.getUserId(), pojoAccount.getAccountTypeId(),
                             ControllerConstants.CATEGORY_INITIAL_BALANCE, Double.parseDouble(amount), null, date, null, null);
-                    if (hist ==null)
+                    if (hist == null)
                         return false;
                 }
-            }
-            else
-                pojoAccount = accountDataSource.updateAccount(user.getUserId(),accName,oldName);
-            ((AccountDataSource) accountDataSource).close();
+            } else
+                pojoAccount = accountDataSource.updateAccount(MainActivity.user.getUserId(), accName, oldName);
             if (pojoAccount != null) {
-                user.addAccount(pojoAccount);
+                MainActivity.user = userDataSource.selectUserById(MainActivity.user.getUserId());
                 return true;
             }
             return false;
@@ -207,7 +211,7 @@ public class EditAccountFragment extends Fragment {
         }
     }
 
-    private class DeleteAccountTask extends  AsyncTask<String,Void,Boolean>{
+    private class DeleteAccountTask extends AsyncTask<String, Void, Boolean> {
 
         private long userId;
 
@@ -218,9 +222,14 @@ public class EditAccountFragment extends Fragment {
         @Override
         protected Boolean doInBackground(String... params) {
             IAccountDao accountDataSource = AccountDataSource.getInstance(getContext());
-            ((AccountDataSource)accountDataSource).open();
-            if (accountDataSource.deleteAccount(userId, params[0]))
+            ((AccountDataSource) accountDataSource).open();
+            IUserDao userDataSource = UserDataSource.getInstance(getContext());
+            ((UserDataSource) userDataSource).open();
+            if (accountDataSource.deleteAccount(userId, params[0])) {
+                MainActivity.user = userDataSource.selectUserById(MainActivity.user.getUserId());
+//                MainActivity.user.deleteAccount(params[0]);
                 return true;
+            }
             return false;
         }
 

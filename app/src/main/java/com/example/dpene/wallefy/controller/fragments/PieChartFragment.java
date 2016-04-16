@@ -16,7 +16,9 @@ import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IPieChartCommunicator;
+import com.example.dpene.wallefy.controller.fragments.interfaces.ISaveSpinnerPosition;
 import com.example.dpene.wallefy.model.classes.Category;
+import com.example.dpene.wallefy.model.classes.User;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -53,19 +55,25 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
 
     private Typeface tf;
 
-    public PieChartFragment() {
-
-    }
+    private User user;
+    int selectedAccountPosition;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         this.parent = (IPieChartCommunicator) context;
+        Log.e("PIECHART", "Atach:account " + selectedAccountPosition );
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
+        Bundle bundle = this.getArguments();
+        user = (User) bundle.getSerializable("user");
+        selectedAccountPosition = parent.getPosition();
+
 
         categories = new ArrayList<>();
         categoriyName = new ArrayList<>();
@@ -206,4 +214,9 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         pieChart.invalidate();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("PIECHART", "resum:account " + selectedAccountPosition);
+    }
 }

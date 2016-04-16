@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.EditActivity;
+import com.example.dpene.wallefy.controller.MainActivity;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.History;
@@ -70,7 +71,7 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        user = (User) getArguments().getSerializable("user");
+//        user = (User) getArguments().getSerializable("user");
 
         arrayListAccounts = new ArrayList<>();
 
@@ -92,7 +93,7 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
                 editActivity.putExtra("title", arrayListAccounts.get(position).getAccountName());
                 editActivity.putExtra("amount", ((TextView) ((ViewGroup) view).getChildAt(1)).getText().toString());
                 editActivity.putExtra("date", "Not available");
-                editActivity.putExtra("user", user);
+//                editActivity.putExtra("user", MainActivity.user);
                 startActivity(editActivity);
             }
         });
@@ -107,7 +108,7 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         Intent editActivity = new Intent(getContext(), EditActivity.class);
         editActivity.putExtra("key", IRequestCodes.EDIT_ACCOUNT);
-        editActivity.putExtra("user",user);
+//        editActivity.putExtra("user",user);
         startActivity(editActivity);
     }
 
@@ -169,7 +170,7 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
             ((HistoryDataSource)historyDataSource).open();
             IAccountDao accountDataSource = AccountDataSource.getInstance(getContext());
             ((AccountDataSource)accountDataSource).open();
-            ArrayList<Account> allAcc = accountDataSource.showAllAccounts(user.getUserId());
+            ArrayList<Account> allAcc = accountDataSource.showAllAccounts(MainActivity.user.getUserId());
             if (allAcc == null || allAcc.size() == 0 )
                 return null;
             for (Account acc :
@@ -192,7 +193,7 @@ public class ListAccountsFragment extends Fragment implements View.OnClickListen
         super.onResume();
 
         if (accountAdapter != null) {
-            new FillAccountsList().execute(user.getUserId());
+            new FillAccountsList().execute(MainActivity.user.getUserId());
         }
     }
 }

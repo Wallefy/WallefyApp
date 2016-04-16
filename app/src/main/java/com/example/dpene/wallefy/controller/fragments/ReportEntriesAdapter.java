@@ -31,6 +31,8 @@ public class ReportEntriesAdapter extends RecyclerView.Adapter<ReportEntriesAdap
     public ReportEntriesAdapter(Context context, ArrayList<History> entries,User user) {
         this.context = context;
         this.currentUser = user;
+        if (entries == null)
+            entries = new ArrayList<>();
         this.entries = entries;
     }
 
@@ -70,7 +72,7 @@ public class ReportEntriesAdapter extends RecyclerView.Adapter<ReportEntriesAdap
                 Intent editActivity = new Intent(context, EditActivity.class);
                 editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
                 editActivity.putExtra("entry", entries.get(position));
-                editActivity.putExtra("user", currentUser);
+//                editActivity.putExtra("user", currentUser);
                 context.startActivity(editActivity);
 
             }
