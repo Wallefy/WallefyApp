@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.EditActivity;
@@ -98,6 +99,11 @@ public class MainInfoFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if (userAccountNames.isEmpty()){
+                    Toast.makeText(getContext(), "There are no accounts", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setView(R.layout.dialog_floating_buttons);
@@ -225,10 +231,14 @@ public class MainInfoFragment extends Fragment {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (spnAccounts.getSelectedItem() == null){
+                        Toast.makeText(getContext(), "There are no accounts", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     Intent editActivity = new Intent(getContext(), EditActivity.class);
                     editActivity.putExtra("key", IRequestCodes.EDIT_TRANSACTION);
-                    editActivity.putExtra("account", spnAccounts.getSelectedItem().toString());
 //                    editActivity.putExtra("user", user);
+                    editActivity.putExtra("account", spnAccounts.getSelectedItem().toString());
                     editActivity.putExtra("category", categs.get(position).getCategoryName());
                     editActivity.putExtra("passedIsExpence", categs.get(position).isExpense());
                     startActivity(editActivity);

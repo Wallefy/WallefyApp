@@ -19,17 +19,16 @@
         <LinearLayout
             android:id="@+id/main_info_balance"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:background="@color/color_orange_white"
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal"
-
             android:padding="@dimen/activity_horizontal_margin">
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -37,7 +36,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:text="@string/balance"
                     android:textSize="@dimen/main_info_small_text_size" />
 
@@ -54,6 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.25"
                 android:gravity="end"
+                android:layout_gravity="center_vertical"
                 android:text="0.0"
                 android:textColor="@color/color_green_dark"
                 android:textSize="@dimen/main_info_big_text_size" />

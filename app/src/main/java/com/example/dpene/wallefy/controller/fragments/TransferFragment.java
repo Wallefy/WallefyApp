@@ -52,8 +52,10 @@ public class TransferFragment extends Fragment {
 //        this.user = (User) getArguments().get("user");
 
         accounts = new ArrayList<>();
-        for(Account acc : MainActivity.user.getAccounts()){
-            accounts.add(acc.getAccountName());
+        if (MainActivity.user.getAccounts() != null) {
+            for (Account acc : MainActivity.user.getAccounts()) {
+                accounts.add(acc.getAccountName());
+            }
         }
 
         View v = inflater.inflate(R.layout.fragment_transfer, container, false);
@@ -65,6 +67,11 @@ public class TransferFragment extends Fragment {
 
         spnFromAcc.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, accounts));
         spnToAcc.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, accounts));
+
+        if (accounts.isEmpty()) {
+            btnTransfer.setText("There are no accounts");
+            btnTransfer.setEnabled(false);
+        }
 
         btnTransfer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,5 +97,7 @@ public class TransferFragment extends Fragment {
 
         return v;
     }
+
+//    TODO remove trash and add save implementation
 
 }

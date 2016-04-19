@@ -195,6 +195,8 @@ public class MainActivity extends AppCompatActivity
             SharedPreferences userId = getPreferences(MODE_PRIVATE);
             userId.edit().clear().apply();
             Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+//            Clears all and loads only new
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
             finish();
 

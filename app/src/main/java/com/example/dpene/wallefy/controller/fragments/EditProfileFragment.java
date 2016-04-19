@@ -158,10 +158,14 @@ public class EditProfileFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(String... params) {
+//            newEmail, newUsername, newPass
+            String newMail = params[0];
+            String newUsername = params[1];
+            String newPass = params[2];
 
             IUserDao userDataSource = UserDataSource.getInstance(getContext());
             ((UserDataSource) userDataSource).open();
-            User updateUser = userDataSource.updateUser(userID, params[0], params[1], params[2]);
+            User updateUser = userDataSource.updateUser(userID, newMail, newUsername, RegisterHelper.md5(newPass));
             if (updateUser != null) {
                 MainActivity.user.setEmail(updateUser.getEmail());
                 MainActivity.user.setUsername(updateUser.getUsername());
@@ -179,8 +183,8 @@ public class EditProfileFragment extends Fragment {
                 Toast.makeText(getContext(), "Save success", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(getContext(), MainActivity.class);
                 i.putExtra("user",parent.sendUser());
-                startActivity(i);
                 getActivity().finish();
+                startActivity(i);
             }
 
         }

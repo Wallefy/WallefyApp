@@ -161,6 +161,11 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             }
         }
 
+        if (listCategories.size()<=0){
+            Toast.makeText(getContext(), "There are no " + ((passedIsExpense)? "Expence" : "Income") + " categories", Toast.LENGTH_SHORT).show();
+            getActivity().finish();
+        }
+
 
         this.initializeCalculatorVariables(v);
 

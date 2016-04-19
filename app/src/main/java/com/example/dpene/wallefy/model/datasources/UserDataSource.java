@@ -98,7 +98,7 @@ public class UserDataSource extends DataSource implements IUserDao {
         values.put(Constants.USER_EMAIL, userEmail);
 
         //TODO: check if email exists
-        long updateId = database.update(Constants.TABLE_USERS, values, Constants.USER_ID + " =? ", upArgs);
+        long updateId = database.update(Constants.TABLE_USERS, values, Constants.USER_ID + " = ? ", upArgs);
 
         if (updateId < 0) {
             Log.e("tag", "db error");
