@@ -4,7 +4,7 @@
     <!-- checkableBehavior - to remove the selection background-->
     <group android:checkableBehavior="none" >
         <item
-            android:id="@+id/nav_stats"
+            android:id="@+id/nav_main_board"
             android:icon="@drawable/board"
             android:title="Board" />
         <item
@@ -24,7 +24,7 @@
     <item android:title="Profile management">
         <menu>
             <item
-                android:id="@+id/nav_settings"
+                android:id="@+id/nav_edit_profile"
                 android:icon="@drawable/edit_profile"
                 android:title="Edit profile" />
             <!--<item-->

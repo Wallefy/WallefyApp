@@ -128,7 +128,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
         // enable options menu
         setHasOptionsMenu(true);
-
+//    TODO must update user accounts and categories
         for (Account acc : MainActivity.user.getAccounts()) {
             mapUsersAccounts.put(acc.getAccountTypeId(), acc.getAccountName());
         }

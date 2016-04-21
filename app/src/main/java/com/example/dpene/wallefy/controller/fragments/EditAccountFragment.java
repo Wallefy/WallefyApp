@@ -39,7 +39,7 @@ import com.example.dpene.wallefy.model.datasources.UserDataSource;
  */
 public class EditAccountFragment extends Fragment {
 
-    private TextView tvTitle;
+    private TextView tvEditAccountName;
     private TextView tvAmount;
     private EditText tvDate;
     private ImageButton btnCalendar;
@@ -70,7 +70,7 @@ public class EditAccountFragment extends Fragment {
         this.existingDate = getArguments().getString("date");
         this.amount = getArguments().getString("amount");
 
-        tvTitle = (TextView) v.findViewById(R.id.edit_account_name);
+        tvEditAccountName = (TextView) v.findViewById(R.id.edit_account_name);
         tvAmount = (TextView) v.findViewById(R.id.edit_account_init_balance);
         tvDate = (EditText) v.findViewById(R.id.edit_account_init_balance_date);
         btnCalendar = (ImageButton) v.findViewById(R.id.edit_account_calendar_btn);
@@ -89,7 +89,7 @@ public class EditAccountFragment extends Fragment {
             btnCalendar.setFocusable(false);
         }
 
-        tvTitle.setText(title);
+        tvEditAccountName.setText(title);
         tvAmount.setText(amount);
         tvDate.setText(existingDate);
 
@@ -124,21 +124,20 @@ public class EditAccountFragment extends Fragment {
             case R.id.save_entry:
 //                TODO check for words in name  - if either balance or date are not empty must fill both
 //                ^\s*$  - if all whitespaces
-                if (tvTitle.getText().toString().matches("^\\s*$") || tvTitle.getText().toString().length() <= 0)
+                if (tvEditAccountName.getText().toString().matches("^\\s*$") || tvEditAccountName.getText().toString().length() <= 0)
                     Toast.makeText(getContext(), "Name can not be empty", Toast.LENGTH_SHORT).show();
                 else {
-                    new SaveAccountTask(amount.length() <= 0).execute(tvTitle.getText().toString(), title,
+                    new SaveAccountTask(amount.length() <= 0).execute(tvEditAccountName.getText().toString(), title,
                             tvDate.getText().toString(), tvAmount.getText().toString());
                 }
                 return true;
             case R.id.clear_values:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("DELETE Account: " + tvTitle.getText().toString());
+                builder.setTitle("DELETE Account: " + tvEditAccountName.getText().toString());
                 builder.setMessage("All entries for this account would be deleted!");
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        new DeleteAccountTask(MainActivity.user.getUserId()).execute(tvTitle.getText().toString());
-                        getActivity().finish();
+                        new DeleteAccountTask(MainActivity.user.getUserId()).execute(tvEditAccountName.getText().toString());
                     }
                 });
                 builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -164,7 +163,7 @@ public class EditAccountFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(String... params) {
-//            tvTitle.getText().toString(), title,
+//            tvEditAccountName.getText().toString(), title,
 //                    tvDate.getText().toString(), tvAmount.getText().toString()
 
             IUserDao userDataSource = UserDataSource.getInstance(getContext());
@@ -221,13 +220,17 @@ public class EditAccountFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(String... params) {
+
+            String newAccountName = params[0];
+
             IAccountDao accountDataSource = AccountDataSource.getInstance(getContext());
             ((AccountDataSource) accountDataSource).open();
             IUserDao userDataSource = UserDataSource.getInstance(getContext());
             ((UserDataSource) userDataSource).open();
-            if (accountDataSource.deleteAccount(userId, params[0])) {
-                MainActivity.user = userDataSource.selectUserById(MainActivity.user.getUserId());
-//                MainActivity.user.deleteAccount(params[0]);
+            if (accountDataSource.deleteAccount(userId, newAccountName)) {
+                MainActivity.user.setAccounts(accountDataSource.showAllAccounts(userId));
+                MainActivity.user.setHistoryLog(HistoryDataSource.getInstance(getContext()).listAllHistory(userId));
+//                MainActivity.user.deleteAccount(newAccountName);
                 return true;
             }
             return false;
@@ -235,8 +238,10 @@ public class EditAccountFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            if (aBoolean)
+            if (aBoolean) {
                 Toast.makeText(getContext(), "DELETE SUCCESS", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+            }
             else
                 Toast.makeText(getContext(), "DELETE FAILED", Toast.LENGTH_SHORT).show();
         }

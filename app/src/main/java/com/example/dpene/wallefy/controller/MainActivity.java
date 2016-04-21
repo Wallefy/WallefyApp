@@ -3,14 +3,10 @@ package com.example.dpene.wallefy.controller;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,26 +22,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.example.dpene.wallefy.R;
-import com.example.dpene.wallefy.controller.fragments.EditAccountFragment;
-import com.example.dpene.wallefy.controller.fragments.EditProfileFragment;
-import com.example.dpene.wallefy.controller.fragments.ExportFragment;
 import com.example.dpene.wallefy.controller.fragments.ListAccountsFragment;
 import com.example.dpene.wallefy.controller.fragments.ListCategoryFragment;
 import com.example.dpene.wallefy.controller.fragments.MainInfoFragment;
 import com.example.dpene.wallefy.controller.fragments.PieChartFragment;
 import com.example.dpene.wallefy.controller.fragments.ReportsFragment;
-import com.example.dpene.wallefy.controller.fragments.TransactionFragment;
+import com.example.dpene.wallefy.controller.fragments.ViewPagerFragment;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IPieChartCommunicator;
 import com.example.dpene.wallefy.controller.fragments.interfaces.IRequestCodes;
 import com.example.dpene.wallefy.controller.fragments.interfaces.ISaveSpinnerPosition;
 import com.example.dpene.wallefy.model.classes.User;
-import com.example.dpene.wallefy.model.dao.IUserDao;
-import com.example.dpene.wallefy.model.datasources.UserDataSource;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ISaveSpinnerPosition, IPieChartCommunicator {
@@ -53,11 +43,7 @@ public class MainActivity extends AppCompatActivity
     public static User user;
     int spinnerPosition;
 
-    //     Start   Tabbed test ---- >
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
-    TabLayout tabLayout;
-    //        End Tabbed  <----
+
 
     Toolbar toolbar;
 
@@ -65,7 +51,6 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.e("PIECHART", "onCreate: MAIN ");
         user = (User) getIntent().getSerializableExtra("user");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -91,15 +76,7 @@ public class MainActivity extends AppCompatActivity
         ((TextView) headView.findViewById(R.id.nav_header_email)).setText(MainActivity.user.getEmail());
         ((TextView) headView.findViewById(R.id.nav_header_username)).setText(user.getUsername());
 
-        //     Start   Tabbed test ---- >
-
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-
-//        End Tabbed  <----
+        replaceFrag(new ViewPagerFragment());
 
     }
 
@@ -110,14 +87,6 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-        }
-
-        if (mViewPager.getVisibility() == View.VISIBLE)
-            finish();
-        else {
-            toolbar.setSubtitle(null);
-            mViewPager.setVisibility(View.VISIBLE);
-            tabLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -135,7 +104,6 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_transfer) {
             Intent editActivity = new Intent(this, EditActivity.class);
             editActivity.putExtra("key", IRequestCodes.TRANSFER);
@@ -152,13 +120,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        mViewPager.setVisibility(View.GONE);
-        tabLayout.setVisibility(View.GONE);
 
-        if (id == R.id.nav_stats) {
-            replaceFrag(new MainInfoFragment());
-            mViewPager.setVisibility(View.VISIBLE);
-            tabLayout.setVisibility(View.VISIBLE);
+        if (id == R.id.nav_main_board) {
+            replaceFrag(new ViewPagerFragment());
             toolbar.setSubtitle(null);
 
         } else if (id == R.id.nav_reports) {
@@ -171,14 +135,10 @@ public class MainActivity extends AppCompatActivity
             replaceFrag(new ListCategoryFragment());
             toolbar.setSubtitle("Categories");
 
-        } else if (id == R.id.nav_settings) {
-
-            mViewPager.setVisibility(View.VISIBLE);
-            tabLayout.setVisibility(View.VISIBLE);
+        } else if (id == R.id.nav_edit_profile) {
 
             Intent editActivity = new Intent(this, EditActivity.class);
             editActivity.putExtra("key", IRequestCodes.EDIT_PROFILE);
-            editActivity.putExtra("user", user);
             startActivity(editActivity);
 
         }
@@ -212,10 +172,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right,R.anim.slide_in_right,R.anim.slide_out_left);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user", user);
-        fr.setArguments(bundle);
         ft.replace(R.id.root_main, fr);
-        ft.addToBackStack(null);
         ft.commit();
     }
 
@@ -235,57 +192,6 @@ public class MainActivity extends AppCompatActivity
         trans.replace(R.id.root_main, fragment);
         trans.commit();
     }
-
-    //     Start   Tabbed test ---- >
-
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            if (position == 0) {
-                Fragment fr = new MainInfoFragment();
-                Bundle bundle = new Bundle();
-//                bundle.putSerializable("user", user);
-                fr.setArguments(bundle);
-                return fr;
-            }
-            if (position == 1) {
-                Fragment fr = new PieChartFragment();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("user", user);
-                bundle.putInt("accountPosition", getPosition());
-                fr.setArguments(bundle);
-                return fr;
-            }
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-//            To show the labels or not to show
-//            switch (position) {
-//                case 0:
-//                    return "History";
-//                case 1:
-//                    return "Stats";
-//            }
-            return null;
-        }
-    }
-//        End Tabbed  <----
-
 
     @Override
     protected void onResume() {

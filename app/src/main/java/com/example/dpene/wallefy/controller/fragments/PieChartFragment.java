@@ -62,7 +62,6 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
     public void onAttach(Context context) {
         super.onAttach(context);
         this.parent = (IPieChartCommunicator) context;
-        Log.e("PIECHART", "Atach:account " + selectedAccountPosition );
     }
 
     @Override
