@@ -28,11 +28,13 @@ public class PickDate {
                 isCanceled =false;
                 
                 final DatePickerDialog dpd = new DatePickerDialog(getActivity(), this, year, month, day);
-                dpd.setButton(DialogInterface.BUTTON_POSITIVE, "Select", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
+//                Not working with android 5+
+//                dpd.setButton(DialogInterface.BUTTON_POSITIVE, "Select", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                    }
+//                });
                 dpd.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
