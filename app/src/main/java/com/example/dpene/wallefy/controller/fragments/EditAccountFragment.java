@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,7 +49,6 @@ public class EditAccountFragment extends Fragment {
     private String title;
     private String amount;
 
-    private User user;
     private Account pojoAccount;
 
     public EditAccountFragment() {
@@ -194,7 +194,7 @@ public class EditAccountFragment extends Fragment {
             } else
                 pojoAccount = accountDataSource.updateAccount(MainActivity.user.getUserId(), accName, oldName);
             if (pojoAccount != null) {
-                MainActivity.user = userDataSource.selectUserById(MainActivity.user.getUserId());
+                MainActivity.user.setAccounts(accountDataSource.showAllAccounts(MainActivity.user.getUserId()));
                 return true;
             }
             return false;

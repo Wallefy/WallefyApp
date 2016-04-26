@@ -321,12 +321,12 @@ public class EditActivity extends AppCompatActivity implements IToolbar, ITransa
         @Override
         public CharSequence getPageTitle(int position) {
 //            To show the labels or not to show
-//            switch (position) {
-//                case 0:
-//                    return "History";
-//                case 1:
-//                    return "Stats";
-//            }
+            switch (position) {
+                case 0:
+                    return "Amount";
+                case 1:
+                    return "Details";
+            }
             return null;
         }
     }

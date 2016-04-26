@@ -254,7 +254,7 @@ public class EditCategoryFragment extends Fragment {
 
                 Category cat = categoryDataSource.updateCategory(params[0],Long.valueOf(params[2]),MainActivity.user.getUserId(),params[3],oldIcon,catId);
                 if (cat != null) {
-                    MainActivity.user.addCategory(cat);
+                    MainActivity.user.setCategories(categoryDataSource.showAllCategoriesForUser(MainActivity.user.getUserId()));
                     return true;
                 }
             }

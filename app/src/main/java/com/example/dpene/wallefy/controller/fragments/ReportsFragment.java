@@ -214,7 +214,7 @@ public class ReportsFragment extends Fragment {
         entries = new ArrayList<>();
 
         spnCategories.setAdapter(categoryAdapter);
-        new TaskFillSpinners().execute(1);
+        new TaskFillSpinners().execute(MainActivity.user.getUserId());
 
         spnExpenseIncome.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, expenseIncome));
 
@@ -270,14 +270,14 @@ public class ReportsFragment extends Fragment {
         return v;
     }
 
-    class TaskFillSpinners extends AsyncTask<Integer, Void, Void> {
+    class TaskFillSpinners extends AsyncTask<Long, Void, Void> {
 
         @Override
         protected void onPreExecute() {
         }
 
         @Override
-        protected Void doInBackground(Integer... params) {
+        protected Void doInBackground(Long... params) {
             ((UserDataSource) userDataSource).open();
             ((CategoryDataSource) categoryDataSource).open();
             ((AccountDataSource) accountDataSource).open();
