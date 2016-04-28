@@ -80,5 +80,6 @@
     <string name="old_password">Old password</string>
     <string name="category">Category</string>
     <string name="export">Export</string>
+    <string name="password_recovery"><u>Forgot your password?</u></string>
 
 </resources>

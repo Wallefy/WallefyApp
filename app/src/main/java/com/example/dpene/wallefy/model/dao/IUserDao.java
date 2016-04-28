@@ -21,7 +21,11 @@ public interface IUserDao {
 
     boolean deleteUser(String email);
 
+    boolean checkForRegisteredEmail(String email);
+
     User updateUser(long id, String userEmail, String userName, String password);
+
+    boolean changeForgottenPassword(String email,String newPass);
 
 }
 

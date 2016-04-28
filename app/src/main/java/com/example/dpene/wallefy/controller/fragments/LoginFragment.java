@@ -1,12 +1,17 @@
 package com.example.dpene.wallefy.controller.fragments;
 
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +19,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dpene.wallefy.R;
+import com.example.dpene.wallefy.controller.LoginActivity;
 import com.example.dpene.wallefy.controller.MainActivity;
+import com.example.dpene.wallefy.controller.fragments.interfaces.ISendMail;
 import com.example.dpene.wallefy.model.classes.Account;
 import com.example.dpene.wallefy.model.classes.Category;
 import com.example.dpene.wallefy.model.classes.History;
@@ -34,62 +42,64 @@ import com.example.dpene.wallefy.model.utils.RegisterHelper;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
-    EditText edtEmail;
-    EditText edtPassword;
-    Button btnLogin;
-    Button btnRegister;
-    CheckBox chbKeepLogged;
+    private Button          btnLogin;
+    private Button          btnRegister;
+    private TextView        forgottenPass;
+    private EditText        edtEmail;
+    private EditText        edtPassword;
+    private CheckBox        chbKeepLogged;
 
-    IUserDao userDataSource;
-    User user;
+    private User            user;
+    private IUserDao        userDataSource;
+    private IHistoryDao     historyDataSource;
+    private IAccountDao     accountDataSource;
+    private ICategoryDao    categoryDataSource;
 
-    IAccountDao accountDataSource;
-    ICategoryDao categoryDataSource;
-    IHistoryDao historyDataSource;
+    private ISendMail       loginActivity;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        loginActivity = (ISendMail) context;
+    }
+
+    @Override
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        userDataSource = UserDataSource.getInstance(getContext());
-        ((UserDataSource) userDataSource).open();
 
 
-        accountDataSource = AccountDataSource.getInstance(getContext());
-        ((AccountDataSource) accountDataSource).open();
-        categoryDataSource = CategoryDataSource.getInstance(getContext());
-        ((CategoryDataSource) categoryDataSource).open();
-        historyDataSource = HistoryDataSource.getInstance(getContext());
-        ((HistoryDataSource) historyDataSource).open();
+        userDataSource      = UserDataSource.getInstance(getContext());
+        historyDataSource   = HistoryDataSource.getInstance(getContext());
+        accountDataSource   = AccountDataSource.getInstance(getContext());
+        categoryDataSource  = CategoryDataSource.getInstance(getContext());
 
-        if (logInfo() > 0) {
+        new Thread(new InstantLog()).start();
 
-            Intent i = new Intent(getContext(), MainActivity.class);
+        final View view       = inflater.inflate(R.layout.fragment_login, container, false);
 
-            user = userDataSource.selectUserById(logInfo());
-
-            i.putExtra("user", loadUserInfo(accountDataSource.showAllAccounts(user.getUserId()),
-                    categoryDataSource.showAllCategoriesForUser(user.getUserId()),
-                    historyDataSource.listAllHistory(user.getUserId())));
-            ((UserDataSource) userDataSource).close();
-            startActivity(i);
-            getActivity().finish();
-        }
-
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
-
-        edtEmail = (EditText) view.findViewById(R.id.email_login);
-        edtPassword = (EditText) view.findViewById(R.id.password_login);
-        btnLogin = (Button) view.findViewById(R.id.login_button);
-        btnRegister = (Button) view.findViewById(R.id.register_button);
-        chbKeepLogged = (CheckBox) view.findViewById(R.id.always_logged);
+        btnLogin        = (Button) view.findViewById(R.id.login_button);
+        edtEmail        = (EditText) view.findViewById(R.id.email_login);
+        btnRegister     = (Button) view.findViewById(R.id.register_button);
+        edtPassword     = (EditText) view.findViewById(R.id.password_login);
+        chbKeepLogged   = (CheckBox) view.findViewById(R.id.always_logged);
+        forgottenPass   = (TextView) view.findViewById(R.id.pass_recover);
 
         btnLogin.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
+
+        forgottenPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                loginActivity.setSenderEmail(edtEmail.getText().toString());
+                FragmentManager fm = getFragmentManager();
+                PassRecoveryDialog prd = new PassRecoveryDialog();
+                prd.show(fm,"pass_recovery_dialog");
+
+            }
+        });
 
         return view;
     }
@@ -99,27 +109,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.login_button:
 
-//                TODO CLOSE CONNECTION
-                user = userDataSource.loginUser(edtEmail.getText().toString(), RegisterHelper.md5(edtPassword.getText().toString()));
-                if (user == null)
-                    Toast.makeText(getContext(), "Wrong username or password", Toast.LENGTH_SHORT).show();
-                else // save in shared prefs userId
-                {
-                    if (chbKeepLogged.isChecked())
-                        keepLogged(user.getUserId());
-                    // create user
-                    //parse user to next activity
-                    Intent i = new Intent(getContext(), MainActivity.class);
-                    i.putExtra("user", loadUserInfo(accountDataSource.showAllAccounts(user.getUserId()),
-                            categoryDataSource.showAllCategoriesForUser(user.getUserId()),
-                            historyDataSource.listAllHistory(user.getUserId())));
-                    ((UserDataSource) userDataSource).close();
-                    startActivity(i);
-                    getActivity().finish();
-                }
+                new Thread(new LogIn()).start();
+
                 break;
             case R.id.register_button:
-                RegisterFragment register = new RegisterFragment();
+                RegisterFragment    register    = new RegisterFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.root_login, register, "register");
 
@@ -133,8 +127,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private void keepLogged(long savedUserId) {
-        SharedPreferences isLogged = PreferenceManager.getDefaultSharedPreferences(getContext());
-        SharedPreferences.Editor editor = isLogged.edit();
+        SharedPreferences           isLogged    = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor    editor      = isLogged.edit();
         editor.putLong("userId", savedUserId);
         editor.commit();
     }
@@ -150,5 +144,58 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         user.setCategories(cat);
         user.setHistoryLog(h);
         return user;
+    }
+
+    private void openConnections() {
+
+        ((UserDataSource)       userDataSource).open();
+        ((HistoryDataSource)    historyDataSource).open();
+        ((AccountDataSource)    accountDataSource).open();
+        ((CategoryDataSource)   categoryDataSource).open();
+    }
+
+    private void parseUserAndStartMainActivity() {
+
+        Intent i = new Intent(getContext(), MainActivity.class);
+        i.putExtra("user", loadUserInfo(accountDataSource.showAllAccounts(user.getUserId()),
+                categoryDataSource.showAllCategoriesForUser(user.getUserId()),
+                historyDataSource.listAllHistory(user.getUserId())));
+        ((UserDataSource) userDataSource).close();
+        startActivity(i);
+        getActivity().finish();
+    }
+
+    private class InstantLog implements Runnable {
+
+        @Override
+        public void run() {
+            if (logInfo() > 0) {
+                openConnections();
+                user = userDataSource.selectUserById(logInfo());
+                parseUserAndStartMainActivity();
+            }
+        }
+    }
+
+    private class LogIn implements Runnable {
+
+        @Override
+        public void run() {
+            openConnections();
+            user = userDataSource.loginUser(edtEmail.getText().toString(), RegisterHelper.md5(edtPassword.getText().toString()));
+            if (user == null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), "Wrong username or password", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                if (chbKeepLogged.isChecked())
+                    keepLogged(user.getUserId());
+
+                parseUserAndStartMainActivity();
+            }
+        }
     }
 }

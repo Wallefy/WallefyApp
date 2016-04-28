@@ -8,6 +8,7 @@ import android.util.Log;
 import com.example.dpene.wallefy.model.classes.User;
 import com.example.dpene.wallefy.model.dao.IUserDao;
 import com.example.dpene.wallefy.model.utils.Constants;
+import com.example.dpene.wallefy.model.utils.RegisterHelper;
 
 public class UserDataSource extends DataSource implements IUserDao {
 
@@ -101,7 +102,6 @@ public class UserDataSource extends DataSource implements IUserDao {
         long updateId = database.update(Constants.TABLE_USERS, values, Constants.USER_ID + " = ? ", upArgs);
 
         if (updateId < 0) {
-            Log.e("tag", "db error");
             return null;
         }
 
@@ -125,6 +125,28 @@ public class UserDataSource extends DataSource implements IUserDao {
 
     @Override
     public boolean deleteUser(String email) {
+        return false;
+    }
+
+    @Override
+    public boolean checkForRegisteredEmail(String email) {
+        if (checkForExisting(Constants.TABLE_USERS, Constants.USER_EMAIL, email)) {
+            return true;
+        }
+        else return false;
+    }
+
+    @Override
+    public boolean changeForgottenPassword(String email,String newPass) {
+        if (checkForRegisteredEmail(email)){
+            String[] upArgs = {email};
+            ContentValues values = new ContentValues();
+            values.put(Constants.USER_PASSWORD, newPass);
+
+            long updatePass = database.update(Constants.TABLE_USERS, values, Constants.USER_EMAIL + " = ? ", upArgs);
+            if (updatePass > 0)
+                return true;
+        }
         return false;
     }
 }

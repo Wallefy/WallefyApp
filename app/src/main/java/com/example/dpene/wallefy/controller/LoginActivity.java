@@ -12,10 +12,12 @@ import android.view.WindowManager;
 
 import com.example.dpene.wallefy.R;
 import com.example.dpene.wallefy.controller.fragments.LoginFragment;
+import com.example.dpene.wallefy.controller.fragments.interfaces.ISendMail;
 import com.example.dpene.wallefy.model.DbHelper;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements ISendMail{
 
+    private String senderEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,5 +36,15 @@ public class LoginActivity extends AppCompatActivity {
         trans.add(R.id.root_login, login, "login");
         trans.commit();
 
+    }
+
+    @Override
+    public String getSenderEmail() {
+        return senderEmail;
+    }
+
+    @Override
+    public void setSenderEmail(String senderEmail) {
+        this.senderEmail = senderEmail;
     }
 }
