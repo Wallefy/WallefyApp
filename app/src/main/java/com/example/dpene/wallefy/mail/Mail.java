@@ -37,8 +37,8 @@ public class Mail extends Authenticator {
 
     public Mail() {
 
-        _systemMail      = "wallefy@abv.bg";                            // set email
-        _pass            = "7y7t3madmin";                               // set password
+        _systemMail      = "";                            // set email
+        _pass            = "";                               // set password
         _host            = "smtp.abv.bg";                               // default smtp server
         _port            = "465";                                       // default smtp port
         _sport           = "465";                                       // default socketfactory port
